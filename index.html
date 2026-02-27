@@ -64,6 +64,29 @@ body{
 .btn-pink{border-color:var(--pink);color:var(--pink);text-shadow:0 0 6px var(--pink)}
 .btn-pink:hover{box-shadow:0 4px 16px rgba(255,80,160,.25)}
 
+#bgm-toggle{
+  position:fixed;
+  right:14px;
+  top:14px;
+  z-index:999;
+  font-family:var(--px);
+  font-size:8px;
+  padding:10px 12px;
+  background:linear-gradient(180deg,#241860 0%,#120c38 100%);
+  border:2px solid var(--bdr2);
+  color:var(--gold);
+  cursor:pointer;
+  border-radius:8px;
+  text-shadow:0 0 6px var(--gold);
+  box-shadow:0 4px 14px rgba(0,0,0,.28);
+}
+#bgm-toggle:hover{border-color:var(--gold)}
+#bgm-toggle.off{
+  color:var(--dim);
+  border-color:var(--bdr);
+  text-shadow:none;
+}
+
 .px7{font-family:var(--px);font-size:7px}
 .px8{font-family:var(--px);font-size:8px}
 .px9{font-family:var(--px);font-size:9px}
@@ -300,6 +323,7 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
 <audio id="bgm" loop preload="auto" autoplay>
   <source src="bgm.mp3" type="audio/mpeg">
 </audio>
+<button id="bgm-toggle" type="button" aria-label="BGM 토글">🔊 BGM ON</button>
 
 <div id="app">
 
@@ -337,8 +361,7 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
 
       <div class="box" style="padding:16px;text-align:center">
         <div class="sec-ttl">게임 안내</div>
-        <div style="font-size:52px;margin:8px 0;filter:drop-shadow(0 0 10px #9050ff)">🧙‍♂️</div>
-        <div class="px7" style="color:var(--silver);line-height:2.2">작고 마른 체형 · 하얀 피부 · 연한 분홍빛 홍조</div>
+        <img src="me.png" alt="주인공" style="width:96px;height:96px;object-fit:cover;border:2px solid var(--bdr2);border-radius:8px;margin:8px auto 10px;display:block;image-rendering:pixelated;">
         <hr class="dv">
         <div class="px7" style="color:var(--dim);line-height:2.55;text-align:left">
           📅 5년 = 60개월<br>
@@ -606,7 +629,7 @@ const NPCS = [
         res:[
           {h:6,txt:'베인이 눈을 내리깔았다. "...네가 다치면 싫으니까."'},
           {h:8,txt:'베인은 흥미롭다는 듯 당신 옆에 가까이 앉았다.'},
-          {h:5,txt:'"너랑 있으면 두렵지 않아." 베인의 목소리가 낮아졌다.'}
+          {h:5,txt:'"너랑 있으면 두렵지 않아." 베인의 시선이 흔들렸다.'}
         ]},
       { t:26, h:11, txt:'금지된 마력의 반동으로 당신이 휘청이자 베인이 즉시 붙잡았다. "말했잖아. 내 앞에서 무모해지지 말라고."'},
       { t:36, h:13, txt:'깊은 밤, 베인은 당신 이름을 작게 부르며 손등에 입술을 스쳤다. "가끔은 확인하고 싶어. 네가 진짜 여기 있는지."'},
@@ -708,7 +731,6 @@ const MINI_ROMANCE = {
 };
 
 const ACTS = [
-  /* JOB */
   { id:'apothecary_job', type:'job', unlock:1, icon:'🧪', name:'약방 보조', stat:{know:1}, fat:10, gold:17, npc:'elias', nc:.30, fail:.05, fstat:{gold:-3}, ftxt:'재고를 헷갈려 보수가 깎였다. -3G' },
   { id:'market_delivery', type:'job', unlock:1, icon:'📦', name:'시장 배달', stat:{body:1}, fat:14, gold:19, npc:'saren', nc:.24, fail:.09, fstat:{fat:8}, ftxt:'짐이 많아져 추가 노동! 피로 +8' },
   { id:'library_sorting', type:'job', unlock:1, icon:'🗂️', name:'서고 정리', stat:{know:1}, fat:8, gold:15, npc:'oliver', nc:.26, fail:.04, fstat:{gold:-2}, ftxt:'고서를 잘못 분류해 보수 -2G' },
@@ -716,7 +738,6 @@ const ACTS = [
   { id:'wall_guard', type:'job', unlock:2, icon:'🛡️', name:'성벽 경비', stat:{body:1}, fat:16, gold:20, npc:'cassian', nc:.28, fail:.09, fstat:{fat:10}, ftxt:'경비가 길어졌다. 피로 +10' },
   { id:'banquet_service', type:'job', unlock:2, icon:'🍷', name:'연회장 서빙', stat:{social:1}, fat:12, gold:16, npc:'leon', nc:.32, fail:.07, fstat:{social:-1}, ftxt:'작은 실수로 민망해졌다. 사교 -1' },
 
-  /* CLASS */
   { id:'elemental_class', type:'class', unlock:1, icon:'✨', name:'기초 원소 마법', stat:{mana:2}, fat:10, gold:-7, npc:'vain', nc:.16, fail:.08, fstat:{mana:-1}, ftxt:'집중이 흔들렸다. 마력 -1' },
   { id:'ancient_texts', type:'class', unlock:1, icon:'📚', name:'고대 문헌학', stat:{know:2}, fat:8, gold:-7, npc:'oliver', nc:.20, fail:.05, fstat:{know:-1}, ftxt:'해석 실수. 지식 -1' },
   { id:'alchemy_practicum', type:'class', unlock:1, icon:'🔬', name:'연금술 실습', stat:{mana:1,know:1}, fat:11, gold:-12, npc:'elias', nc:.16, fail:.10, fstat:{gold:-4}, ftxt:'재료를 다시 구매했다. 추가 비용 -4G' },
@@ -724,7 +745,6 @@ const ACTS = [
   { id:'court_etiquette', type:'class', unlock:2, icon:'👑', name:'궁정 예법', stat:{social:2}, fat:8, gold:-9, npc:'leon', nc:.24, fail:.07, fstat:{social:-1}, ftxt:'예법을 틀렸다. 사교 -1' },
   { id:'forbidden_decoding', type:'class', unlock:3, icon:'🌑', name:'금서 해독', stat:{mana:2,know:1}, fat:14, gold:-15, npc:'vain', nc:.32, fail:.14, fstat:{mana:-2,fat:10}, ftxt:'금서의 반동을 받았다. 마력 -2, 피로 +10', forbidden:true },
 
-  /* SOCIAL */
   { id:'royal_tea', type:'social', unlock:1, icon:'🫖', name:'왕궁 티파티', stat:{social:1}, fat:8, gold:-13, npc:'leon', nc:.38, fail:.05, fstat:{social:-1}, ftxt:'대화가 어색하게 꼬였다. 사교 -1' },
   { id:'night_market', type:'social', unlock:1, icon:'🏮', name:'야시장 산책', stat:{social:1}, fat:5, gold:-5, npc:'saren', nc:.36, fail:.05, fstat:{gold:-4}, ftxt:'충동구매를 더 했다. -4G' },
   { id:'herb_tea_circle', type:'social', unlock:1, icon:'🌿', name:'약초차 모임', stat:{social:1}, fat:-8, gold:-6, npc:'elias', nc:.34, fail:.02, fstat:{}, ftxt:'잔잔한 시간만 흘렀다.' },
@@ -732,7 +752,6 @@ const ACTS = [
   { id:'festival', type:'social', unlock:2, icon:'🎉', name:'왕국 축제', stat:{social:2}, fat:12, gold:-15, npc:'jaiden', nc:.28, fail:.08, fstat:{gold:-5}, ftxt:'축제에서 돈을 더 써버렸다. -5G' },
   { id:'secret_archive', type:'social', unlock:3, icon:'🕯️', name:'비밀 서고 탐방', stat:{know:1}, fat:9, gold:-9, npc:'vain', nc:.38, fail:.10, fstat:{fat:7}, ftxt:'수상한 기운 탓에 피로 +7', forbidden:true },
 
-  /* FREE */
   { id:'self_practice', type:'free', unlock:1, icon:'🔮', name:'자율 연습', stat:{mana:1}, fat:8, gold:0, npc:null, nc:0, fail:.06, fstat:{mana:-1}, ftxt:'마법식이 꼬였다. 마력 -1' },
   { id:'note_review', type:'free', unlock:1, icon:'📝', name:'복습 정리', stat:{know:1}, fat:6, gold:0, npc:null, nc:0, fail:.04, fstat:{}, ftxt:'정리가 더뎠다.' },
   { id:'walk', type:'free', unlock:1, icon:'🚶', name:'산책', stat:{social:1}, fat:-8, gold:0, npc:'saren', nc:.14, fail:0, fstat:{}, ftxt:'' },
@@ -936,6 +955,8 @@ let _lvNpc = null;
 let _lvMark = null;
 
 let bgmFallbackHooked = false;
+let bgmEnabled = true;
+let bgmUserPaused = false;
 
 function baseCounts() {
   return {
@@ -1120,20 +1141,72 @@ function getLoveStage(h) {
 function getBgm() {
   return document.getElementById('bgm');
 }
-async function tryStartBgm() {
+
+function updateBgmButton(isPlaying) {
+  const btn = document.getElementById('bgm-toggle');
+  if (!btn) return;
+
+  if (bgmEnabled && isPlaying) {
+    btn.textContent = '🔊 BGM ON';
+    btn.classList.remove('off');
+  } else {
+    btn.textContent = '🔇 BGM OFF';
+    btn.classList.add('off');
+  }
+}
+
+async function tryStartBgm(force = false) {
   const bgm = getBgm();
   if (!bgm) return false;
+  if ((!bgmEnabled || bgmUserPaused) && !force) {
+    updateBgmButton(false);
+    return false;
+  }
+
   bgm.volume = 0.35;
+  bgm.muted = false;
+
   try {
     await bgm.play();
     unhookBgmFallback();
+    updateBgmButton(true);
     return true;
   } catch (err) {
     hookBgmFallback();
+    updateBgmButton(false);
     return false;
   }
 }
-function bgmFallbackHandler() { tryStartBgm(); }
+
+function stopBgm() {
+  const bgm = getBgm();
+  if (!bgm) return;
+  bgm.pause();
+  updateBgmButton(false);
+}
+
+async function toggleBgm() {
+  const bgm = getBgm();
+  if (!bgm) return;
+
+  if (!bgm.paused && !bgm.ended) {
+    bgmEnabled = false;
+    bgmUserPaused = true;
+    stopBgm();
+    return;
+  }
+
+  bgmEnabled = true;
+  bgmUserPaused = false;
+  await tryStartBgm(true);
+}
+
+function bgmFallbackHandler() {
+  if (bgmEnabled && !bgmUserPaused) {
+    tryStartBgm();
+  }
+}
+
 function hookBgmFallback() {
   if (bgmFallbackHooked) return;
   bgmFallbackHooked = true;
@@ -1141,6 +1214,7 @@ function hookBgmFallback() {
   document.addEventListener('keydown', bgmFallbackHandler, true);
   document.addEventListener('touchstart', bgmFallbackHandler, true);
 }
+
 function unhookBgmFallback() {
   if (!bgmFallbackHooked) return;
   bgmFallbackHooked = false;
@@ -1208,6 +1282,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.getElementById('date-cancel-btn').addEventListener('click', closeDateModal);
   document.getElementById('npc-close-btn').addEventListener('click', closeNpcModal);
+  document.getElementById('bgm-toggle').addEventListener('click', toggleBgm);
 
   ['ev-modal','npc-modal','date-modal'].forEach(id => {
     document.getElementById(id).addEventListener('click', e => {
@@ -1219,6 +1294,15 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   tryStartBgm();
+  window.addEventListener('load', () => {
+    tryStartBgm();
+    setTimeout(() => tryStartBgm(), 250);
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && bgmEnabled && !bgmUserPaused) {
+      tryStartBgm();
+    }
+  });
 });
 
 /* Create */
