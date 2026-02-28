@@ -58,18 +58,17 @@ body{
 .btn:active{transform:translateY(0)}
 .btn:disabled{opacity:.35;cursor:default;transform:none}
 .btn-sm{padding:8px 16px;font-size:8px}
-.btn-xs{padding:4px 10px;font-size:7px}
+.btn-xs{padding:6px 10px;font-size:7px}
 .btn-red{border-color:var(--red);color:var(--red);text-shadow:0 0 6px var(--red)}
 .btn-red:hover{box-shadow:0 4px 16px rgba(255,80,80,.25)}
 .btn-pink{border-color:var(--pink);color:var(--pink);text-shadow:0 0 6px var(--pink)}
 .btn-pink:hover{box-shadow:0 4px 16px rgba(255,80,160,.25)}
 
 .bgm-row{
-  margin-top:10px;
+  margin-top:12px;
   display:flex;
   justify-content:center;
 }
-
 #bgm-toggle{
   position:static;
   z-index:auto;
@@ -150,6 +149,7 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
   cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:background .1s
 }
 .sbtn:hover{background:var(--bdr2)}
+.alloc-tools{display:flex;justify-content:flex-end;margin:-2px 0 10px}
 
 /* HUD */
 .hud{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:9px 13px;margin-bottom:10px}
@@ -352,9 +352,17 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
         <div class="sec-ttl">이름 입력</div>
         <input type="text" class="name-inp" id="char-name" placeholder="이름을 입력하세요" maxlength="10">
         <hr class="dv" style="margin:13px 0">
+
         <div class="sec-ttl">능력치 배분 (포인트: 20)</div>
+        <div class="alloc-tools">
+          <button class="btn btn-xs" id="random-stat-btn" type="button">🎲 랜덤 배분</button>
+        </div>
         <div id="stat-alloc"></div>
-        <div style="text-align:right;margin-top:5px" class="px8">남은 포인트: <span id="pts" style="color:var(--grn)">20</span></div>
+
+        <div style="text-align:right;margin-top:5px" class="px8">
+          남은 포인트: <span id="pts" style="color:var(--grn)">20</span>
+        </div>
+
         <hr class="dv" style="margin:13px 0">
         <div style="display:flex;gap:8px;justify-content:center">
           <button class="btn btn-sm" id="back-btn">← 뒤로</button>
@@ -415,10 +423,6 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
           <div id="badges"></div>
         </div>
 
-        <div class="bgm-row">
-          <button id="bgm-toggle" type="button" aria-label="BGM 토글">🔊 BGM ON</button>
-        </div>
-
         <div class="box pnl" style="margin-top:8px">
           <div class="pttl">✦ 상점</div>
           <div id="shop-list"></div>
@@ -459,6 +463,11 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
           <button class="btn btn-sm btn-pink" id="date-btn" style="display:none;width:100%;margin-top:6px">💕 데이트 신청</button>
         </div>
       </div>
+    </div>
+
+    <!-- BGM ROW : 게임 전체 그리드 아래 단독 배치 -->
+    <div class="bgm-row">
+      <button id="bgm-toggle" type="button" aria-label="BGM 토글">🔊 BGM ON</button>
     </div>
   </div>
 
@@ -1290,21 +1299,25 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('date-cancel-btn').addEventListener('click', closeDateModal);
   document.getElementById('npc-close-btn').addEventListener('click', closeNpcModal);
   document.getElementById('bgm-toggle').addEventListener('click', toggleBgm);
+  document.getElementById('random-stat-btn').addEventListener('click', randomizeAlloc);
 
   ['ev-modal','npc-modal','date-modal'].forEach(id => {
     document.getElementById(id).addEventListener('click', e => {
       if (e.target === e.currentTarget) document.getElementById(id).classList.remove('open');
     });
   });
+
   document.getElementById('lv-modal').addEventListener('click', e => {
     if (e.target === e.currentTarget) closeLvModal();
   });
 
   tryStartBgm();
+
   window.addEventListener('load', () => {
     tryStartBgm();
     setTimeout(() => tryStartBgm(), 250);
   });
+
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible' && bgmEnabled && !bgmUserPaused) {
       tryStartBgm();
@@ -1328,6 +1341,7 @@ function renderAlloc() {
     ['body','💪 체력','s-body'],
     ['social','💬 사교','s-soc']
   ];
+
   let h = '';
   for (const [k, lbl, cls] of defs) {
     const v = alloc[k];
@@ -1350,6 +1364,20 @@ function adj(k, d) {
   if (d < 0 && alloc[k] <= 1) return;
   alloc[k] += d;
   pts -= d;
+  renderAlloc();
+}
+
+function randomizeAlloc() {
+  alloc = { mana:5, know:5, body:5, social:5 };
+  pts = 20;
+
+  const keys = ['mana', 'know', 'body', 'social'];
+  for (let i = 0; i < 20; i++) {
+    const pick = keys[Math.floor(Math.random() * keys.length)];
+    alloc[pick] += 1;
+    pts -= 1;
+  }
+
   renderAlloc();
 }
 
