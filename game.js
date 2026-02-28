@@ -30,7 +30,10 @@ function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const next=document.getElementById(id);
   if(next) next.classList.add('active');
-  requestAnimationFrame(syncLayoutOffsets);
+  requestAnimationFrame(()=>{
+    syncLayoutOffsets();
+    toggleScrollTopButton();
+  });
 }
 
 function getYear(){return Math.ceil(G.turn/12)}
@@ -87,6 +90,20 @@ function syncLayoutOffsets(){
   const tabHeight=tabbar ? Math.ceil(tabbar.getBoundingClientRect().height) : 0;
   root.style.setProperty('--hud-offset', `${hudHeight}px`);
   root.style.setProperty('--tabbar-offset', `${tabHeight}px`);
+  toggleScrollTopButton();
+}
+
+function scrollToTopNow(){
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleScrollTopButton(){
+  const btn=document.getElementById('scroll-top-btn');
+  const gameScreen=document.getElementById('screen-game');
+  if(!btn || !gameScreen) return;
+  const shouldShow=gameScreen.classList.contains('active') && window.scrollY>220;
+  btn.classList.toggle('show', shouldShow);
+  btn.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
 }
 
 function getFocusableElements(scope){
@@ -185,6 +202,8 @@ function handleDelegatedClick(event){
     closeLvModal();
   }else if(action==='start-date'){
     startDate(trigger.dataset.npcId);
+  }else if(action==='scroll-top'){
+    scrollToTopNow();
   }
 }
 
@@ -687,7 +706,10 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('warn-cancel-btn').addEventListener('click',()=>closeWarnModal(false));
   document.getElementById('warn-ok-btn').addEventListener('click',()=>closeWarnModal(true));
   document.getElementById('bgm-toggle').addEventListener('click',toggleBgm);
+  document.getElementById('scroll-top-btn').addEventListener('click',scrollToTopNow);
   document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>setTab(btn.dataset.tab)));
 
+  window.addEventListener('scroll',toggleScrollTopButton,{passive:true});
   syncLayoutOffsets();
+  toggleScrollTopButton();
 });

@@ -93,10 +93,13 @@
         <div class="slot"><div class="slot-lbl">🌅 오전</div><div class="slot-val empty" id="slot-am">선택 안 함</div></div>
         <div class="slot"><div class="slot-lbl">🌆 오후</div><div class="slot-val empty" id="slot-pm">선택 안 함</div></div>
       </div>
-      <div class="preview-box">
-        <div class="preview-ttl">✦ 이번 달 예상 변화</div>
-        <div class="preview-main" id="preview-main">활동을 고르면 예상 변화가 표시돼요.</div>
-        <div class="preview-sub" id="preview-sub"></div>
+      <div class="preview-row">
+        <div class="preview-box">
+          <div class="preview-ttl">✦ 이번 달 예상 변화</div>
+          <div class="preview-main" id="preview-main">활동을 고르면 예상 변화가 표시돼요.</div>
+          <div class="preview-sub" id="preview-sub"></div>
+        </div>
+        <button class="btn next-month-btn" id="confirm-btn" type="button">다음 달 진행 →</button>
       </div>
       <div style="font-size:14px;color:var(--dim);margin-bottom:12px;line-height:1.9;word-break:keep-all">활동 선택 (오전 → 오후 순). 데이트는 오후 슬롯을 사용해요.</div>
       
@@ -104,7 +107,6 @@
       
       <button class="btn btn-pink" id="date-btn-main" style="display:none;width:100%;margin-bottom:12px;font-size:14px;padding:16px;">💕 데이트 신청 (오후 활동)</button>
       
-      <button class="btn" style="width:100%;font-size:14px;padding:16px;" id="confirm-btn">다음 달 진행 →</button>
     </div>
   </div>
 
@@ -152,6 +154,8 @@
     <button class="tab-btn" data-tab="status">내 정보</button>
   </div>
 </div>
+
+<button id="scroll-top-btn" class="scroll-top-btn" type="button" aria-label="맨 위로 이동" aria-hidden="true">↑<span>위로</span></button>
 
 <div id="screen-ending" class="screen screen-flex">
   <div class="en-ico" id="en-ico">✨</div>

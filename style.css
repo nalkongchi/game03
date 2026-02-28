@@ -93,11 +93,17 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:14px 0}
 .slot-lbl{font-family:var(--px);font-size:9px;color:var(--dim);margin-bottom:6px}
 .slot-val{font-size:14px;color:var(--silver);line-height:1.7;min-height:44px}
 .slot-val.empty{color:var(--dim)}
-.preview-box{padding:12px;border:1px solid var(--bdr);background:rgba(16,14,34,.9);margin-bottom:12px}
+.preview-row{display:grid;grid-template-columns:minmax(0,1fr) 128px;gap:10px;margin-bottom:12px;align-items:stretch}
+.preview-box{padding:12px;border:1px solid var(--bdr);background:rgba(16,14,34,.9);margin-bottom:0;min-width:0}
 .preview-ttl{font-family:var(--px);font-size:10px;color:var(--know);margin-bottom:10px}
 .preview-main{font-size:14px;line-height:1.8;color:var(--silver)}
 .preview-sub{font-size:13px;line-height:1.8;color:var(--dim);margin-top:8px}
 .preview-warn{color:var(--ora)}
+.next-month-btn{width:100%;min-height:100%;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;padding:14px 10px;line-height:1.7;word-break:keep-all}
+.scroll-top-btn{position:fixed;right:16px;bottom:calc(var(--tabbar-offset) + 18px);z-index:75;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:56px;height:56px;border:1px solid var(--gold);background:rgba(16,14,34,.96);color:var(--gold);font-family:var(--px);font-size:12px;cursor:pointer;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .18s ease, transform .18s ease, box-shadow .18s ease;box-shadow:0 0 0 rgba(0,0,0,0)}
+.scroll-top-btn span{font-size:8px;line-height:1.2}
+.scroll-top-btn.show{opacity:1;pointer-events:auto;transform:translateY(0);box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.scroll-top-btn:hover{box-shadow:0 0 12px rgba(232,184,48,.3)}
 
 /* 카테고리 (아코디언) UI - 크기 대폭 확대 */
 .cat-wrap { margin-bottom: 14px; }
@@ -202,5 +208,8 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:14px 0}
   .hd-name{max-width:88px;font-size:11px}
   .hd-gold{font-size:11px}
   .m-txt,.modal-desc{font-size:15px}
+  .preview-row{grid-template-columns:minmax(0,1fr) 112px}
+  .next-month-btn{font-size:12px;padding:12px 8px}
+  .scroll-top-btn{right:12px;width:52px;height:52px}
   .cat-body{grid-template-columns:1fr 1fr}
 }
