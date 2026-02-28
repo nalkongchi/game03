@@ -96,16 +96,31 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
 .preview-main{font-size:13px;line-height:1.8;color:var(--silver)}
 .preview-sub{font-size:12px;line-height:1.8;color:var(--dim);margin-top:6px}
 .preview-warn{color:var(--ora)}
-.ag{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
-@media(min-width:740px){.ag{grid-template-columns:repeat(3,1fr)}}
+
+/* 카테고리 (아코디언) UI */
+.cat-wrap { margin-bottom: 12px; }
+.cat-head { padding: 8px 10px; font-family: var(--px); font-size: 9px; color: var(--silver); border-left: 3px solid var(--bdr2); background: rgba(94, 68, 170, .12); cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+.cat-head:hover { background: rgba(94, 68, 170, .22); }
+.cat-head::after { content: '▼'; font-size: 8px; transition: transform 0.2s; color: var(--dim); }
+.cat-head.collapsed::after { transform: rotate(-90deg); }
+.cat-body { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 8px; }
+@media(min-width: 740px) { .cat-body { grid-template-columns: repeat(3, 1fr); } }
+.cat-body.collapsed { display: none; }
+
+/* 활동 버튼 UI */
 .ab{padding:10px 8px;background:var(--bg2);border:1px solid var(--bdr);color:var(--text);cursor:pointer;font-family:var(--sr);text-align:center;transition:all .12s;line-height:1.4}
 .ab:hover{background:#19133a;border-color:var(--bdr2)}
 .ab.sel{border-color:var(--mana);background:#1c1050}
 .ab.dis{opacity:.45;cursor:not-allowed}
 .ai{font-size:19px;display:block;margin-bottom:4px}
 .an{font-size:14px;display:block;line-height:1.45}
-.ac{font-size:12px;color:var(--dim);display:block;margin-top:4px;line-height:1.7}
-.cat-head{grid-column:1/-1;padding:5px 7px;font-family:var(--px);font-size:8px;color:var(--silver);border-left:3px solid var(--bdr2);background:rgba(94,68,170,.12)}
+.ac{font-size:12px;color:var(--dim);display:block;margin-top:5px;line-height:1.7}
+
+/* 스탯 증감 색상 포맷팅 */
+.c-pos { color: var(--grn); font-weight: 600; }
+.c-neg { color: var(--red); font-weight: 600; }
+.c-neu { color: var(--dim); }
+.ac span, .preview-main span { display: inline-block; margin-right: 6px; }
 
 .np{padding:12px}
 .me-card{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border:1px solid var(--bdr);cursor:pointer;margin-bottom:10px}
@@ -182,7 +197,7 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
   .hd-name{max-width:88px;font-size:10px}
   .hd-gold{font-size:10px}
   .m-txt,.modal-desc{font-size:14px}
-  .ag{grid-template-columns:1fr 1fr}
+  .cat-body{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -274,7 +289,7 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
         <div class="preview-sub" id="preview-sub"></div>
       </div>
       <div style="font-size:13px;color:var(--dim);margin-bottom:8px;line-height:1.9;word-break:keep-all">활동 선택 (오전 → 오후 순). 데이트는 오후 슬롯을 사용해요.</div>
-      <div class="ag" id="act-grid"></div>
+      <div id="act-grid"></div>
       <button class="btn" style="width:100%" id="confirm-btn">다음 달 →</button>
     </div>
   </div>
@@ -474,14 +489,14 @@ const SHOP=[
 ];
 
 const RANDS=[
-{ico:'⛈️',ttl:'폭풍우',txt:'폭풍우로 야간 수련이 완전히 꼬였다.',eff:{mana:-2,fat:8},tags:['마력 −2','피로 +8']},
+{ico:'⛈️',ttl:'폭풍우',txt:'폭풍우로 야간 수련이 완전히 꼬였다.',eff:{mana:-2,fat:8},tags:['마력 -2','피로 +8']},
 {ico:'🌟',ttl:'마법 각성',txt:'수련 중 갑자기 마력이 솟구쳤다!',eff:{mana:3},tags:['마력 +3']},
 {ico:'📜',ttl:'고서 발견',txt:'먼지 쌓인 서고에서 귀한 마법 고서를 발견했다.',eff:{know:3},tags:['지식 +3']},
 {ico:'🐉',ttl:'드래곤 소동',txt:'왕국 외곽 소동으로 예정이 꼬였다.',eff:{fat:18},tags:['피로 +18']},
 {ico:'🍀',ttl:'행운의 날',txt:'오늘은 이상하게 모든 게 잘 풀린다.',eff:{mana:1,know:1,body:1,social:1},tags:['전 스탯 +1']},
-{ico:'💸',ttl:'세금 징수',txt:'예상치 못한 왕실 세금이 부과됐다.',eff:{gold:-22},tags:['골드 −22G']},
-{ico:'🌸',ttl:'왕국 축제',txt:'잠시 수련을 잊고 축제를 즐겼다.',eff:{social:2,fat:-8},tags:['사교 +2','피로 −8']},
-{ico:'🌡️',ttl:'병치레',txt:'몸 상태가 좋지 않아 회복에 시간을 썼다.',eff:{body:-2,fat:20,gold:-10},tags:['체력 −2','피로 +20','골드 −10G']},
+{ico:'💸',ttl:'세금 징수',txt:'예상치 못한 왕실 세금이 부과됐다.',eff:{gold:-22},tags:['골드 -22G']},
+{ico:'🌸',ttl:'왕국 축제',txt:'잠시 수련을 잊고 축제를 즐겼다.',eff:{social:2,fat:-8},tags:['사교 +2','피로 -8']},
+{ico:'🌡️',ttl:'병치레',txt:'몸 상태가 좋지 않아 회복에 시간을 썼다.',eff:{body:-2,fat:20,gold:-10},tags:['체력 -2','피로 +20','골드 -10G']},
 {ico:'🎖️',ttl:'칭찬장',txt:'이번 달 성실함을 인정받아 포상금을 받았다.',eff:{gold:18,know:1},tags:['골드 +18G','지식 +1']}
 ];
 
@@ -495,193 +510,39 @@ jaiden:[{req:25,fat:9,h:8,txt:'제이든이 투덜거리며 같이 식사하자�
 oliver:[{req:25,fat:7,h:7,txt:'올리버와 도서관 창가에 나란히 앉아 공부했다. 책보다 서로에게 더 신경 쓰이는 순간이 늘었다.',choices:['집중한다','조용히 웃는다'],res:[{h:4,txt:'올리버는 평소보다 더 가까이 노트를 밀어주었다.'},{h:6,txt:'올리버가 시선을 피하다가 작게 따라 웃었다.'}]},{req:50,fat:8,h:10,txt:'목적 없는 산책 중 올리버가 한참 침묵하다 말했다. "...너랑 있으면 계획이 틀어져도 괜찮아."'},{req:75,fat:8,h:14,txt:'올리버는 당신 손끝을 조심스럽게 잡았다. "이 감정은 비효율적이지만, 포기할 생각은 없어."'}]
 };
 
+// --- 31종 최신 엔딩 풀세트 ---
 const MAIN_ENDINGS = [
-  // ----------------------------------------------------
-  // 1순위: 강제 배드 엔딩 (스탯이 아무리 높아도 우선 판정)
-  // ----------------------------------------------------
-  {
-    id:'burnout', ico:'🥀', ttl:'번아웃한 수련생',
-    cond:s => s.burnout >= 3 || (s.fatigue >= 85 && s.freeCount < 10),
-    txt:'당신은 누구보다 열심히 달렸지만, 끝내 자신을 돌보지 못했다. 손에 쥔 것은 많았지만 마음과 몸은 완전히 지쳐버렸다.'
-  },
-  {
-    id:'debt', ico:'💸', ttl:'빚더미 수련생',
-    cond:s => s.debt >= 5,
-    txt:'수업과 사교를 쫓는 동안 지갑은 텅 비었고, 결국 빚쟁이들을 피해 아카데미를 야반도주해야 했다. 뼈아픈 경제적 교훈을 얻었다.'
-  },
-
-  // ----------------------------------------------------
-  // 2순위: 최상위 & 히든 엔딩 (극한의 조건)
-  // ----------------------------------------------------
-  {
-    id:'legend', ico:'✨', ttl:'전설의 대마법사',
-    cond:s => s.mana >= 65 && s.know >= 65 && s.body >= 42 && s.social >= 42 && s.scholarship >= 2,
-    txt:'네 분야를 가리지 않고 빛난 당신은 세대에 한 번 나올까 말까 한 천재로 기록되었다. 수백 년이 지나도 그 이름은 전설로 남는다.'
-  },
-  {
-    id:'forbidden', ico:'🌑', ttl:'금지된 마도의 계승자',
-    cond:s => s.forbidden >= 6 && s.mana >= 50 && s.npc.vain >= 55,
-    txt:'당신은 금지된 지식의 매력을 끝내 외면하지 않았다. 사람들은 두려워했지만, 당신은 누구보다 깊은 심연의 진실에 닿았다.'
-  },
-  {
-    id:'fire_mage', ico:'🏖️', ttl:'조기 은퇴 마법사',
-    cond:s => s.gold >= 350 && s.debt === 0,
-    txt:'수련보다 자본의 복리 효과를 일찍 깨달았다. 마법 아이템 판매 수입을 철저히 분산 투자해 46세가 되기도 전에 완벽한 조기 은퇴(FIRE)를 달성하고 유유자적한 삶을 즐긴다.'
-  },
-
-  // ----------------------------------------------------
-  // 3순위: 상위 직업 엔딩 (주요 스탯 60 이상)
-  // ----------------------------------------------------
-  {
-    id:'archmage', ico:'👑', ttl:'왕실 수석 마법사',
-    cond:s => s.mana >= 60 && s.know >= 60,
-    txt:'5년의 수련을 마친 당신은 왕국 역사상 가장 어린 수석 마법사로 임명되었다. 왕실은 당신의 이름을 가장 명예로운 공식 기록에 남겼다.'
-  },
-  {
-    id:'battle', ico:'⚔️', ttl:'전투 마도사단 단장',
-    cond:s => s.mana >= 55 && s.body >= 60,
-    txt:'마법과 전투를 완벽히 겸비한 당신은 왕국 최정예 전투 마도사단의 지휘를 맡았다. 전장에서는 당신의 검광 하나가 승부를 갈랐다.'
-  },
-  {
-    id:'professor', ico:'🎓', ttl:'아카데미 교수',
-    cond:s => s.know >= 65 && s.classCount >= 26,
-    txt:'당신은 아카데미에 남아 차세대 마법사들을 가르치게 되었다. 깐깐하지만 확실한 강의 덕분에 학생들은 당신의 수업을 듣기 위해 길게 줄을 섰다.'
-  },
-  {
-    id:'diplomat', ico:'🕊️', ttl:'궁정 외교 마법사',
-    cond:s => s.social >= 60 && s.know >= 50,
-    txt:'마법만큼이나 말의 힘을 이해한 당신은 여러 왕국 사이를 오가며 외교를 이끌었다. 거대한 전쟁을 막아낸 것은 종종 당신의 우아한 찻자리 한 번이었다.'
-  },
-  {
-    id:'alchemist', ico:'⚗️', ttl:'대연금술사',
-    cond:s => s.know >= 55 && s.mana >= 50 && s.alchemyCount >= 12,
-    txt:'연금술에 깊이 몰두한 당신은 아무도 상상하지 못한 새로운 조합법을 잇달아 만들어냈다. 귀족과 상인들이 당신의 공방 앞에 금화를 들고 대기한다.'
-  },
-  {
-    id:'merchant', ico:'💰', ttl:'자수성가한 마법 상인',
-    cond:s => s.gold >= 260 && s.jobCount >= 26 && s.social >= 40,
-    txt:'아르바이트와 거래를 발판 삼아 자신만의 거대한 상단을 만들었다. 마법사이자 타고난 사업가로서, 당신의 샵은 곧 왕국 최고의 핫플레이스가 되었다.'
-  },
-
-  // ----------------------------------------------------
-  // 4순위: 이색 상위 직업 & 특수 활동 위주
-  // ----------------------------------------------------
-  {
-    id:'summoner', ico:'🧚', ttl:'정령 소환사',
-    cond:s => s.mana >= 55 && s.social >= 50,
-    txt:'사람뿐만 아니라 정령과도 능숙하게 교감한 당신. 거대한 자연의 힘을 자유자재로 다루며 가장 위대한 정령 소환사로 거듭났다.'
-  },
-  {
-    id:'minister', ico:'🏛️', ttl:'마법부 장관',
-    cond:s => s.social >= 65 && s.mana >= 40,
-    txt:'압도적인 인맥과 정치력으로 마법사 사회의 정점에 올랐다. 실무 마법보다 행정과 권력을 다루는 데 천부적인 재능을 꽃피웠다.'
-  },
-  {
-    id:'illusionist', ico:'🎨', ttl:'환영 예술가',
-    cond:s => s.mana >= 50 && s.social >= 50 && (s.counts?.byAct?.self_practice >= 10),
-    txt:'빈 캔버스에 그림을 그리듯 허공에 환상적인 마법의 풍경을 생생하게 구현해냈다. 당신의 혁신적인 환영 작품들은 귀족들 사이에서 엄청난 유행이 되었다.'
-  },
-  {
-    id:'botanist', ico:'🌱', ttl:'마법 생태학자',
-    cond:s => s.know >= 45 && s.body >= 45 && (s.counts?.byAct?.herb_tea_circle >= 10),
-    txt:'마법으로 치명적인 병해충을 방제하고, 원원종 99.0%의 완벽한 순도를 자랑하는 마법 종자를 개량하는 데 성공했다. 당신은 왕국 농업의 판도를 바꾼 전설이 되었다.'
-  },
-  {
-    id:'royal_tutor', ico:'🧐', ttl:'왕실 가정교사',
-    cond:s => s.know >= 55 && s.social >= 55,
-    txt:'전투보다는 지식을 부드럽게 전달하고 귀족들과 교류하는 능력을 인정받아, 콧대 높은 왕족들의 전담 스승으로 초빙되었다.'
-  },
-  {
-    id:'muscle_wizard', ico:'🏋️', ttl:'근육 마법사',
-    cond:s => s.body >= 70 && s.mana <= 25,
-    txt:'"마력이 부족하다면 물리력으로 해결한다!" 당신은 아카데미 역사상 전무후무한 완력을 자랑하며 지팡이 대신 맨손으로 오크를 때려잡는 근육 마법사로 졸업했다.'
-  },
-  {
-    id:'healer', ico:'🩹', ttl:'신성 치유사',
-    cond:s => s.know >= 50 && s.body >= 50 && (s.counts?.byAct?.apothecary_job >= 15),
-    txt:'전장이 아닌 병동에서 마법으로 사람을 살리는 길을 택했다. 당신의 헌신적인 치유 마법은 수많은 생명을 구하며 성녀(성자)로 추앙받게 만들었다.'
-  },
-
-  // ----------------------------------------------------
-  // 5순위: 아르바이트 특화 직업 (해당 알바 15회 이상)
-  // ----------------------------------------------------
-  {
-    id:'job_apothecary', ico:'🌿', ttl:'마을의 명의',
-    cond:s => (s.counts?.byAct?.apothecary_job >= 15) && s.know >= 40,
-    txt:'마법 수련보다 약초와 처방에 더 깊은 재능을 보였다. 엘리아스의 약방을 물려받아 마을 사람들의 건강을 다정하게 책임지는 명의가 되었다.'
-  },
-  {
-    id:'job_delivery', ico:'📦', ttl:'마법 물류왕',
-    cond:s => (s.counts?.byAct?.market_delivery >= 15) && s.body >= 40,
-    txt:'골목을 누비던 배달 솜씨에 공간 이동 마법을 결합했다. 당신은 왕국 전체의 유통망을 꽉 잡은 대륙 최고의 거대 물류 길드장이 되었다.'
-  },
-  {
-    id:'job_library', ico:'📚', ttl:'대도서관 관장',
-    cond:s => (s.counts?.byAct?.library_sorting >= 15) && s.know >= 45,
-    txt:'먼지 쌓인 고서들과 가장 많은 시간을 보낸 당신. 아카데미의 서고를 넘어 왕립 대도서관의 모든 책을 관리하는 총괄 관장이 되었다.'
-  },
-  {
-    id:'job_alchemy', ico:'🔬', ttl:'수석 연금 연구원',
-    cond:s => (s.counts?.byAct?.alchemy_assist >= 15) && s.mana >= 40,
-    txt:'매번 폭발하는 연금 솥을 꿋꿋이 수습하던 당신은 어느새 연금술의 달인이 되어, 왕립 공방을 이끄는 수석 연구원으로 발탁되었다.'
-  },
-  {
-    id:'job_guard', ico:'🛡️', ttl:'성벽 수비대장',
-    cond:s => (s.counts?.byAct?.wall_guard >= 15) && s.body >= 45,
-    txt:'수련보다 성벽 위에서 밤바람을 맞은 날이 더 많았다. 그 묵묵한 성실함과 체력을 인정받아 수도의 외곽 방어를 총괄하는 수비대장이 되었다.'
-  },
-  {
-    id:'job_banquet', ico:'🍷', ttl:'왕실 수석 시종장',
-    cond:s => (s.counts?.byAct?.banquet_service >= 15) && s.social >= 45,
-    txt:'수많은 귀족들 사이에서 완벽한 눈치와 예법을 마스터했다. 마법사로서의 길 대신 왕실의 모든 대소사를 매끄럽게 총괄하는 수석 시종장이 되었다.'
-  },
-
-  // ----------------------------------------------------
-  // 6순위: 언더월드 & 방랑
-  // ----------------------------------------------------
-  {
-    id:'dark_merchant', ico:'🃏', ttl:'어둠의 마도 상인',
-    cond:s => s.forbidden >= 4 && s.gold >= 200,
-    txt:'합법적인 상단 대신 왕국의 그늘을 택했다. 뒷골목에서 위험하고 진귀한 금지된 마법 물품들을 은밀하게 밀매하며 거물로 성장했다.'
-  },
-  {
-    id:'mercenary', ico:'⛺', ttl:'떠돌이 마법 용병',
-    cond:s => s.body >= 55 && s.gold <= 50,
-    txt:'실력은 출중하지만 모아둔 돈이 없어 전장을 떠돌게 되었다. 거친 용병단에 합류해 하루하루 의뢰를 해결하며 자유롭고도 위태로운 삶을 산다.'
-  },
-  {
-    id:'wanderer', ico:'🗺️', ttl:'자유로운 방랑자',
-    cond:s => s.freeCount >= 25 && s.debt === 0,
-    txt:'명예나 돈에 얽매이지 않고 발길 닿는 대로 유랑하는 길을 택했다. 새로운 마을에 닿을 때마다 고향에 안부 엽서를 띄우며 세상을 유유자적 탐험한다.'
-  },
-
-  // ----------------------------------------------------
-  // 7순위: 개그 & 일상 계열
-  // ----------------------------------------------------
-  {
-    id:'social_butterfly', ico:'🎉', ttl:'아카데미 파티광',
-    cond:s => s.social >= 70 && s.know <= 30,
-    txt:'공부는 뒷전이고 5년 내내 축제와 다과회만 쫓아다녔다. 매일 밤을 론네펠트 홍차와 동파육이 끊이지 않는 연회로 채운 끝에, 마법 실력은 바닥이지만 인맥 하나는 왕국 최고인 셀럽이 되었다.'
-  },
-  {
-    id:'slacker', ico:'🛌', ttl:'게으른 백수',
-    cond:s => (s.counts?.byAct?.nap >= 20) && (s.mana + s.know + s.body + s.social) <= 100,
-    txt:'아카데미에 침대를 하나 더 둔 것처럼 잠만 잤다. 결국 치열한 마법사의 길을 포기하고 따뜻한 고향으로 돌아가 한없이 늘어지는 일상을 택했다.'
-  },
-
-  // ----------------------------------------------------
-  // 8순위: 기본 엔딩 (안전망)
-  // ----------------------------------------------------
-  {
-    id:'normal', ico:'📘', ttl:'무난한 졸업생',
-    cond:s => (s.mana + s.know + s.body + s.social) >= 110,
-    txt:'눈부신 전설은 아니더라도, 당신은 끈기 있게 5년의 수련을 완주했다. 이제 아카데미를 떠나 한 명의 어엿한 마법사로서 진짜 삶을 시작한다.'
-  },
-  {
-    id:'bad', ico:'💀', ttl:'유급 수련생',
-    cond:() => true,
-    txt:'5년이 지났지만 정식 마법사가 되기엔 실력이 조금 부족했다. 하지만 완전히 끝난 것은 아니다. 다시 시작한다면 이번엔 더 멀리 갈 수 있을 것이다.'
-  }
+  { id:'burnout', ico:'🥀', ttl:'번아웃한 수련생', cond:s => s.burnout >= 3 || (s.fatigue >= 85 && s.freeCount < 10), txt:'당신은 누구보다 열심히 달렸지만, 끝내 자신을 돌보지 못했다. 손에 쥔 것은 많았지만 마음과 몸은 완전히 지쳐버렸다.' },
+  { id:'debt', ico:'💸', ttl:'빚더미 수련생', cond:s => s.debt >= 5, txt:'수업과 사교를 쫓는 동안 지갑은 텅 비었고, 결국 빚쟁이들을 피해 아카데미를 야반도주해야 했다. 뼈아픈 경제적 교훈을 얻었다.' },
+  { id:'legend', ico:'✨', ttl:'전설의 대마법사', cond:s => s.mana >= 65 && s.know >= 65 && s.body >= 42 && s.social >= 42 && s.scholarship >= 2, txt:'네 분야를 가리지 않고 빛난 당신은 세대에 한 번 나올까 말까 한 천재로 기록되었다. 수백 년이 지나도 그 이름은 전설로 남는다.' },
+  { id:'forbidden', ico:'🌑', ttl:'금지된 마도의 계승자', cond:s => s.forbidden >= 6 && s.mana >= 50 && s.npc.vain >= 55, txt:'당신은 금지된 지식의 매력을 끝내 외면하지 않았다. 사람들은 두려워했지만, 당신은 누구보다 깊은 심연의 진실에 닿았다.' },
+  { id:'fire_mage', ico:'🏖️', ttl:'조기 은퇴 마법사', cond:s => s.gold >= 350 && s.debt === 0, txt:'수련보다 자본의 복리 효과를 일찍 깨달았다. 마법 아이템 판매 수입을 철저히 분산 투자해 46세가 되기도 전에 완벽한 조기 은퇴(FIRE)를 달성하고 유유자적한 삶을 즐긴다.' },
+  { id:'archmage', ico:'👑', ttl:'왕실 수석 마법사', cond:s => s.mana >= 60 && s.know >= 60, txt:'5년의 수련을 마친 당신은 왕국 역사상 가장 어린 수석 마법사로 임명되었다. 왕실은 당신의 이름을 가장 명예로운 공식 기록에 남겼다.' },
+  { id:'battle', ico:'⚔️', ttl:'전투 마도사단 단장', cond:s => s.mana >= 55 && s.body >= 60, txt:'마법과 전투를 완벽히 겸비한 당신은 왕국 최정예 전투 마도사단의 지휘를 맡았다. 전장에서는 당신의 검광 하나가 승부를 갈랐다.' },
+  { id:'professor', ico:'🎓', ttl:'아카데미 교수', cond:s => s.know >= 65 && s.classCount >= 26, txt:'당신은 아카데미에 남아 차세대 마법사들을 가르치게 되었다. 깐깐하지만 확실한 강의 덕분에 학생들은 당신의 수업을 듣기 위해 길게 줄을 섰다.' },
+  { id:'diplomat', ico:'🕊️', ttl:'궁정 외교 마법사', cond:s => s.social >= 60 && s.know >= 50, txt:'마법만큼이나 말의 힘을 이해한 당신은 여러 왕국 사이를 오가며 외교를 이끌었다. 거대한 전쟁을 막아낸 것은 종종 당신의 우아한 찻자리 한 번이었다.' },
+  { id:'alchemist', ico:'⚗️', ttl:'대연금술사', cond:s => s.know >= 55 && s.mana >= 50 && s.alchemyCount >= 12, txt:'연금술에 깊이 몰두한 당신은 아무도 상상하지 못한 새로운 조합법을 잇달아 만들어냈다. 귀족과 상인들이 당신의 공방 앞에 금화를 들고 대기한다.' },
+  { id:'merchant', ico:'💰', ttl:'자수성가한 마법 상인', cond:s => s.gold >= 260 && s.jobCount >= 26 && s.social >= 40, txt:'아르바이트와 거래를 발판 삼아 자신만의 거대한 상단을 만들었다. 마법사이자 타고난 사업가로서, 당신의 샵은 곧 왕국 최고의 핫플레이스가 되었다.' },
+  { id:'summoner', ico:'🧚', ttl:'정령 소환사', cond:s => s.mana >= 55 && s.social >= 50, txt:'사람뿐만 아니라 정령과도 능숙하게 교감한 당신. 거대한 자연의 힘을 자유자재로 다루며 가장 위대한 정령 소환사로 거듭났다.' },
+  { id:'minister', ico:'🏛️', ttl:'마법부 장관', cond:s => s.social >= 65 && s.mana >= 40, txt:'압도적인 인맥과 정치력으로 마법사 사회의 정점에 올랐다. 실무 마법보다 행정과 권력을 다루는 데 천부적인 재능을 꽃피웠다.' },
+  { id:'illusionist', ico:'🎨', ttl:'환영 예술가', cond:s => s.mana >= 50 && s.social >= 50 && (s.counts?.byAct?.self_practice >= 10), txt:'빈 캔버스에 그림을 그리듯 허공에 환상적인 마법의 풍경을 생생하게 구현해냈다. 당신의 혁신적인 환영 작품들은 귀족들 사이에서 엄청난 유행이 되었다.' },
+  { id:'botanist', ico:'🌱', ttl:'마법 생태학자', cond:s => s.know >= 45 && s.body >= 45 && (s.counts?.byAct?.herb_tea_circle >= 10), txt:'마법으로 치명적인 병해충을 방제하고, 원원종 99.0%의 완벽한 순도를 자랑하는 마법 종자를 개량하는 데 성공했다. 당신은 왕국 농업의 판도를 바꾼 전설이 되었다.' },
+  { id:'royal_tutor', ico:'🧐', ttl:'왕실 가정교사', cond:s => s.know >= 55 && s.social >= 55, txt:'전투보다는 지식을 부드럽게 전달하고 귀족들과 교류하는 능력을 인정받아, 콧대 높은 왕족들의 전담 스승으로 초빙되었다.' },
+  { id:'muscle_wizard', ico:'🏋️', ttl:'근육 마법사', cond:s => s.body >= 70 && s.mana <= 25, txt:'"마력이 부족하다면 물리력으로 해결한다!" 당신은 아카데미 역사상 전무후무한 완력을 자랑하며 지팡이 대신 맨손으로 오크를 때려잡는 근육 마법사로 졸업했다.' },
+  { id:'healer', ico:'🩹', ttl:'신성 치유사', cond:s => s.know >= 50 && s.body >= 50 && (s.counts?.byAct?.apothecary_job >= 15), txt:'전장이 아닌 병동에서 마법으로 사람을 살리는 길을 택했다. 당신의 헌신적인 치유 마법은 수많은 생명을 구하며 성녀(성자)로 추앙받게 만들었다.' },
+  { id:'job_apothecary', ico:'🌿', ttl:'마을의 명의', cond:s => (s.counts?.byAct?.apothecary_job >= 15) && s.know >= 40, txt:'마법 수련보다 약초와 처방에 더 깊은 재능을 보였다. 엘리아스의 약방을 물려받아 마을 사람들의 건강을 다정하게 책임지는 명의가 되었다.' },
+  { id:'job_delivery', ico:'📦', ttl:'마법 물류왕', cond:s => (s.counts?.byAct?.market_delivery >= 15) && s.body >= 40, txt:'골목을 누비던 배달 솜씨에 공간 이동 마법을 결합했다. 당신은 왕국 전체의 유통망을 꽉 잡은 대륙 최고의 거대 물류 길드장이 되었다.' },
+  { id:'job_library', ico:'📚', ttl:'대도서관 관장', cond:s => (s.counts?.byAct?.library_sorting >= 15) && s.know >= 45, txt:'먼지 쌓인 고서들과 가장 많은 시간을 보낸 당신. 아카데미의 서고를 넘어 왕립 대도서관의 모든 책을 관리하는 총괄 관장이 되었다.' },
+  { id:'job_alchemy', ico:'🔬', ttl:'수석 연금 연구원', cond:s => (s.counts?.byAct?.alchemy_assist >= 15) && s.mana >= 40, txt:'매번 폭발하는 연금 솥을 꿋꿋이 수습하던 당신은 어느새 연금술의 달인이 되어, 왕립 공방을 이끄는 수석 연구원으로 발탁되었다.' },
+  { id:'job_guard', ico:'🛡️', ttl:'성벽 수비대장', cond:s => (s.counts?.byAct?.wall_guard >= 15) && s.body >= 45, txt:'수련보다 성벽 위에서 밤바람을 맞은 날이 더 많았다. 그 묵묵한 성실함과 체력을 인정받아 수도의 외곽 방어를 총괄하는 수비대장이 되었다.' },
+  { id:'job_banquet', ico:'🍷', ttl:'왕실 수석 시종장', cond:s => (s.counts?.byAct?.banquet_service >= 15) && s.social >= 45, txt:'수많은 귀족들 사이에서 완벽한 눈치와 예법을 마스터했다. 마법사로서의 길 대신 왕실의 모든 대소사를 매끄럽게 총괄하는 수석 시종장이 되었다.' },
+  { id:'dark_merchant', ico:'🃏', ttl:'어둠의 마도 상인', cond:s => s.forbidden >= 4 && s.gold >= 200, txt:'합법적인 상단 대신 왕국의 그늘을 택했다. 뒷골목에서 위험하고 진귀한 금지된 마법 물품들을 은밀하게 밀매하며 거물로 성장했다.' },
+  { id:'mercenary', ico:'⛺', ttl:'떠돌이 마법 용병', cond:s => s.body >= 55 && s.gold <= 50, txt:'실력은 출중하지만 모아둔 돈이 없어 전장을 떠돌게 되었다. 거친 용병단에 합류해 하루하루 의뢰를 해결하며 자유롭고도 위태로운 삶을 산다.' },
+  { id:'wanderer', ico:'🗺️', ttl:'자유로운 방랑자', cond:s => s.freeCount >= 25 && s.debt === 0, txt:'명예나 돈에 얽매이지 않고 발길 닿는 대로 유랑하는 길을 택했다. 새로운 마을에 닿을 때마다 고향에 안부 엽서를 띄우며 세상을 유유자적 탐험한다.' },
+  { id:'social_butterfly', ico:'🎉', ttl:'아카데미 파티광', cond:s => s.social >= 70 && s.know <= 30, txt:'공부는 뒷전이고 5년 내내 축제와 다과회만 쫓아다녔다. 매일 밤을 론네펠트 홍차와 동파육이 끊이지 않는 연회로 채운 끝에, 마법 실력은 바닥이지만 인맥 하나는 왕국 최고인 셀럽이 되었다.' },
+  { id:'slacker', ico:'🛌', ttl:'게으른 백수', cond:s => (s.counts?.byAct?.nap >= 20) && (s.mana + s.know + s.body + s.social) <= 100, txt:'아카데미에 침대를 하나 더 둔 것처럼 잠만 잤다. 결국 치열한 마법사의 길을 포기하고 따뜻한 고향으로 돌아가 한없이 늘어지는 일상을 택했다.' },
+  { id:'normal', ico:'📘', ttl:'무난한 졸업생', cond:s => (s.mana + s.know + s.body + s.social) >= 110, txt:'눈부신 전설은 아니더라도, 당신은 끈기 있게 5년의 수련을 완주했다. 이제 아카데미를 떠나 한 명의 어엿한 마법사로서 진짜 삶을 시작한다.' },
+  { id:'bad', ico:'💀', ttl:'유급 수련생', cond:() => true, txt:'5년이 지났지만 정식 마법사가 되기엔 실력이 조금 부족했다. 하지만 완전히 끝난 것은 아니다. 다시 시작한다면 이번엔 더 멀리 갈 수 있을 것이다.' }
 ];
 
 const ROMANCE_ENDINGS=[
@@ -713,8 +574,9 @@ function getAvailableActs(){return ACTS.filter(a=>getYear()>=(a.unlock||1))}
 function applyEff(eff){for(const[k,v]of Object.entries(eff||{})){if(k==='fat')G.fatigue=clamp(G.fatigue+v);else if(k==='gold')G.gold=Math.max(0,G.gold+v);else if(G.stats[k]!==undefined)G.stats[k]=Math.max(0,G.stats[k]+v);}}
 function addLog(txt,cls='',mark=null){const label=mark||`${getYear()}년 ${getMonth()}월`;G.log.unshift({mark:label,txt,cls});if(G.log.length>60)G.log.pop();renderLog();}
 function renderLog(){const p=document.getElementById('log-panel');let h='<div class="px9" style="color:var(--dim);margin-bottom:6px">— 최근 기록 —</div>';G.log.slice(0,28).forEach(item=>{h+=`<div class="le${item.cls?` le-${item.cls}`:''}">[${item.mark}] ${item.txt}</div>`});p.innerHTML=h;}
-function initGame(name,stats){G={name,turn:1,totalTurns:60,gold:240,fatigue:0,stats:{mana:stats.mana,know:stats.know,body:stats.body,social:stats.social},npc:{leon:0,cassian:0,saren:0,vain:0,elias:0,jaiden:0,oliver:0},counts:baseCounts(),selAM:null,selPM:null,forcedRest:false,triggered:{},log:[],activeTab:'train'};}
-function normalizeGameState(src){const counts=Object.assign(baseCounts(),src.counts||{});counts.byAct=counts.byAct||{};return{name:src.name||'아리아',turn:Math.max(1,src.turn||1),totalTurns:60,gold:Math.max(0,src.gold??240),fatigue:clamp(src.fatigue??0),stats:{mana:Math.max(0,src.stats?.mana??5),know:Math.max(0,src.stats?.know??5),body:Math.max(0,src.stats?.body??5),social:Math.max(0,src.stats?.social??5)},npc:{leon:clamp(src.npc?.leon??0),cassian:clamp(src.npc?.cassian??0),saren:clamp(src.npc?.saren??0),vain:clamp(src.npc?.vain??0),elias:clamp(src.npc?.elias??0),jaiden:clamp(src.npc?.jaiden??0),oliver:clamp(src.npc?.oliver??0)},counts,selAM:src.selAM??null,selPM:src.selPM??null,forcedRest:!!src.forcedRest,triggered:src.triggered||{},log:Array.isArray(src.log)?src.log:[],activeTab:src.activeTab||'train'};}
+
+function initGame(name,stats){G={name,turn:1,totalTurns:60,gold:240,fatigue:0,stats:{mana:stats.mana,know:stats.know,body:stats.body,social:stats.social},npc:{leon:0,cassian:0,saren:0,vain:0,elias:0,jaiden:0,oliver:0},counts:baseCounts(),selAM:null,selPM:null,forcedRest:false,triggered:{},log:[],activeTab:'train',collapsed:{job:false,class:false,social:false,free:false}};}
+function normalizeGameState(src){const counts=Object.assign(baseCounts(),src.counts||{});counts.byAct=counts.byAct||{};return{name:src.name||'아리아',turn:Math.max(1,src.turn||1),totalTurns:60,gold:Math.max(0,src.gold??240),fatigue:clamp(src.fatigue??0),stats:{mana:Math.max(0,src.stats?.mana??5),know:Math.max(0,src.stats?.know??5),body:Math.max(0,src.stats?.body??5),social:Math.max(0,src.stats?.social??5)},npc:{leon:clamp(src.npc?.leon??0),cassian:clamp(src.npc?.cassian??0),saren:clamp(src.npc?.saren??0),vain:clamp(src.npc?.vain??0),elias:clamp(src.npc?.elias??0),jaiden:clamp(src.npc?.jaiden??0),oliver:clamp(src.npc?.oliver??0)},counts,selAM:src.selAM??null,selPM:src.selPM??null,forcedRest:!!src.forcedRest,triggered:src.triggered||{},log:Array.isArray(src.log)?src.log:[],activeTab:src.activeTab||'train',collapsed:src.collapsed||{job:false,class:false,social:false,free:false}};}
 function migrateLegacySave(old){return normalizeGameState({name:old.name,turn:old.turn,totalTurns:60,gold:old.gold,fatigue:old.fatigue,stats:old.stats,npc:old.npc,forcedRest:old.forcedRest,triggered:old.triggered,log:(old.log||[]).map(item=>typeof item==='string'?{mark:'기록',txt:item,cls:''}:{mark:item.mark||'기록',txt:item.txt||'',cls:item.cls||''})});}
 function saveGame(){if(Object.keys(G).length)localStorage.setItem(SAVE_KEY,JSON.stringify(G));}
 function clearSave(){[SAVE_KEY,'mageAcad_v5','mageAcad_v4','mageAcad_v3','mageAcad_v2'].forEach(k=>localStorage.removeItem(k));}
@@ -743,10 +605,73 @@ function getComboPreview(am,pm){const out={mana:0,know:0,body:0,social:0,gold:0,
 function getDatePreview(npcId){const evList=DATE_EVS[npcId]||[];return evList.filter(e=>G.npc[npcId]>=e.req).pop()||{fat:8,h:5};}
 function getPreviewResult(){const res={mana:0,know:0,body:0,social:0,gold:0,fat:0,heart:0,notes:[]};for(const slot of [G.selAM,G.selPM]){if(!slot)continue;if(isDateSlot(slot)){const npcId=slot.split(':')[1],ev=getDatePreview(npcId);res.fat+=(ev.fat||8);res.heart+=(ev.h||5);const npc=NPCS.find(n=>n.id===npcId);if(npc)res.notes.push(`${npc.name} 호감도 +${ev.h||5}`);}else{const a=getActById(slot);if(!a)continue;for(const[k,v]of Object.entries(a.stat||{}))res[k]+=v;res.gold+=(a.gold||0);res.fat+=(a.fat||0);}}
 const combo=getComboPreview(G.selAM,G.selPM);['mana','know','body','social','gold','heart'].forEach(k=>res[k]+=combo[k]||0);res.notes.push(...combo.notes);res.gold-=10;res.endGold=Math.max(0,G.gold+res.gold);res.endFat=clamp(G.fatigue+res.fat);res.forced=res.endFat>=90;return res;}
-function fmtDelta(n,v,suffix=''){if(!v)return'';const label={mana:'마력',know:'지식',body:'체력',social:'사교',gold:'골드',fat:'피로'}[n]||n;const sign=v>0?'+':'';return `${label} ${sign}${v}${suffix}`;}
-function renderPreview(){const p=getPreviewResult();const chosen=!!(G.selAM||G.selPM);if(!chosen){document.getElementById('preview-main').textContent='활동을 고르면 예상 변화가 표시돼요.';document.getElementById('preview-sub').textContent='';return;}const parts=[fmtDelta('mana',p.mana),fmtDelta('know',p.know),fmtDelta('body',p.body),fmtDelta('social',p.social),fmtDelta('gold',p.gold,'G'),fmtDelta('fat',p.fat)].filter(Boolean);document.getElementById('preview-main').textContent=parts.join(' / ')||'큰 변화 없음';const notes=[];notes.push(`월말 예상 골드 ${p.endGold}G`);notes.push(`예상 피로 ${p.endFat}/100`);if(p.heart)notes.push(`데이트 포함 호감도 +${p.heart}`);if(p.notes.length)notes.push(p.notes.join(', '));if(p.forced)notes.push('⚠️ 이 상태면 다음 달 강제 휴식 가능');const sub=document.getElementById('preview-sub');sub.textContent=notes.join(' · ');sub.className='preview-sub'+(p.forced?' preview-warn':'');}
-function renderTrain(){const am=slotText(G.selAM),pm=slotText(G.selPM);const amEl=document.getElementById('slot-am'),pmEl=document.getElementById('slot-pm');amEl.textContent=am.txt;pmEl.textContent=pm.txt;amEl.classList.toggle('empty',am.empty);pmEl.classList.toggle('empty',pm.empty);document.getElementById('m-info').textContent=G.forcedRest?`⚠️ ${getYear()}년차 ${getMonth()}월 — 강제 휴식 (활동 불가)`:`${getYear()}년차 ${getMonth()}월 — 이달의 활동을 선택하세요`;if(G.forcedRest){document.getElementById('act-grid').innerHTML='<div class="cat-head">🛌 이달은 강제 휴식입니다.</div>';renderPreview();return;}const groups=[{key:'job',label:'🧹 아르바이트 — 돈 벌기 / 성장 적음'},{key:'class',label:'📚 수업 — 돈 쓰기 / 성장 큼'},{key:'social',label:'🎭 사교 — 돈 쓰기 / 이벤트 강화'},{key:'free',label:'😴 무료 행동 — 회복 / 소성장'}];let h='';for(const g of groups){const list=getAvailableActs().filter(a=>a.type===g.key);if(!list.length)continue;h+=`<div class="cat-head">${g.label}</div>`;for(const a of list){const selected=G.selAM===a.id||G.selPM===a.id;const disabled=!(a.gold<0&&G.gold<Math.abs(a.gold));const statStr=Object.entries(a.stat||{}).map(([k,v])=>({mana:'마력',know:'지식',body:'체력',social:'사교'}[k]+(v>0?'+':'')+v)).join(' ');const goldStr=a.gold?(a.gold>0?` 💰+${a.gold}G`:` 💸${a.gold}G`):'';const fatStr=a.fat?`${a.fat>0?'+':''}${a.fat}피로`:'';h+=`<button class="ab${selected?' sel':''}${disabled?'':' dis'}" onclick="selAct('${a.id}')"><span class="ai">${a.icon}</span><span class="an">${a.name}</span><span class="ac">${statStr||'변화 적음'}${goldStr}<br>${fatStr}</span></button>`;}}
- document.getElementById('act-grid').innerHTML=h;renderPreview();}
+
+// 스탯 포맷 통일 함수 (+는 초록, -는 빨강. 단 피로도는 반대)
+function fmtChange(k, v) {
+  if (!v) return '';
+  const labels = { mana:'마력', know:'지식', body:'체력', social:'사교', gold:'골드', fat:'피로' };
+  const lbl = labels[k] || k;
+  const sign = v > 0 ? '+' : '';
+  const isGood = k === 'fat' ? v < 0 : v > 0;
+  const cls = isGood ? 'c-pos' : 'c-neg';
+  return `<span class="${cls}">${lbl} ${sign}${v}</span>`;
+}
+
+function renderPreview(){const p=getPreviewResult();const chosen=!!(G.selAM||G.selPM);if(!chosen){document.getElementById('preview-main').textContent='활동을 고르면 예상 변화가 표시돼요.';document.getElementById('preview-sub').textContent='';return;}
+  const parts=[fmtChange('mana',p.mana),fmtChange('know',p.know),fmtChange('body',p.body),fmtChange('social',p.social),fmtChange('gold',p.gold),fmtChange('fat',p.fat)].filter(Boolean);
+  document.getElementById('preview-main').innerHTML=parts.join(' ') || '<span class="c-neu">큰 변화 없음</span>';
+  const notes=[];notes.push(`월말 예상 골드 ${p.endGold}G`);notes.push(`예상 피로 ${p.endFat}/100`);if(p.heart)notes.push(`데이트 포함 호감도 +${p.heart}`);if(p.notes.length)notes.push(p.notes.join(', '));if(p.forced)notes.push('⚠️ 이 상태면 다음 달 강제 휴식 가능');const sub=document.getElementById('preview-sub');sub.textContent=notes.join(' · ');sub.className='preview-sub'+(p.forced?' preview-warn':'');
+}
+
+function toggleCat(key) {
+  G.collapsed[key] = !G.collapsed[key];
+  renderTrain();
+  saveGame();
+}
+
+function renderTrain(){
+  const am=slotText(G.selAM),pm=slotText(G.selPM);
+  const amEl=document.getElementById('slot-am'),pmEl=document.getElementById('slot-pm');
+  amEl.textContent=am.txt;pmEl.textContent=pm.txt;amEl.classList.toggle('empty',am.empty);pmEl.classList.toggle('empty',pm.empty);
+  document.getElementById('m-info').textContent=G.forcedRest?`⚠️ ${getYear()}년차 ${getMonth()}월 — 강제 휴식 (활동 불가)`:`${getYear()}년차 ${getMonth()}월 — 이달의 활동을 선택하세요`;
+  if(G.forcedRest){document.getElementById('act-grid').innerHTML='<div class="cat-head">🛌 이달은 강제 휴식입니다.</div>';renderPreview();return;}
+  
+  const groups=[
+    {key:'job',label:'🧹 아르바이트 — 돈 벌기 / 성장 적음'},
+    {key:'class',label:'📚 수업 — 돈 쓰기 / 성장 큼'},
+    {key:'social',label:'🎭 사교 — 돈 쓰기 / 이벤트 강화'},
+    {key:'free',label:'😴 무료 행동 — 회복 / 소성장'}
+  ];
+  
+  let h='';
+  for(const g of groups){
+    const list=getAvailableActs().filter(a=>a.type===g.key);
+    if(!list.length)continue;
+    const isCol = G.collapsed[g.key];
+    
+    h += `<div class="cat-wrap">`;
+    h += `<div class="cat-head ${isCol ? 'collapsed' : ''}" onclick="toggleCat('${g.key}')">${g.label}</div>`;
+    h += `<div class="cat-body ${isCol ? 'collapsed' : ''}" id="cat-${g.key}">`;
+    
+    for(const a of list){
+      const selected=G.selAM===a.id||G.selPM===a.id;
+      const disabled=!(a.gold<0&&G.gold<Math.abs(a.gold));
+      
+      let st = [];
+      for(const[k,v] of Object.entries(a.stat||{})) st.push(fmtChange(k,v));
+      if(a.gold) st.push(fmtChange('gold',a.gold));
+      if(a.fat) st.push(fmtChange('fat',a.fat));
+      
+      const statStr = st.length ? st.join(' ') : '<span class="c-neu">변화 없음</span>';
+      
+      h+=`<button class="ab${selected?' sel':''}${disabled?'':' dis'}" onclick="selAct('${a.id}')"><span class="ai">${a.icon}</span><span class="an">${a.name}</span><span class="ac">${statStr}</span></button>`;
+    }
+    h += `</div></div>`;
+  }
+  document.getElementById('act-grid').innerHTML=h;
+  renderPreview();
+}
+
 function selAct(id){if(G.forcedRest)return;const a=getActById(id);if(!a)return;if(a.gold<0&&G.gold<Math.abs(a.gold)){addLog(`💸 ${a.name} 비용이 부족합니다.`,'bad');return;}if(G.selAM===id){G.selAM=null;renderTrain();saveGame();return;}if(G.selPM===id){G.selPM=null;renderTrain();saveGame();return;}const pmIsDate=isDateSlot(G.selPM);if(!G.selAM)G.selAM=id;else if(!G.selPM)G.selPM=id;else if(pmIsDate)G.selAM=id;else{G.selAM=G.selPM;G.selPM=id;}renderTrain();saveGame();}
 
 function renderRelations(){let h='',anyDate=false;for(const npc of NPCS){const met=npc.meet(G.turn),heart=G.npc[npc.id];if(heart>=25&&met)anyDate=true;h+=`<div class="nc${met?'':' locked'}" ${met?`onclick="openNpcModal('${npc.id}')"`:''}><img src="${IMG[npc.id]}" class="npc-img" alt="${npc.name}"><div style="flex:1;min-width:0"><span class="nn">${npc.name}${met?'':' 🔒'}</span><div class="nh"><div class="nhf" style="width:${heart}%"></div></div></div><span class="hnum">${met?heart:'?'}</span></div>`;}document.getElementById('npc-list').innerHTML=h;const db=document.getElementById('date-btn');db.style.display=(anyDate&&!G.forcedRest)?'block':'none';db.textContent=isDateSlot(G.selPM)?'💕 데이트 변경':'💕 데이트 신청';}
@@ -796,7 +721,7 @@ function showEnding(main,romance){document.getElementById('en-ico').textContent=
 function loadGame(){const v6=localStorage.getItem(SAVE_KEY);const v5=localStorage.getItem('mageAcad_v5');const v4=localStorage.getItem('mageAcad_v4');const v3=localStorage.getItem('mageAcad_v3');const v2=localStorage.getItem('mageAcad_v2');if(v6)G=normalizeGameState(JSON.parse(v6));else if(v5){G=normalizeGameState(JSON.parse(v5));saveGame();}else if(v4){G=normalizeGameState(JSON.parse(v4));saveGame();}else if(v3){G=normalizeGameState(JSON.parse(v3));saveGame();}else if(v2){G=migrateLegacySave(JSON.parse(v2));saveGame();}else return;startGame();}
 function restartGame(){showScreen('screen-title');}
 
-window.adj=adj;window.openNpcModal=openNpcModal;window.selAct=selAct;window.startDate=startDate;window.pickNpcChoice=pickNpcChoice;window.openMeModal=openMeModal;window.buyItem=buyItem;
+window.adj=adj;window.openNpcModal=openNpcModal;window.selAct=selAct;window.startDate=startDate;window.pickNpcChoice=pickNpcChoice;window.openMeModal=openMeModal;window.buyItem=buyItem;window.toggleCat=toggleCat;
 
 document.addEventListener('DOMContentLoaded',()=>{
  for(let i=0;i<70;i++){const s=document.createElement('div');s.className='star';s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()*2+1}px;height:${Math.random()*2+1}px;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*3}s`;document.body.appendChild(s);}
