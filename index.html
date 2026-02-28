@@ -64,11 +64,15 @@ body{
 .btn-pink{border-color:var(--pink);color:var(--pink);text-shadow:0 0 6px var(--pink)}
 .btn-pink:hover{box-shadow:0 4px 16px rgba(255,80,160,.25)}
 
+.bgm-row{
+  margin-top:10px;
+  display:flex;
+  justify-content:center;
+}
+
 #bgm-toggle{
-  position:fixed;
-  right:14px;
-  top:14px;
-  z-index:999;
+  position:static;
+  z-index:auto;
   font-family:var(--px);
   font-size:8px;
   padding:10px 12px;
@@ -323,7 +327,6 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
 <audio id="bgm" loop preload="auto" autoplay>
   <source src="bgm.mp3" type="audio/mpeg">
 </audio>
-<button id="bgm-toggle" type="button" aria-label="BGM 토글">🔊 BGM ON</button>
 
 <div id="app">
 
@@ -410,6 +413,10 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
           </div>
           <div class="fatb"><div class="fatf" id="fat-fill" style="width:0%"></div></div>
           <div id="badges"></div>
+        </div>
+
+        <div class="bgm-row">
+          <button id="bgm-toggle" type="button" aria-label="BGM 토글">🔊 BGM ON</button>
         </div>
 
         <div class="box pnl" style="margin-top:8px">
