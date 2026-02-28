@@ -4,10 +4,12 @@ const {
   SOLO_ENDING,
   NPCS,
   MINI_ROMANCE,
+  EXTRA_MINI_ROMANCE,
   ACTS,
   SHOP,
   RANDS,
   DATE_EVS,
+  RANDOM_NPC_EVENTS,
   MAIN_ENDINGS,
   ROMANCE_ENDINGS
 } = window.MAGE_DATA;
@@ -42,12 +44,73 @@ function getSeason(){const m=getMonth();if(m<=3)return['봄','sp'];if(m<=6)retur
 function isDateSlot(v){return typeof v==='string'&&v.startsWith('date:')}
 function getActById(id){return ACTS.find(a=>a.id===id)}
 function getAvailableActs(){return ACTS.filter(a=>getYear()>=(a.unlock||1))}
+
+
+function ensureStoryState(){
+  if(!G.story) G.story={lastNpc:null,lastMiniNpc:null,lastDeepTurn:0,lastSeen:{}};
+  if(!G.story.lastSeen) G.story.lastSeen={};
+}
+
+function choiceGainLabel(v){
+  if(v>=5) return '크게 가까워짐';
+  if(v>=3) return '조금 더 가까워짐';
+  if(v>=1) return '분위기 호전';
+  return '큰 변화 없음';
+}
+
+function getNextStoryThreshold(npcId,currentHeart){
+  const list=(RANDOM_NPC_EVENTS?.[npcId]||[]).map(ev=>ev.minH).filter(v=>v>currentHeart);
+  if(!list.length) return null;
+  return Math.min(...list);
+}
+
+function weightedPick(arr,getWeight){
+  const total=arr.reduce((sum,item)=>sum+Math.max(0,getWeight(item)),0);
+  if(total<=0) return arr[Math.floor(Math.random()*arr.length)];
+  let roll=Math.random()*total;
+  for(const item of arr){
+    roll-=Math.max(0,getWeight(item));
+    if(roll<=0) return item;
+  }
+  return arr[arr.length-1];
+}
+
+function maybeQueueRandomNpcStory(mark){
+  ensureStoryState();
+  const pool=[];
+  for(const npc of NPCS){
+    if(!npc.meet(G.turn)) continue;
+    const heart=G.npc[npc.id]||0;
+    const list=RANDOM_NPC_EVENTS?.[npc.id]||[];
+    for(const ev of list){
+      if(heart < (ev.minH??0) || heart > (ev.maxH??100)) continue;
+      const seenTurn=G.story.lastSeen?.[ev.id] ?? -999;
+      if(G.turn - seenTurn < 5) continue;
+      if(G.story.lastNpc===npc.id && G.turn-seenTurn < 8) continue;
+      if(ev.kind==='branch' && G.turn - (G.story.lastDeepTurn||0) < 2) continue;
+      pool.push({npc,ev});
+    }
+  }
+  if(!pool.length) return;
+  if(Math.random()>=0.68) return;
+  const picked=weightedPick(pool,item=>{
+    const heart=G.npc[item.npc.id]||0;
+    const balanceBonus=Math.max(0,28-heart)*0.9;
+    const deepBonus=item.ev.kind==='branch' ? 6 : 0;
+    return (item.ev.weight||15)+balanceBonus+deepBonus;
+  });
+  G.story.lastNpc=picked.npc.id;
+  G.story.lastSeen[picked.ev.id]=G.turn;
+  if(picked.ev.kind==='branch') G.story.lastDeepTurn=G.turn;
+  _q.push({type:'npc',npc:picked.npc,ev:picked.ev,mark});
+}
+
 function applyEff(eff){for(const[k,v]of Object.entries(eff||{})){if(k==='fat')G.fatigue=clamp(G.fatigue+v);else if(k==='gold')G.gold=Math.max(0,G.gold+v);else if(G.stats[k]!==undefined)G.stats[k]=Math.max(0,G.stats[k]+v);}}
 function addLog(txt,cls='',mark=null){const label=mark||`${getYear()}년 ${getMonth()}월`;G.log.unshift({mark:label,txt,cls});if(G.log.length>60)G.log.pop();renderLog();}
 function renderLog(){const p=document.getElementById('log-panel');let h='<div class="px9" style="color:var(--dim);margin-bottom:8px">— 최근 기록 —</div>';G.log.slice(0,28).forEach(item=>{h+=`<div class="le${item.cls?` le-${item.cls}`:''}">[${item.mark}] ${item.txt}</div>`});p.innerHTML=h;}
 
-function initGame(name,stats){G={name,turn:1,totalTurns:60,gold:240,fatigue:0,stats:{mana:stats.mana,know:stats.know,body:stats.body,social:stats.social},npc:{leon:0,cassian:0,saren:0,vain:0,elias:0,jaiden:0,oliver:0},counts:baseCounts(),selAM:null,selPM:null,forcedRest:false,triggered:{},log:[],activeTab:'train',collapsed:{job:true,class:true,social:true,free:true}};}
-function normalizeGameState(src){const counts=Object.assign(baseCounts(),src.counts||{});counts.byAct=counts.byAct||{};return{name:src.name||'아리아',turn:Math.max(1,src.turn||1),totalTurns:60,gold:Math.max(0,src.gold??240),fatigue:clamp(src.fatigue??0),stats:{mana:Math.max(0,src.stats?.mana??5),know:Math.max(0,src.stats?.know??5),body:Math.max(0,src.stats?.body??5),social:Math.max(0,src.stats?.social??5)},npc:{leon:clamp(src.npc?.leon??0),cassian:clamp(src.npc?.cassian??0),saren:clamp(src.npc?.saren??0),vain:clamp(src.npc?.vain??0),elias:clamp(src.npc?.elias??0),jaiden:clamp(src.npc?.jaiden??0),oliver:clamp(src.npc?.oliver??0)},counts,selAM:src.selAM??null,selPM:src.selPM??null,forcedRest:!!src.forcedRest,triggered:src.triggered||{},log:Array.isArray(src.log)?src.log:[],activeTab:src.activeTab||'train',collapsed:src.collapsed||{job:true,class:true,social:true,free:true}};}
+function initGame(name,stats){G={name,turn:1,totalTurns:60,gold:240,fatigue:0,stats:{mana:stats.mana,know:stats.know,body:stats.body,social:stats.social},npc:{leon:0,cassian:0,saren:0,vain:0,elias:0,jaiden:0,oliver:0},counts:baseCounts(),selAM:null,selPM:null,forcedRest:false,triggered:{},story:{lastNpc:null,lastMiniNpc:null,lastDeepTurn:0,lastSeen:{}},log:[],activeTab:'train',collapsed:{job:true,class:true,social:true,free:true}};}
+function normalizeGameState(src){const counts=Object.assign(baseCounts(),src.counts||{});counts.byAct=counts.byAct||{};const story=src.story||{};return{name:src.name||'아리아',turn:Math.max(1,src.turn||1),totalTurns:60,gold:Math.max(0,src.gold??240),fatigue:clamp(src.fatigue??0),stats:{mana:Math.max(0,src.stats?.mana??5),know:Math.max(0,src.stats?.know??5),body:Math.max(0,src.stats?.body??5),social:Math.max(0,src.stats?.social??5)},npc:{leon:clamp(src.npc?.leon??0),cassian:clamp(src.npc?.cassian??0),saren:clamp(src.npc?.saren??0),vain:clamp(src.npc?.vain??0),elias:clamp(src.npc?.elias??0),jaiden:clamp(src.npc?.jaiden??0),oliver:clamp(src.npc?.oliver??0)},counts,selAM:src.selAM??null,selPM:src.selPM??null,forcedRest:!!src.forcedRest,triggered:src.triggered||{},story:{lastNpc:story.lastNpc??null,lastMiniNpc:story.lastMiniNpc??null,lastDeepTurn:story.lastDeepTurn??0,lastSeen:story.lastSeen||{}},log:Array.isArray(src.log)?src.log:[],activeTab:src.activeTab||'train',collapsed:src.collapsed||{job:true,class:true,social:true,free:true}};}
 function migrateLegacySave(old){return normalizeGameState({name:old.name,turn:old.turn,totalTurns:60,gold:old.gold,fatigue:old.fatigue,stats:old.stats,npc:old.npc,forcedRest:old.forcedRest,triggered:old.triggered,log:(old.log||[]).map(item=>typeof item==='string'?{mark:'기록',txt:item,cls:''}:{mark:item.mark||'기록',txt:item.txt||'',cls:item.cls||''})});}
 function saveGame(){if(Object.keys(G).length)localStorage.setItem(SAVE_KEY,JSON.stringify(G));}
 function clearSave(){
@@ -487,13 +550,28 @@ function closeWarnModal(run=false){
 function attemptConfirmMonth(){const msg=getEmptySlotWarning();if(msg){openWarnModal(msg,processMonth);}else processMonth();}
 
 let _monthAM=null,_monthPM=null,_monthMark=null;
-function processMonth(){if(!G.forcedRest&&!G.selAM&&!G.selPM){addLog('활동을 최소 1개 선택하세요.');return;} _monthMark=`${getYear()}년 ${getMonth()}월`;_monthAM=G.selAM;_monthPM=G.selPM;_q=[];_qi=0;if(G.forcedRest){G.fatigue=clamp(G.fatigue-45);addLog('🛌 강제 휴식. 피로 −45','good',_monthMark);G.forcedRest=false;}else{for(const slot of [_monthAM,_monthPM]){if(!slot)continue;if(isDateSlot(slot))doDateActivity(slot.split(':')[1],_monthMark);else{const act=getActById(slot);if(act)doActivity(act,_monthMark);}}applyComboBonus(_monthAM,_monthPM,_monthMark);}applyLivingCost(_monthMark);applySemesterScholarship(_monthMark);maybeQueueMiniRomance(_monthMark);if(G.fatigue>=90&&!G.forcedRest){G.forcedRest=true;G.counts.burnout++;_q.push({type:'sys',ico:'🛌',ttl:'과로로 쓰러짐',txt:'극심한 피로로 쓰러졌다. 다음 달은 강제 휴식이다.',tags:['다음 달 강제 휴식'],mark:_monthMark});addLog('⚠️ 과로 쓰러짐! 다음 달 강제 휴식','bad',_monthMark);}for(const npc of NPCS){for(const ev of npc.events){const key=npc.id+'_'+ev.t;if(ev.t===G.turn&&!G.triggered[key]&&npc.meet(G.turn)){G.triggered[key]=true;_q.push({type:'npc',npc,ev,mark:_monthMark});}}}if(Math.random()<0.12)_q.push({type:'rand',ev:RANDS[Math.floor(Math.random()*RANDS.length)],mark:_monthMark});G.selAM=null;G.selPM=null;G.turn++;renderAll();runQueue();}
+function processMonth(){if(!G.forcedRest&&!G.selAM&&!G.selPM){addLog('활동을 최소 1개 선택하세요.');return;} ensureStoryState(); _monthMark=`${getYear()}년 ${getMonth()}월`;_monthAM=G.selAM;_monthPM=G.selPM;_q=[];_qi=0;if(G.forcedRest){G.fatigue=clamp(G.fatigue-45);addLog('🛌 강제 휴식. 피로 −45','good',_monthMark);G.forcedRest=false;}else{for(const slot of [_monthAM,_monthPM]){if(!slot)continue;if(isDateSlot(slot))doDateActivity(slot.split(':')[1],_monthMark);else{const act=getActById(slot);if(act)doActivity(act,_monthMark);}}applyComboBonus(_monthAM,_monthPM,_monthMark);}applyLivingCost(_monthMark);applySemesterScholarship(_monthMark);maybeQueueMiniRomance(_monthMark);maybeQueueRandomNpcStory(_monthMark);if(G.fatigue>=90&&!G.forcedRest){G.forcedRest=true;G.counts.burnout++;_q.push({type:'sys',ico:'🛌',ttl:'과로로 쓰러짐',txt:'극심한 피로로 쓰러졌다. 다음 달은 강제 휴식이다.',tags:['다음 달 강제 휴식'],mark:_monthMark});addLog('⚠️ 과로 쓰러짐! 다음 달 강제 휴식','bad',_monthMark);}if(Math.random()<0.12)_q.push({type:'rand',ev:RANDS[Math.floor(Math.random()*RANDS.length)],mark:_monthMark});G.selAM=null;G.selPM=null;G.turn++;renderAll();runQueue();}
 function doActivity(act,mark){if(act.gold<0&&G.gold<Math.abs(act.gold)){addLog(`💸 ${act.name} 비용이 부족해 참여하지 못했다.`,'bad',mark);_q.push({type:'sys',ico:'💸',ttl:'비용 부족',txt:`${act.name} 비용이 부족해 참여하지 못했다.`,tags:['행동 무효'],mark});return;}if(act.fail&&Math.random()<act.fail){for(const[k,v]of Object.entries(act.fstat||{})){if(k==='fat')G.fatigue=clamp(G.fatigue+v);else if(k==='gold')G.gold=Math.max(0,G.gold+v);else G.stats[k]=Math.max(0,(G.stats[k]||0)+v);}addLog('❌ '+act.ftxt,'bad',mark);_q.push({type:'sys',ico:'❌',ttl:'활동 실패',txt:act.ftxt,tags:[],mark});return;}for(const[k,v]of Object.entries(act.stat||{}))G.stats[k]=Math.max(0,(G.stats[k]||0)+v);G.fatigue=clamp(G.fatigue+(act.fat||0));if(act.gold)G.gold=Math.max(0,G.gold+act.gold);G.counts[act.type]=(G.counts[act.type]||0)+1;G.counts.byAct[act.id]=(G.counts.byAct[act.id]||0)+1;if(act.forbidden)G.counts.forbidden++;const statStr=Object.entries(act.stat||{}).map(([k,v])=>({mana:'마력',know:'지식',body:'체력',social:'사교'}[k]+(v>0?'+':'')+v)).join(' ');addLog(`${act.icon} ${act.name}${statStr?' ('+statStr+')':''}${act.gold?((act.gold>0?' +':' ')+act.gold+'G'):''}`,'good',mark);if(act.npc&&Math.random()<(act.nc||0)){const npc=NPCS.find(n=>n.id===act.npc);if(npc&&npc.meet(G.turn)){const gain=act.type==='social'?4:3;G.npc[act.npc]=clamp(G.npc[act.npc]+gain);addLog(`❤️ ${npc.name}와(과) 가까워졌다. 호감도 +${gain}`,'heart',mark);}}}
 function doDateActivity(npcId,mark){const npc=NPCS.find(n=>n.id===npcId);if(!npc)return;let ev=(DATE_EVS[npcId]||[]).filter(e=>G.npc[npcId]>=e.req).pop();if(!ev)ev={fat:8,h:5,txt:`${npc.name}와(과) 조용한 시간을 보냈다. 짧았지만 분명히 마음이 가까워졌다.`};G.fatigue=clamp(G.fatigue+(ev.fat||8));G.counts.dates++;_q.push({type:'date',npc,ev,mark});}
 function applyComboBonus(am,pm,mark){if(!am||!pm||isDateSlot(am)||isDateSlot(pm))return;const pair=[am,pm].sort().join('|');if(pair===['alchemy_assist','alchemy_practicum'].sort().join('|')){G.stats.mana+=1;G.stats.know+=1;G.gold+=5;addLog('🔗 연금 시너지! 마력 +1, 지식 +1, 골드 +5G','good',mark);}else if(pair===['wall_guard','martial_basics'].sort().join('|')){G.stats.body+=1;G.npc.cassian=clamp(G.npc.cassian+2);addLog('🔗 전투 시너지! 체력 +1, 카시안 호감도 +2','heart',mark);}else if(pair===['banquet_service','royal_tea'].sort().join('|')){G.stats.social+=2;G.npc.leon=clamp(G.npc.leon+2);addLog('🔗 궁정 인맥 시너지! 사교 +2, 레온 호감도 +2','heart',mark);}else if(pair===['market_delivery','night_market'].sort().join('|')){G.stats.social+=1;G.gold+=8;G.npc.saren=clamp(G.npc.saren+2);addLog('🔗 시장 인맥 시너지! 사교 +1, 골드 +8G, 사렌 호감도 +2','heart',mark);}else if(pair===['library_sorting','ancient_texts'].sort().join('|')){G.stats.know+=1;G.npc.oliver=clamp(G.npc.oliver+2);addLog('🔗 연구 시너지! 지식 +1, 올리버 호감도 +2','heart',mark);}else if(pair===['forbidden_decoding','secret_archive'].sort().join('|')){G.stats.mana+=2;G.stats.know+=1;G.counts.forbidden++;G.npc.vain=clamp(G.npc.vain+3);addLog('🔗 금지 지식 공명! 마력 +2, 지식 +1, 베인 호감도 +3','heart',mark);}}
 function applyLivingCost(mark){if(G.gold>=10){G.gold-=10;addLog('💸 생활비 10G 차감','bad',mark);}else{G.counts.debt++;G.stats.social=Math.max(0,G.stats.social-2);addLog('⚠️ 생활비 부족! 사교 −2','bad',mark);}if(G.gold===0)G.counts.debt++;}
 function applySemesterScholarship(mark){if(G.turn%6!==0)return;const score=G.stats.mana+G.stats.know+G.stats.body+G.stats.social+(G.counts.class*2);let reward=0;if(score>=150)reward=45;else if(score>=120)reward=28;if(reward>0){G.gold+=reward;G.counts.scholarship++;addLog(`🏅 학기 장학금 +${reward}G`,'good',mark);_q.push({type:'sys',ico:'🏅',ttl:'학기 장학금',txt:`이번 학기 성적이 우수하여 장학금 ${reward}G를 받았다.`,tags:[`골드 +${reward}G`],mark});}}
-function maybeQueueMiniRomance(mark){const candidates=NPCS.filter(n=>n.meet(G.turn)&&G.npc[n.id]>=15);if(!candidates.length||Math.random()>=0.38)return;candidates.sort((a,b)=>G.npc[b.id]-G.npc[a.id]);const pool=candidates.slice(0,Math.min(3,candidates.length));const npc=pool[Math.floor(Math.random()*pool.length)];const lines=MINI_ROMANCE[npc.id]||[];const txt=lines[Math.floor(Math.random()*lines.length)]||'';const gain=G.npc[npc.id]>=60?4:G.npc[npc.id]>=30?3:2;_q.push({type:'mini',npc,txt,h:gain,mark});}
+function maybeQueueMiniRomance(mark){
+  ensureStoryState();
+  const candidates=NPCS.filter(n=>n.meet(G.turn)&&G.npc[n.id]>=12);
+  if(!candidates.length||Math.random()>=0.48) return;
+  const npc=weightedPick(candidates,n=>{
+    const heart=G.npc[n.id]||0;
+    const recencyPenalty=G.story.lastMiniNpc===n.id ? 8 : 0;
+    return Math.max(6,32-Math.floor(heart/3)-recencyPenalty);
+  });
+  const lines=[...(MINI_ROMANCE[npc.id]||[]),...(EXTRA_MINI_ROMANCE?.[npc.id]||[])];
+  const txt=lines[Math.floor(Math.random()*lines.length)]||'잠깐의 대화가 이상하게 오래 남았다.';
+  const heart=G.npc[npc.id]||0;
+  const gain=heart<30?3:heart<60?2:1;
+  G.story.lastMiniNpc=npc.id;
+  _q.push({type:'mini',npc,txt,h:gain,mark});
+}
 function runQueue(){if(_qi>=_q.length){checkEnding();return;}const item=_q[_qi++];if(item.type==='sys'){showEvModal(item.ico,item.ttl,item.txt,item.tags||[],runQueue,null);}else if(item.type==='rand'){applyEff(item.ev.eff);renderAll();addLog('🌀 '+item.ev.ttl,'ev',item.mark);showEvModal(item.ev.ico,item.ev.ttl,item.ev.txt,item.ev.tags,runQueue,null);}else if(item.type==='mini'){G.npc[item.npc.id]=clamp(G.npc[item.npc.id]+item.h);addLog(`💞 ${item.npc.name}와 작은 순간. 호감도 +${item.h}`,'heart',item.mark);renderAll();showEvModal(item.npc.icon,`${item.npc.name} — 작은 순간`,item.txt,[`호감도 +${item.h}`],runQueue,IMG[item.npc.id]);}else if(item.type==='npc'){showLoveScene(item.npc,item.ev,runQueue,'이벤트',item.mark);}else if(item.type==='date'){showLoveScene(item.npc,item.ev,runQueue,'데이트',item.mark);}}
 
 function showEvModal(ico,ttl,txt,tags,cb,imgSrc=null){
@@ -550,11 +628,22 @@ function pickNpcChoice(i){
   if(!res) return;
   if(_lvNpc){
     G.npc[_lvNpc.id]=clamp(G.npc[_lvNpc.id]+(res.h||0));
-    addLog(`💬 ${res.txt} 호감도 +${res.h||0}`,'heart',_lvMark);
+    if(res.h){
+      addLog(`💬 ${_lvNpc.name} — ${choiceGainLabel(res.h)} (호감도 +${res.h})`,'heart',_lvMark);
+    }else{
+      addLog(`💬 ${_lvNpc.name}와 대화를 이어갔다.`,'ev',_lvMark);
+    }
   }
-  document.getElementById('lv-txt').textContent=res.txt;
-  document.getElementById('lv-choices').innerHTML=`<button class="btn" type="button" data-action="close-love-modal">확인</button>`;
-  _lvRes=[];
+  if(res.next && res.next.choices && res.next.choices.length){
+    const mergedText=[res.txt,res.next.txt].filter(Boolean).join('\n\n');
+    document.getElementById('lv-txt').textContent=mergedText;
+    document.getElementById('lv-choices').innerHTML=res.next.choices.map((c,idx)=>`<button class="chbtn" type="button" data-action="pick-choice" data-choice-index="${idx}">${c}</button>`).join('');
+    _lvRes=res.next.res||[];
+  }else{
+    document.getElementById('lv-txt').textContent=res.txt;
+    document.getElementById('lv-choices').innerHTML=`<button class="btn" type="button" data-action="close-love-modal">확인</button>`;
+    _lvRes=[];
+  }
   renderAll();
 }
 
@@ -599,8 +688,8 @@ function openNpcModal(id){
   document.getElementById('nm-hf').style.width=h+'%';
   document.getElementById('nm-hn').textContent=h+'/100';
   document.getElementById('nm-stage').textContent=getLoveStage(h);
-  const nxt=npc.events.find(e=>!G.triggered[npc.id+'_'+e.t]&&e.t>=G.turn);
-  document.getElementById('nm-next').textContent=nxt?`다음 주요 이벤트까지 약 ${nxt.t-G.turn+1}개월`:'주요 이벤트 완료 ✨';
+  const nextThreshold=getNextStoryThreshold(id,h);
+  document.getElementById('nm-next').textContent=nextThreshold!==null?`다음 깊은 에피소드 구간까지 호감도 ${Math.max(0,nextThreshold-h)}`:'현재 호감도로 대부분의 랜덤 에피소드가 해금됨 ✨';
   openModal('npc-modal');
 }
 
