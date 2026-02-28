@@ -5,321 +5,184 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>마법사 수련생 아카데미 🔮</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Press+Start+2P&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Press+Start+2P&display=swap');
 :root{
   --bg:#080614;--bg2:#100e22;--panel:#0e0c1e;
   --bdr:#2e2258;--bdr2:#5e44aa;
-  --gold:#e8b830;--silver:#b8cce0;--text:#ddd0ff;--dim:#6858a0;
+  --gold:#e8b830;--silver:#b8cce0;--text:#ddd0ff;--dim:#7564b2;
   --mana:#9050ff;--know:#40b0ff;--body:#40e880;--soc:#ffaa40;
-  --red:#ff5050;--grn:#50ff90;--pink:#ff50a0;--ora:#ff9040;
-  --px:'Press Start 2P',monospace;--sr:'Noto Serif KR',serif;
+  --red:#ff5f7a;--grn:#63ff9c;--pink:#ff6db2;--ora:#ffb15a;
+  --px:'Press Start 2P', monospace;--sr:'Noto Serif KR', serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:var(--sr);
-  min-height:100vh;
-  overflow-x:hidden;
+  background:var(--bg);color:var(--text);font-family:var(--sr);min-height:100vh;overflow-x:hidden;
   background-image:
     radial-gradient(ellipse at 15% 25%,rgba(80,40,160,.2) 0%,transparent 55%),
     radial-gradient(ellipse at 85% 75%,rgba(40,20,100,.25) 0%,transparent 55%);
 }
 .star{position:fixed;background:#fff;border-radius:50%;animation:tw 3s infinite;pointer-events:none;z-index:0}
-@keyframes tw{0%,100%{opacity:.15}50%{opacity:.9}}
-#app{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:14px}
+@keyframes tw{0%,100%{opacity:.15}50%{opacity:.95}}
+#app{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:14px}
 .screen{display:none !important}
 .screen.active{display:block !important}
 .screen-flex.active{display:flex !important}
-
-#screen-title{flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:20px;text-align:center}
-.box{background:var(--panel);border:2px solid var(--bdr);position:relative}
+.box{background:var(--panel);border:2px solid var(--bdr);position:relative;box-shadow:0 8px 30px rgba(0,0,0,.22)}
 .box::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(94,68,170,.06) 0%,transparent 50%);pointer-events:none}
-
 .btn{
-  font-family:var(--px);
-  font-size:10px;
-  padding:12px 28px;
-  background:linear-gradient(180deg,#241860 0%,#120c38 100%);
-  border:2px solid var(--bdr2);
-  color:var(--gold);
-  cursor:pointer;
-  letter-spacing:1px;
-  transition:all .15s;
+  font-family:var(--px);font-size:11px;padding:12px 18px;background:linear-gradient(180deg,#241860 0%,#120c38 100%);
+  border:2px solid var(--bdr2);color:var(--gold);cursor:pointer;letter-spacing:.6px;transition:all .15s;
   text-shadow:0 0 6px var(--gold);
 }
-.btn:hover{
-  background:linear-gradient(180deg,#341d80,#241860);
-  border-color:var(--gold);
-  transform:translateY(-1px);
-  box-shadow:0 4px 16px rgba(232,184,48,.25)
-}
+.btn:hover{background:linear-gradient(180deg,#341d80,#241860);border-color:var(--gold);transform:translateY(-1px)}
 .btn:active{transform:translateY(0)}
-.btn:disabled{opacity:.35;cursor:default;transform:none}
-.btn-sm{padding:8px 16px;font-size:8px}
-.btn-xs{padding:6px 10px;font-size:7px}
+.btn:disabled{opacity:.4;cursor:default;transform:none}
+.btn-sm{padding:8px 14px;font-size:9px}
+.btn-xs{padding:6px 10px;font-size:8px}
 .btn-red{border-color:var(--red);color:var(--red);text-shadow:0 0 6px var(--red)}
-.btn-red:hover{box-shadow:0 4px 16px rgba(255,80,80,.25)}
 .btn-pink{border-color:var(--pink);color:var(--pink);text-shadow:0 0 6px var(--pink)}
-.btn-pink:hover{box-shadow:0 4px 16px rgba(255,80,160,.25)}
-
-.bgm-row{
-  margin-top:12px;
-  display:flex;
-  justify-content:center;
-}
-#bgm-toggle{
-  position:static;
-  z-index:auto;
-  font-family:var(--px);
-  font-size:8px;
-  padding:10px 12px;
-  background:linear-gradient(180deg,#241860 0%,#120c38 100%);
-  border:2px solid var(--bdr2);
-  color:var(--gold);
-  cursor:pointer;
-  border-radius:8px;
-  text-shadow:0 0 6px var(--gold);
-  box-shadow:0 4px 14px rgba(0,0,0,.28);
-}
-#bgm-toggle:hover{border-color:var(--gold)}
-#bgm-toggle.off{
-  color:var(--dim);
-  border-color:var(--bdr);
-  text-shadow:none;
-}
-
-.px7{font-family:var(--px);font-size:7px}
-.px8{font-family:var(--px);font-size:8px}
 .px9{font-family:var(--px);font-size:9px}
 .px10{font-family:var(--px);font-size:10px}
+.px11{font-family:var(--px);font-size:11px}
 .px12{font-family:var(--px);font-size:12px}
 hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
 
-/* TITLE */
+#screen-title{flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:20px;text-align:center}
 .ttl-em{font-size:72px;animation:flt 4s ease-in-out infinite;filter:drop-shadow(0 0 18px #9050ff)}
 @keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.ttl-main{
-  font-family:var(--px);
-  font-size:clamp(13px,2.8vw,20px);
-  color:var(--gold);
-  text-shadow:0 0 18px var(--gold),2px 2px 0 #000;
-  line-height:2;
-}
-.ttl-sub{font-family:var(--px);font-size:clamp(7px,1.3vw,10px);color:var(--dim);letter-spacing:1px}
+.ttl-main{font-family:var(--px);font-size:clamp(14px,2.8vw,20px);color:var(--gold);text-shadow:0 0 18px var(--gold),2px 2px 0 #000;line-height:2}
+.ttl-sub{font-family:var(--px);font-size:10px;color:var(--dim);letter-spacing:1px}
 
-/* CREATE */
 .cg{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:580px){.cg{grid-template-columns:1fr}}
-.sec-ttl{
-  font-family:var(--px);
-  font-size:8px;
-  color:var(--know);
-  margin-bottom:10px;
-  border-bottom:1px solid var(--bdr);
-  padding-bottom:5px;
-  text-shadow:0 0 5px var(--know)
-}
-.name-inp{
-  width:100%;
-  background:var(--bg2);
-  border:2px solid var(--bdr);
-  color:var(--text);
-  font-family:var(--sr);
-  font-size:15px;
-  padding:8px 12px;
-  outline:none;
-  transition:border-color .2s
-}
-.name-inp:focus{border-color:var(--bdr2)}
-.name-inp::placeholder{color:var(--dim)}
-.srow{display:flex;align-items:center;gap:7px;margin-bottom:9px}
-.slbl{font-family:var(--px);font-size:7px;width:54px;flex-shrink:0;line-height:1.5}
-.sbw{flex:1;height:11px;background:var(--bg2);border:1px solid var(--bdr);position:relative}
-.sbf{height:100%;transition:width .2s}
-.sbf::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:rgba(255,255,255,.12)}
-.sn{font-family:var(--px);font-size:7px;width:20px;text-align:right;flex-shrink:0}
-.s-mana .sbf{background:var(--mana)}
-.s-know .sbf{background:var(--know)}
-.s-body .sbf{background:var(--body)}
-.s-soc .sbf{background:var(--soc)}
-.sbtn{
-  width:19px;height:19px;background:var(--bg2);border:1px solid var(--bdr);color:var(--text);
-  cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:background .1s
-}
+@media(max-width:700px){.cg{grid-template-columns:1fr}}
+.sec-ttl{font-family:var(--px);font-size:9px;color:var(--know);margin-bottom:12px;border-bottom:1px solid var(--bdr);padding-bottom:6px;text-shadow:0 0 5px var(--know)}
+.name-inp{width:100%;background:var(--bg2);border:2px solid var(--bdr);color:var(--text);font-family:var(--sr);font-size:16px;padding:10px 12px;outline:none;transition:border-color .2s}
+.name-inp:focus{border-color:var(--bdr2)} .name-inp::placeholder{color:var(--dim)}
+.srow{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.slbl{font-family:var(--px);font-size:8px;width:62px;flex-shrink:0;line-height:1.6}
+.sbw{flex:1;height:14px;background:var(--bg2);border:1px solid var(--bdr);position:relative}
+.sbf{height:100%;transition:width .2s}.sbf::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:rgba(255,255,255,.12)}
+.sn{font-family:var(--px);font-size:8px;width:26px;text-align:right;flex-shrink:0}
+.s-mana .sbf{background:var(--mana)} .s-know .sbf{background:var(--know)} .s-body .sbf{background:var(--body)} .s-soc .sbf{background:var(--soc)}
+.sbtn{width:22px;height:22px;background:var(--bg2);border:1px solid var(--bdr);color:var(--text);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center}
 .sbtn:hover{background:var(--bdr2)}
-.alloc-tools{display:flex;justify-content:flex-end;margin:-2px 0 10px}
+.alloc-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
 
-/* HUD */
-.hud{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:9px 13px;margin-bottom:10px}
-.hd-left{display:flex;align-items:center;gap:8px}
-.me-img{
-  width:42px;height:42px;object-fit:cover;border:2px solid var(--bdr2);
-  border-radius:6px;image-rendering:pixelated;flex-shrink:0
-}
-.hd-name{font-family:var(--px);font-size:11px;color:var(--gold)}
-.hd-date{font-family:var(--px);font-size:9px;color:var(--gold);text-align:center}
-.hd-gold{font-family:var(--px);font-size:10px;color:var(--gold);text-align:right}
-.prog{width:100%;height:6px;background:var(--bg2);border:1px solid var(--bdr);margin-top:4px}
-.progf{height:100%;background:linear-gradient(90deg,var(--mana),var(--know));transition:width .5s}
-.stag{font-family:var(--px);font-size:7px;padding:2px 6px;border:1px solid;display:inline-block;margin-top:3px}
-.sp{color:#90ff70;border-color:#90ff70}
-.su{color:#ffe060;border-color:#ffe060}
-.au{color:#ff8830;border-color:#ff8830}
-.wi{color:#70c0ff;border-color:#70c0ff}
+#screen-game{padding-bottom:150px}
+.hud-wrap{position:sticky;top:0;z-index:40;padding-top:4px;background:linear-gradient(180deg,rgba(8,6,20,.98) 0%,rgba(8,6,20,.85) 80%,transparent 100%)}
+.hud{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:10px 12px;margin-bottom:10px}
+.hd-left{display:flex;align-items:center;gap:10px;min-width:0}
+.me-img{width:48px;height:48px;object-fit:cover;border:2px solid var(--bdr2);border-radius:8px;image-rendering:pixelated;flex-shrink:0;cursor:pointer}
+.hd-name{font-family:var(--px);font-size:11px;color:var(--gold);line-height:1.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.hd-sub{font-size:12px;color:var(--dim);line-height:1.5}
+.hd-date{font-family:var(--px);font-size:10px;color:var(--gold);text-align:center;line-height:1.7}
+.hd-gold{font-family:var(--px);font-size:11px;color:var(--gold);text-align:right;white-space:nowrap}
+.prog{width:100%;height:8px;background:var(--bg2);border:1px solid var(--bdr);margin-top:6px}
+.progf{height:100%;background:linear-gradient(90deg,var(--mana),var(--know));transition:width .4s}
+.stag{font-family:var(--px);font-size:8px;padding:3px 6px;border:1px solid;display:inline-block;margin-top:4px}
+.sp{color:#90ff70;border-color:#90ff70}.su{color:#ffe060;border-color:#ffe060}.au{color:#ff8830;border-color:#ff8830}.wi{color:#70c0ff;border-color:#70c0ff}
 
-/* GAME GRID */
-.gg{display:grid;grid-template-columns:188px 1fr 208px;gap:10px}
-@media(max-width:760px){.gg{grid-template-columns:1fr}}
-
-/* PANEL */
-.pnl{padding:11px}
-.pttl{
-  font-family:var(--px);
-  font-size:8px;
-  color:var(--know);
-  margin-bottom:9px;
-  border-bottom:1px solid var(--bdr);
-  padding-bottom:5px;
-  text-shadow:0 0 5px var(--know)
-}
-.sdr{display:flex;align-items:center;gap:5px;margin-bottom:6px}
-.sdlbl{font-family:var(--px);font-size:7px;width:44px;flex-shrink:0;line-height:1.4}
-.sdb{flex:1;height:8px;background:var(--bg2);border:1px solid var(--bdr)}
-.sdf{height:100%;transition:width .3s}
-.sdn{font-family:var(--px);font-size:7px;width:22px;text-align:right;flex-shrink:0}
-.sd-mana .sdf{background:var(--mana)}
-.sd-know .sdf{background:var(--know)}
-.sd-body .sdf{background:var(--body)}
-.sd-soc .sdf{background:var(--soc)}
-.mr{display:flex;justify-content:space-between;margin-bottom:4px}
-.fatb{width:100%;height:6px;background:var(--bg2);border:1px solid var(--bdr);margin-bottom:7px}
-.fatf{height:100%;transition:width .3s}
-.badge{display:inline-block;font-family:var(--px);font-size:7px;padding:2px 5px;border:1px solid;margin:2px 2px 0 0}
-.b-ok{color:var(--grn);border-color:var(--grn)}
-.b-warn{color:var(--ora);border-color:var(--ora)}
-.b-bad{color:var(--red);border-color:var(--red)}
-
-/* SCHEDULE */
-.sch{padding:11px}
-.mi{font-family:var(--px);font-size:9px;color:var(--gold);text-align:center;margin-bottom:9px;text-shadow:0 0 7px var(--gold)}
-.slots{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px}
-.slot{padding:7px;border:1px solid var(--bdr);background:var(--bg2)}
-.slot-lbl{font-family:var(--px);font-size:7px;color:var(--dim);margin-bottom:4px}
-.slot-val{font-family:var(--px);font-size:7px;color:var(--mana);min-height:14px;line-height:1.6}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.tabbox{padding:12px}
+.mi{font-family:var(--px);font-size:10px;color:var(--gold);text-align:center;margin-bottom:10px;text-shadow:0 0 7px var(--gold);line-height:1.9}
+.slots{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.slot{padding:9px;border:1px solid var(--bdr);background:var(--bg2)}
+.slot-lbl{font-family:var(--px);font-size:8px;color:var(--dim);margin-bottom:5px}
+.slot-val{font-size:13px;color:var(--silver);line-height:1.7;min-height:40px}
 .slot-val.empty{color:var(--dim)}
-.ag{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:9px}
-@media(max-width:500px){.ag{grid-template-columns:repeat(2,1fr)}}
-.ab{
-  padding:7px 4px;background:var(--bg2);border:1px solid var(--bdr);color:var(--text);
-  cursor:pointer;font-family:var(--sr);text-align:center;transition:all .12s;line-height:1.3
-}
-.ab:hover{background:var(--bdr);border-color:var(--bdr2)}
+.preview-box{padding:10px;border:1px solid var(--bdr);background:rgba(16,14,34,.9);margin-bottom:10px}
+.preview-ttl{font-family:var(--px);font-size:9px;color:var(--know);margin-bottom:8px}
+.preview-main{font-size:13px;line-height:1.8;color:var(--silver)}
+.preview-sub{font-size:12px;line-height:1.8;color:var(--dim);margin-top:6px}
+.preview-warn{color:var(--ora)}
+.ag{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+@media(min-width:740px){.ag{grid-template-columns:repeat(3,1fr)}}
+.ab{padding:10px 8px;background:var(--bg2);border:1px solid var(--bdr);color:var(--text);cursor:pointer;font-family:var(--sr);text-align:center;transition:all .12s;line-height:1.4}
+.ab:hover{background:#19133a;border-color:var(--bdr2)}
 .ab.sel{border-color:var(--mana);background:#1c1050}
-.ab.dis{opacity:.35;cursor:not-allowed}
-.ai{font-size:17px;display:block;margin-bottom:2px}
-.an{font-size:10px;display:block}
-.ac{font-family:var(--px);font-size:7px;color:var(--dim);display:block;margin-top:2px;line-height:1.5}
-.cat-head{
-  grid-column:span 4;
-  padding:4px 6px;
-  font-family:var(--px);
-  font-size:7px;
-  color:var(--silver);
-  border-left:3px solid var(--bdr2);
-  background:rgba(94,68,170,.12);
-}
-@media(max-width:500px){.cat-head{grid-column:span 2}}
+.ab.dis{opacity:.45;cursor:not-allowed}
+.ai{font-size:19px;display:block;margin-bottom:4px}
+.an{font-size:14px;display:block;line-height:1.45}
+.ac{font-size:12px;color:var(--dim);display:block;margin-top:4px;line-height:1.7}
+.cat-head{grid-column:1/-1;padding:5px 7px;font-family:var(--px);font-size:8px;color:var(--silver);border-left:3px solid var(--bdr2);background:rgba(94,68,170,.12)}
 
-/* NPC */
-.np{padding:11px}
-.nc{
-  display:flex;align-items:center;gap:6px;padding:6px 8px;background:var(--bg2);
-  border:1px solid var(--bdr);cursor:pointer;transition:all .12s;margin-bottom:5px
-}
-.nc:hover{background:#1c1840;border-color:var(--bdr2)}
-.nc.locked{opacity:.4;cursor:default}
-.npc-img{
-  width:46px;height:46px;object-fit:cover;border:2px solid var(--bdr);
-  border-radius:6px;image-rendering:pixelated;flex-shrink:0
-}
-.nn{font-family:var(--px);font-size:7px;display:block;margin-bottom:2px}
-.nh{width:100%;height:5px;background:var(--bg);border:1px solid var(--bdr)}
+.np{padding:12px}
+.me-card{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border:1px solid var(--bdr);cursor:pointer;margin-bottom:10px}
+.me-card:hover{border-color:var(--bdr2);background:#19133a}
+.me-card img{width:54px;height:54px;border-radius:8px;border:2px solid var(--bdr2);object-fit:cover;image-rendering:pixelated;flex-shrink:0}
+.me-card .t1{font-family:var(--px);font-size:9px;color:var(--gold);line-height:1.8}
+.me-card .t2{font-size:12px;color:var(--dim);line-height:1.6}
+.nc{display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg2);border:1px solid var(--bdr);cursor:pointer;transition:all .12s;margin-bottom:7px}
+.nc:hover{background:#1c1840;border-color:var(--bdr2)} .nc.locked{opacity:.42;cursor:default}
+.npc-img{width:52px;height:52px;object-fit:cover;border:2px solid var(--bdr);border-radius:8px;image-rendering:pixelated;flex-shrink:0}
+.nn{font-family:var(--px);font-size:8px;display:block;margin-bottom:3px;line-height:1.6}
+.nh{width:100%;height:6px;background:var(--bg);border:1px solid var(--bdr)}
 .nhf{height:100%;background:linear-gradient(90deg,#d04070,#f050a0);transition:width .3s}
-.hnum{font-family:var(--px);font-size:7px;color:var(--pink);flex-shrink:0}
+.hnum{font-family:var(--px);font-size:8px;color:var(--pink);flex-shrink:0}
 
-/* LOG */
-.log{padding:8px 10px;max-height:120px;overflow-y:auto;margin-top:7px}
-.le{
-  font-family:var(--px);
-  font-size:7px;
-  color:var(--dim);
-  margin-bottom:3px;
-  line-height:1.7;
-  border-left:2px solid var(--bdr);
-  padding-left:5px
-}
-.le-ev{color:var(--ora);border-color:var(--ora)}
-.le-good{color:var(--grn);border-color:var(--grn)}
-.le-bad{color:var(--red);border-color:var(--red)}
-.le-heart{color:var(--pink);border-color:var(--pink)}
+.shop-box{padding:12px}
+.sh-item{display:flex;justify-content:space-between;align-items:center;padding:8px 9px;background:var(--bg2);border:1px solid var(--bdr);margin-bottom:7px;gap:10px}
+.sh-name{font-size:14px;line-height:1.5}
+.sh-desc{font-size:12px;color:var(--dim);line-height:1.5;margin-top:2px}
 
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--bdr)}
+.stat-box{padding:12px}
+.pttl{font-family:var(--px);font-size:9px;color:var(--know);margin-bottom:10px;border-bottom:1px solid var(--bdr);padding-bottom:6px;text-shadow:0 0 5px var(--know)}
+.sdr{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.sdlbl{font-family:var(--px);font-size:8px;width:52px;flex-shrink:0;line-height:1.5}
+.sdb{flex:1;height:10px;background:var(--bg2);border:1px solid var(--bdr)}
+.sdf{height:100%;transition:width .3s}
+.sdn{font-family:var(--px);font-size:8px;width:24px;text-align:right;flex-shrink:0}
+.sd-mana .sdf{background:var(--mana)} .sd-know .sdf{background:var(--know)} .sd-body .sdf{background:var(--body)} .sd-soc .sdf{background:var(--soc)}
+.mr{display:flex;justify-content:space-between;margin-bottom:6px}
+.fatb{width:100%;height:8px;background:var(--bg2);border:1px solid var(--bdr);margin-bottom:8px}
+.fatf{height:100%;transition:width .3s}
+.badge{display:inline-block;font-family:var(--px);font-size:8px;padding:3px 6px;border:1px solid;margin:2px 3px 0 0}
+.b-ok{color:var(--grn);border-color:var(--grn)} .b-warn{color:var(--ora);border-color:var(--ora)} .b-bad{color:var(--red);border-color:var(--red)}
+.log{padding:9px 10px;max-height:220px;overflow-y:auto;margin-top:8px;border:1px solid var(--bdr);background:var(--bg2)}
+.le{font-size:12px;color:var(--dim);margin-bottom:5px;line-height:1.75;border-left:2px solid var(--bdr);padding-left:6px;word-break:keep-all}
+.le-ev{color:var(--ora);border-color:var(--ora)} .le-good{color:var(--grn);border-color:var(--grn)} .le-bad{color:var(--red);border-color:var(--red)} .le-heart{color:var(--pink);border-color:var(--pink)}
 
-/* MODAL */
-.ov{
-  display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;
-  align-items:center;justify-content:center;backdrop-filter:blur(3px)
-}
+#game-tabbar{position:fixed;left:0;right:0;bottom:0;z-index:70;background:rgba(8,6,20,.98);border-top:1px solid var(--bdr);display:flex;justify-content:center;gap:8px;padding:8px 10px calc(8px + env(safe-area-inset-bottom, 0px))}
+.tab-btn{flex:1;max-width:180px;padding:10px 8px;background:var(--bg2);border:1px solid var(--bdr);color:var(--dim);font-family:var(--px);font-size:9px;cursor:pointer}
+.tab-btn.active{border-color:var(--gold);color:var(--gold);text-shadow:0 0 6px var(--gold)}
+#bgm-toggle{position:fixed;left:50%;transform:translateX(-50%);z-index:75;font-family:var(--px);font-size:9px;padding:10px 14px;background:linear-gradient(180deg,#241860 0%,#120c38 100%);border:2px solid var(--bdr2);color:var(--gold);cursor:pointer;border-radius:999px;text-shadow:0 0 6px var(--gold);box-shadow:0 4px 16px rgba(0,0,0,.3)}
+#bgm-toggle.off{color:var(--dim);border-color:var(--bdr);text-shadow:none}
+
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(3px);padding:18px}
 .ov.open{display:flex}
-.modal{max-width:460px;width:92%;padding:24px;animation:mIn .18s ease-out}
-@keyframes mIn{
-  from{transform:scale(.92) translateY(16px);opacity:0}
-  to{transform:scale(1) translateY(0);opacity:1}
-}
-.m-ico{font-size:42px;text-align:center;margin-bottom:9px}
-.m-ttl{font-family:var(--px);font-size:11px;color:var(--gold);text-align:center;margin-bottom:12px;text-shadow:0 0 8px var(--gold)}
-.m-txt{font-size:13px;line-height:1.85;color:var(--silver);text-align:center;margin-bottom:14px}
-.m-tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-bottom:14px}
-.tag{font-family:var(--px);font-size:7px;padding:3px 7px;border:1px solid;background:rgba(0,0,0,.3)}
-.tp{color:var(--grn);border-color:var(--grn)}
-.tn{color:var(--red);border-color:var(--red)}
+.modal{max-width:500px;width:100%;padding:22px;animation:mIn .18s ease-out;max-height:90vh;overflow:auto}
+@keyframes mIn{from{transform:scale(.94) translateY(16px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.m-ico{font-size:42px;text-align:center;margin-bottom:10px}
+.m-ttl{font-family:var(--px);font-size:11px;color:var(--gold);text-align:center;margin-bottom:12px;text-shadow:0 0 8px var(--gold);line-height:1.8}
+.m-txt{font-size:15px;line-height:1.9;color:var(--silver);text-align:center;margin-bottom:14px;word-break:keep-all}
+.modal-desc{font-size:15px;line-height:1.95;color:var(--silver);text-align:left;word-break:keep-all;max-width:320px;margin:0 auto 14px}
+.m-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:14px}
+.tag{font-family:var(--px);font-size:8px;padding:4px 7px;border:1px solid;background:rgba(0,0,0,.3)}
+.tp{color:var(--grn);border-color:var(--grn)} .tn{color:var(--red);border-color:var(--red)}
 .m-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.choices{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
-.chbtn{
-  padding:9px 12px;background:var(--bg2);border:1px solid var(--bdr);color:var(--text);
-  cursor:pointer;font-family:var(--sr);font-size:13px;text-align:left;transition:all .12s;line-height:1.5
-}
+.choices{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.chbtn{padding:11px 12px;background:var(--bg2);border:1px solid var(--bdr);color:var(--text);cursor:pointer;font-family:var(--sr);font-size:14px;text-align:left;transition:all .12s;line-height:1.6;word-break:keep-all}
 .chbtn:hover{background:#1c1840;border-color:var(--bdr2)}
+.ev-img,.lv-img,.nm-img,.me-modal-img{width:96px;height:96px;object-fit:cover;display:block;margin:0 auto 12px;border:2px solid var(--bdr2);border-radius:10px;image-rendering:pixelated}
+.nm-img,.me-modal-img{width:120px;height:120px}
+.meta-list{font-size:14px;line-height:1.9;color:var(--silver);display:grid;gap:5px;max-width:320px;margin:0 auto 14px;text-align:left;word-break:keep-all}
+.warn-box{font-size:14px;line-height:1.9;color:var(--silver);text-align:center;word-break:keep-all;margin-bottom:16px}
 
-.ev-img,.lv-img,.nm-img{
-  width:92px;height:92px;object-fit:cover;display:block;margin:0 auto 10px;
-  border:2px solid var(--bdr2);border-radius:8px;image-rendering:pixelated
-}
-.nm-img{width:120px;height:120px}
-
-/* ENDING */
-#screen-ending{
-  flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;
-  gap:17px;padding:36px 18px
-}
+#screen-ending{flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;gap:18px;padding:36px 18px}
 .en-ico{font-size:68px;animation:flt 4s ease-in-out infinite}
-.en-ttl{
-  font-family:var(--px);
-  font-size:clamp(11px,2.4vw,17px);
-  color:var(--gold);
-  text-shadow:0 0 18px var(--gold);
-  line-height:1.9
-}
-.en-txt{max-width:520px;font-size:14px;line-height:1.95;color:var(--silver)}
+.en-ttl{font-family:var(--px);font-size:clamp(11px,2.4vw,17px);color:var(--gold);text-shadow:0 0 18px var(--gold);line-height:1.9}
+.en-txt{max-width:520px;font-size:15px;line-height:2;color:var(--silver);word-break:keep-all}
 .en-stats{display:flex;gap:11px;flex-wrap:wrap;justify-content:center}
-.en-st{padding:7px 13px;border:1px solid var(--bdr);font-family:var(--px);font-size:8px;background:var(--panel)}
-.sh-item{
-  display:flex;justify-content:space-between;align-items:center;padding:5px 7px;background:var(--bg2);
-  border:1px solid var(--bdr);margin-bottom:5px;gap:8px
+.en-st{padding:8px 13px;border:1px solid var(--bdr);font-family:var(--px);font-size:8px;background:var(--panel);line-height:1.8}
+
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bdr)}
+@media(max-width:480px){
+  #app{padding:10px}
+  .hd-name{max-width:88px;font-size:10px}
+  .hd-gold{font-size:10px}
+  .m-txt,.modal-desc{font-size:14px}
+  .ag{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -327,178 +190,161 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
 <audio id="bgm" loop preload="auto" autoplay>
   <source src="bgm.mp3" type="audio/mpeg">
 </audio>
-
+<button id="bgm-toggle" type="button">🔊 BGM ON</button>
 <div id="app">
 
-  <!-- TITLE -->
-  <div id="screen-title" class="screen screen-flex active">
-    <div class="ttl-em">🔮</div>
-    <div class="ttl-main">마법사 수련생<br>아카데미</div>
-    <div class="ttl-sub">— MAGE ACADEMY v5 —</div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px">
-      <button class="btn" id="new-game-btn">✦ 새 게임</button>
-      <button class="btn" id="load-btn" style="display:none">▶ 이어하기</button>
-    </div>
-    <div class="px8" style="color:var(--dim);margin-top:14px;line-height:2.3">
-      5년의 수련 끝에 어떤 마법사가 될 것인가
-    </div>
+<div id="screen-title" class="screen screen-flex active">
+  <div class="ttl-em">🔮</div>
+  <div class="ttl-main">마법사 수련생<br>아카데미</div>
+  <div class="ttl-sub">— MAGE ACADEMY v6 —</div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+    <button class="btn" id="new-game-btn">✦ 새 게임</button>
+    <button class="btn" id="load-btn" style="display:none">▶ 이어하기</button>
   </div>
+  <div class="px10" style="color:var(--dim);margin-top:14px;line-height:2.2">5년의 수련 끝에 어떤 마법사가 될 것인가</div>
+</div>
 
-  <!-- CREATE -->
-  <div id="screen-create" class="screen" style="padding:18px 0">
-    <div class="px12" style="color:var(--gold);text-align:center;margin-bottom:18px;text-shadow:0 0 10px var(--gold)">✦ 수련생 등록 ✦</div>
-    <div class="cg">
-      <div class="box" style="padding:16px">
-        <div class="sec-ttl">이름 입력</div>
-        <input type="text" class="name-inp" id="char-name" placeholder="이름을 입력하세요" maxlength="10">
-        <hr class="dv" style="margin:13px 0">
-
-        <div class="sec-ttl">능력치 배분 (포인트: 20)</div>
-        <div class="alloc-tools">
-          <button class="btn btn-xs" id="random-stat-btn" type="button">🎲 랜덤 배분</button>
-        </div>
-        <div id="stat-alloc"></div>
-
-        <div style="text-align:right;margin-top:5px" class="px8">
-          남은 포인트: <span id="pts" style="color:var(--grn)">20</span>
-        </div>
-
-        <hr class="dv" style="margin:13px 0">
-        <div style="display:flex;gap:8px;justify-content:center">
-          <button class="btn btn-sm" id="back-btn">← 뒤로</button>
-          <button class="btn btn-sm" id="start-btn">시작 →</button>
-        </div>
+<div id="screen-create" class="screen" style="padding:18px 0">
+  <div class="px12" style="color:var(--gold);text-align:center;margin-bottom:18px;text-shadow:0 0 10px var(--gold)">✦ 수련생 등록 ✦</div>
+  <div class="cg">
+    <div class="box" style="padding:16px">
+      <div class="sec-ttl">이름 입력</div>
+      <input type="text" class="name-inp" id="char-name" placeholder="이름을 입력하세요" maxlength="10">
+      <hr class="dv" style="margin:13px 0">
+      <div class="sec-ttl">능력치 배분 (포인트: 20)</div>
+      <div id="stat-alloc"></div>
+      <div style="text-align:right;margin-top:6px" class="px10">남은 포인트: <span id="pts" style="color:var(--grn)">20</span></div>
+      <div class="alloc-actions">
+        <button class="btn btn-sm" id="random-stat-btn">🎲 랜덤 배분</button>
       </div>
-
-      <div class="box" style="padding:16px;text-align:center">
-        <div class="sec-ttl">게임 안내</div>
-        <img src="me.png" alt="주인공" style="width:96px;height:96px;object-fit:cover;border:2px solid var(--bdr2);border-radius:8px;margin:8px auto 10px;display:block;image-rendering:pixelated;">
-        <hr class="dv">
-        <div class="px7" style="color:var(--dim);line-height:2.55;text-align:left">
-          📅 5년 = 60개월<br>
-          💸 생활비 월 10G 자동 차감<br>
-          🧹 아르바이트 = 돈 벌기 / 성장 적음<br>
-          📚 수업 = 돈 쓰기 / 성장 큼<br>
-          🎭 사교 = 돈 쓰기 / 호감도·이벤트 강화<br>
-          😴 무료 행동 = 회복·소성장<br>
-          🎓 6개월마다 성적 우수 시 장학금 지급<br>
-          🛌 피로 90+ → 다음 달 강제 휴식
-        </div>
+      <hr class="dv" style="margin:13px 0">
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-sm" id="back-btn">← 뒤로</button>
+        <button class="btn btn-sm" id="start-btn">시작 →</button>
+      </div>
+    </div>
+    <div class="box" style="padding:16px;text-align:center">
+      <div class="sec-ttl">게임 안내</div>
+      <img src="me.png" alt="주인공" style="width:96px;height:96px;object-fit:cover;border:2px solid var(--bdr2);border-radius:8px;margin:8px auto 10px;display:block;image-rendering:pixelated;cursor:pointer" onclick="openMeModal(true)">
+      <hr class="dv">
+      <div style="font-size:14px;color:var(--silver);line-height:2;text-align:left;word-break:keep-all">
+        📅 5년 = 60개월<br>
+        💸 생활비 월 10G 자동 차감<br>
+        🧹 아르바이트 = 돈 벌기 / 성장 적음<br>
+        📚 수업 = 돈 쓰기 / 성장 큼<br>
+        🎭 사교 = 돈 쓰기 / 호감도·이벤트 강화<br>
+        😴 무료 행동 = 회복·소성장<br>
+        🎓 6개월마다 성적 우수 시 장학금 지급<br>
+        🛌 피로 90+ → 다음 달 강제 휴식
       </div>
     </div>
   </div>
+</div>
 
-  <!-- GAME -->
-  <div id="screen-game" class="screen">
+<div id="screen-game" class="screen">
+  <div class="hud-wrap">
     <div class="box hud">
       <div class="hd-left">
-        <img id="me-img" class="me-img" src="me.png" alt="주인공">
-        <div>
+        <img id="me-img" class="me-img" src="me.png" alt="주인공" onclick="openMeModal()">
+        <div style="min-width:0">
           <div class="hd-name" id="hd-name">수련생</div>
-          <div class="px7" style="color:var(--dim);margin-top:2px">🧙‍♂️ 마법사 수련생</div>
+          <div class="hd-sub">🧙‍♂️ 마법사 수련생</div>
         </div>
       </div>
-      <div style="text-align:center">
+      <div style="text-align:center;min-width:0">
         <div class="hd-date" id="hd-date">1년차 1월</div>
         <div id="hd-season"></div>
         <div class="prog"><div class="progf" id="hd-prog" style="width:0%"></div></div>
-        <div class="px7" style="color:var(--dim);margin-top:2px" id="hd-turn">1/60</div>
+        <div class="px9" style="color:var(--dim);margin-top:3px" id="hd-turn">1/60</div>
       </div>
       <div class="hd-gold">💰 <span id="hd-gold">240</span>G</div>
     </div>
+  </div>
 
-    <div class="gg">
-      <!-- LEFT -->
-      <div>
-        <div class="box pnl">
-          <div class="pttl">✦ 능력치</div>
-          <div id="stat-panel"></div>
-          <hr class="dv">
-          <div class="pttl">✦ 상태</div>
-          <div class="mr">
-            <span class="px7" style="color:var(--dim)">피로도</span>
-            <span class="px7" id="fat-num">0/100</span>
-          </div>
-          <div class="fatb"><div class="fatf" id="fat-fill" style="width:0%"></div></div>
-          <div id="badges"></div>
-        </div>
-
-        <div class="box pnl" style="margin-top:8px">
-          <div class="pttl">✦ 상점</div>
-          <div id="shop-list"></div>
-        </div>
+  <div id="tab-train" class="tab-panel active">
+    <div class="box tabbox">
+      <div class="mi" id="m-info">1년차 1월 — 이달의 활동을 선택하세요</div>
+      <div class="slots">
+        <div class="slot"><div class="slot-lbl">🌅 오전</div><div class="slot-val empty" id="slot-am">선택 안 함</div></div>
+        <div class="slot"><div class="slot-lbl">🌆 오후</div><div class="slot-val empty" id="slot-pm">선택 안 함</div></div>
       </div>
-
-      <!-- CENTER -->
-      <div class="box sch">
-        <div class="mi" id="m-info">1년차 1월 — 이달의 활동을 선택하세요</div>
-
-        <div class="slots">
-          <div class="slot">
-            <div class="slot-lbl">🌅 오전</div>
-            <div class="slot-val empty" id="slot-am">선택 안 함</div>
-          </div>
-          <div class="slot">
-            <div class="slot-lbl">🌆 오후</div>
-            <div class="slot-val empty" id="slot-pm">선택 안 함</div>
-          </div>
-        </div>
-
-        <div class="px7" style="color:var(--dim);margin-bottom:6px;line-height:2">
-          활동 선택 (오전 → 오후 순)<br>
-          아르바이트는 수입 / 수업·사교는 비용 / 데이트는 오후 슬롯을 사용합니다.
-        </div>
-
-        <div class="ag" id="act-grid"></div>
-        <button class="btn" style="width:100%" id="confirm-btn">다음 달 →</button>
-
-        <div class="box log" id="log-panel"></div>
+      <div class="preview-box">
+        <div class="preview-ttl">✦ 이번 달 예상 변화</div>
+        <div class="preview-main" id="preview-main">활동을 고르면 예상 변화가 표시돼요.</div>
+        <div class="preview-sub" id="preview-sub"></div>
       </div>
-
-      <!-- RIGHT -->
-      <div>
-        <div class="box np">
-          <div class="pttl">✦ 인물 관계</div>
-          <div id="npc-list"></div>
-          <button class="btn btn-sm btn-pink" id="date-btn" style="display:none;width:100%;margin-top:6px">💕 데이트 신청</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- BGM ROW : 게임 전체 그리드 아래 단독 배치 -->
-    <div class="bgm-row">
-      <button id="bgm-toggle" type="button" aria-label="BGM 토글">🔊 BGM ON</button>
+      <div style="font-size:13px;color:var(--dim);margin-bottom:8px;line-height:1.9;word-break:keep-all">활동 선택 (오전 → 오후 순). 데이트는 오후 슬롯을 사용해요.</div>
+      <div class="ag" id="act-grid"></div>
+      <button class="btn" style="width:100%" id="confirm-btn">다음 달 →</button>
     </div>
   </div>
 
-  <!-- ENDING -->
-  <div id="screen-ending" class="screen screen-flex">
-    <div class="en-ico" id="en-ico">✨</div>
-
-    <div class="en-ttl" id="en-main-ttl">메인 엔딩</div>
-    <div class="en-txt" id="en-main-txt"></div>
-
-    <div class="box" id="en-side-wrap" style="max-width:520px;width:100%;padding:14px;display:none">
-      <div class="px9" id="en-side-label" style="color:var(--pink);margin-bottom:10px;text-shadow:0 0 8px var(--pink)">💕 로맨스 에필로그</div>
-      <div class="px10" id="en-side-ttl" style="color:var(--pink);margin-bottom:10px;line-height:1.8"></div>
-      <div class="en-txt" id="en-side-txt" style="font-size:13px;max-width:none"></div>
-    </div>
-
-    <div class="box" style="max-width:520px;width:100%;padding:14px">
-      <div class="px9" style="color:var(--know);margin-bottom:10px;text-shadow:0 0 8px var(--know)">✦ 수련 기록</div>
-      <div id="en-meta" style="font-size:13px;line-height:2;color:var(--silver)"></div>
-    </div>
-
-    <div class="en-stats" id="en-stats"></div>
-
-    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:10px">
-      <button class="btn" id="restart-btn">✦ 다시 시작</button>
+  <div id="tab-relations" class="tab-panel">
+    <div class="box np">
+      <div class="pttl">✦ 관계</div>
+      <div class="me-card" onclick="openMeModal()">
+        <img src="me.png" alt="주인공">
+        <div>
+          <div class="t1">주인공 상태 보기</div>
+          <div class="t2">나의 현재 성장 방향과 가까운 인물을 확인해요.</div>
+        </div>
+      </div>
+      <div id="npc-list"></div>
+      <button class="btn btn-sm btn-pink" id="date-btn" style="display:none;width:100%;margin-top:6px">💕 데이트 신청</button>
     </div>
   </div>
+
+  <div id="tab-shop" class="tab-panel">
+    <div class="box shop-box">
+      <div class="pttl">✦ 상점</div>
+      <div id="shop-list"></div>
+    </div>
+  </div>
+
+  <div id="tab-status" class="tab-panel">
+    <div class="box stat-box">
+      <div class="pttl">✦ 능력치</div>
+      <div id="stat-panel"></div>
+      <hr class="dv">
+      <div class="pttl">✦ 상태</div>
+      <div class="mr"><span class="px9" style="color:var(--dim)">피로도</span><span class="px9" id="fat-num">0/100</span></div>
+      <div class="fatb"><div class="fatf" id="fat-fill" style="width:0%"></div></div>
+      <div id="badges"></div>
+      <hr class="dv" style="margin-top:10px">
+      <div class="pttl">✦ 기록</div>
+      <div class="log" id="log-panel"></div>
+    </div>
+  </div>
+
+  <div id="game-tabbar">
+    <button class="tab-btn active" data-tab="train">수련</button>
+    <button class="tab-btn" data-tab="relations">관계</button>
+    <button class="tab-btn" data-tab="shop">상점</button>
+    <button class="tab-btn" data-tab="status">내 정보</button>
+  </div>
+</div>
+
+<div id="screen-ending" class="screen screen-flex">
+  <div class="en-ico" id="en-ico">✨</div>
+  <div class="en-ttl" id="en-main-ttl">메인 엔딩</div>
+  <div class="en-txt" id="en-main-txt"></div>
+  <div class="box" id="en-side-wrap" style="max-width:520px;width:100%;padding:14px;display:none">
+    <div class="px10" id="en-side-label" style="color:var(--pink);margin-bottom:10px;text-shadow:0 0 8px var(--pink)">💕 로맨스 에필로그</div>
+    <div class="px11" id="en-side-ttl" style="color:var(--pink);margin-bottom:10px;line-height:1.8"></div>
+    <div class="en-txt" id="en-side-txt" style="font-size:14px;max-width:none"></div>
+  </div>
+  <div class="box" style="max-width:520px;width:100%;padding:14px">
+    <div class="px10" style="color:var(--know);margin-bottom:10px;text-shadow:0 0 8px var(--know)">✦ 수련 기록</div>
+    <div id="en-meta" style="font-size:14px;line-height:2;color:var(--silver)"></div>
+  </div>
+  <div class="en-stats" id="en-stats"></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:10px">
+    <button class="btn" id="restart-btn">✦ 다시 시작</button>
+  </div>
+</div>
 
 </div>
 
-<!-- EVENT MODAL -->
 <div class="ov" id="ev-modal">
   <div class="box modal">
     <img id="ev-img" class="ev-img" style="display:none" alt="">
@@ -510,7 +356,6 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
   </div>
 </div>
 
-<!-- LOVE MODAL -->
 <div class="ov" id="lv-modal">
   <div class="box modal">
     <img id="lv-img" class="lv-img" alt="">
@@ -521,1603 +366,288 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
   </div>
 </div>
 
-<!-- DATE SELECT MODAL -->
 <div class="ov" id="date-modal">
   <div class="box modal">
     <div class="m-ttl">💕 데이트 상대 선택</div>
-    <div class="m-txt px8" style="margin-bottom:10px">
-      호감도 25 이상인 인물과 데이트할 수 있어요.<br>
-      데이트는 오후 활동 시간을 사용합니다.
-    </div>
+    <div class="m-txt" style="font-size:14px">호감도 25 이상인 인물과 데이트할 수 있어요.<br>데이트는 오후 활동 시간을 사용합니다.</div>
     <div class="choices" id="date-choices"></div>
     <div class="m-btns"><button class="btn btn-sm btn-red" id="date-cancel-btn">취소</button></div>
   </div>
 </div>
 
-<!-- NPC MODAL -->
 <div class="ov" id="npc-modal">
-  <div class="box modal" style="max-width:370px">
+  <div class="box modal" style="max-width:390px">
     <img id="nm-img" class="nm-img" alt="">
-    <div class="nm-name" id="nm-name">이름</div>
-    <div class="nm-title" id="nm-title">직함</div>
-    <div class="m-txt" id="nm-desc" style="margin-bottom:9px;font-size:13px"></div>
-
-    <div class="nm-hr" style="display:flex;align-items:center;gap:7px;margin-bottom:9px">
-      <span class="px7" style="color:var(--dim);flex-shrink:0">호감도</span>
-      <div style="flex:1;height:9px;background:var(--bg2);border:1px solid var(--bdr)">
-        <div id="nm-hf" style="height:100%;background:linear-gradient(90deg,#d04070,#f050a0);transition:width .3s"></div>
-      </div>
-      <span class="px7" style="color:var(--pink);flex-shrink:0" id="nm-hn">0/100</span>
+    <div class="m-ttl" id="nm-name" style="margin-bottom:6px">이름</div>
+    <div class="px10" id="nm-title" style="color:var(--dim);text-align:center;margin-bottom:12px;line-height:1.8">직함</div>
+    <div class="modal-desc" id="nm-desc"></div>
+    <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px">
+      <span class="px9" style="color:var(--dim);flex-shrink:0">호감도</span>
+      <div style="flex:1;height:9px;background:var(--bg2);border:1px solid var(--bdr)"><div id="nm-hf" style="height:100%;background:linear-gradient(90deg,#d04070,#f050a0);transition:width .3s"></div></div>
+      <span class="px9" style="color:var(--pink);flex-shrink:0" id="nm-hn">0/100</span>
     </div>
-
-    <div class="px7" style="color:var(--dim);text-align:center;margin-bottom:5px" id="nm-stage"></div>
-    <div class="px7" style="color:var(--dim);text-align:center;margin-bottom:12px" id="nm-next"></div>
+    <div class="px9" style="color:var(--dim);text-align:center;margin-bottom:6px" id="nm-stage"></div>
+    <div class="px9" style="color:var(--dim);text-align:center;margin-bottom:14px" id="nm-next"></div>
     <div class="m-btns"><button class="btn btn-sm" id="npc-close-btn">닫기</button></div>
   </div>
 </div>
 
+<div class="ov" id="me-modal">
+  <div class="box modal" style="max-width:410px">
+    <img src="me.png" class="me-modal-img" alt="주인공">
+    <div class="m-ttl">나의 상태</div>
+    <div class="meta-list" id="me-meta-list"></div>
+    <div class="modal-desc" id="me-desc" style="margin-bottom:16px"></div>
+    <div class="m-btns"><button class="btn btn-sm" id="me-close-btn">닫기</button></div>
+  </div>
+</div>
+
+<div class="ov" id="warn-modal">
+  <div class="box modal" style="max-width:380px">
+    <div class="m-ico">⚠️</div>
+    <div class="m-ttl">확인</div>
+    <div class="warn-box" id="warn-text">경고</div>
+    <div class="m-btns">
+      <button class="btn btn-sm btn-red" id="warn-cancel-btn">취소</button>
+      <button class="btn btn-sm" id="warn-ok-btn">그대로 진행</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const SAVE_KEY = 'mageAcad_v5';
+const SAVE_KEY='mageAcad_v6';
+const IMG={leon:'leon.png',cassian:'cassian.png',saren:'saren.png',vain:'vain.png',elias:'elias.png',jaiden:'jaiden.png',oliver:'oliver.png',me:'me.png'};
+const SOLO_ENDING={ttl:'솔로 엔딩 — 혼자여도 괜찮아',txt:'5년의 수련이 끝났지만, 이번엔 누구의 손도 잡지 않았다. 조금은 쓸쓸했지만 이상하게 후회는 없었다. 당신은 스스로의 힘으로 여기까지 왔고, 앞으로의 길도 충분히 걸어갈 수 있다. 누군가와 함께하는 미래는 아직 열려 있다. 다만, 이번 주인공은 오롯이 당신 자신이었다.'};
 
-const IMG = {
-  leon:'leon.png',
-  cassian:'cassian.png',
-  saren:'saren.png',
-  vain:'vain.png',
-  elias:'elias.png',
-  jaiden:'jaiden.png',
-  oliver:'oliver.png',
-  me:'me.png'
+const NPCS=[
+{id:'leon',icon:'🤴',name:'레온',title:'왕국의 왕자',desc:'빛나는 금발과 다정한 미소를 가진 왕자. 누구에게나 친절하지만, 당신 앞에서는 유독 더 가까이 다가온다.',meet:t=>t>=2,events:[{t:4,h:7,txt:'왕궁 복도에서 레온이 먼저 말을 걸어왔다. "오늘도 수련하러 가는 거지? 네 얼굴 보면 이상하게 기분이 좋아져."'},{t:12,h:8,txt:'저녁 정원에서 레온이 당신에게 꽃을 건넸다. "이건 네 눈이랑 잘 어울릴 것 같아서."',choices:['고맙다고 받는다','왜 나를 챙기냐고 묻는다','살짝 웃는다'],res:[{h:4,txt:'레온이 환하게 웃었다. "역시 웃는 얼굴이 제일 예뻐."'},{h:6,txt:'"그건… 네가 특별하니까?" 레온이 장난스럽게 말했지만 시선은 진지했다.'},{h:5,txt:'짧은 미소 하나에 레온의 귀가 빨갛게 달아올랐다.'}]},{t:22,h:10,txt:'연회 뒤편 발코니, 레온이 한숨을 쉬며 말했다. "다들 나를 왕자로만 보는데, 넌 다르게 봐주잖아."'},{t:32,h:12,txt:'레온이 성의 비밀 정원으로 당신을 불렀다. "이곳엔 아무도 못 들어와. 너만은 예외야."',choices:['조용히 곁에 선다','손을 먼저 내민다'],res:[{h:6,txt:'말 없이 나란히 선 순간, 레온은 당신의 어깨에 살짝 기대 왔다.'},{h:8,txt:'레온이 놀란 듯 굳었다가, 곧 손가락을 맞잡았다.'}]},{t:44,h:14,txt:'비가 오는 날, 레온은 망토 안으로 당신을 끌어당겼다. "감기 걸리면 곤란해. 네가 아프면… 내가 싫거든."'},{t:56,h:18,txt:'왕궁의 최고층. 레온이 낮게 속삭였다. "이제 더는 숨기기 싫어. 내가 원하는 건 왕좌보다 네 곁이야."'}]},
+{id:'cassian',icon:'🗡️',name:'카시안',title:'왕실 근위기사',desc:'과묵하고 단단한 기사. 늘 한 걸음 뒤에서 지키지만, 당신이 위험하면 누구보다 먼저 움직인다.',meet:t=>t>=1,events:[{t:3,h:6,txt:'훈련장에서 넘어지자 카시안이 즉시 손을 내밀었다. "다치지 않았습니까?" 그의 목소리는 놀랄 만큼 다정했다.'},{t:10,h:7,txt:'야간 순찰 중 카시안이 당신의 발걸음을 맞춰 걸었다. "혼자 다니는 습관은 고치시는 게 좋습니다."',choices:['걱정해줘서 고맙다고 한다','왜 신경 쓰냐고 묻는다','앞으로 같이 걸어달라 한다'],res:[{h:4,txt:'카시안이 짧게 고개를 끄덕였다. 하지만 귀 끝이 붉었다.'},{h:6,txt:'"...제가 원해서입니다." 그 한마디 뒤로 침묵이 무거워졌다.'},{h:8,txt:'카시안이 시선을 피한 채 답했다. "원하신다면, 언제든."'}]},{t:20,h:9,txt:'임무 중 상처를 입은 카시안의 붕대를 감아주자, 그가 당신 손목을 잠깐 붙잡았다. "이 손, 떨고 있습니다."'},{t:30,h:12,txt:'폭풍우 치는 밤, 카시안은 문밖에 서 있었다. "혹시라도 불안하실까 봐…" 그는 끝내 말을 잇지 못했다.'},{t:42,h:14,txt:'훈련이 끝난 뒤, 카시안이 뒤에서 조용히 검을 잡아주며 자세를 바로잡았다. 서로의 숨이 닿을 만큼 가까웠다.'},{t:54,h:18,txt:'성벽 위 달빛 아래서 카시안이 고개를 숙였다. "기사의 맹세보다 앞선 감정이 생겨버렸습니다. 그것이… 당신입니다."'}]},
+{id:'saren',icon:'🌊',name:'사렌',title:'이방인 상인',desc:'먼 나라에서 온 자유로운 상인. 능청스럽고 가벼워 보여도, 당신에게만은 자꾸 진심을 흘린다.',meet:t=>t>=4,events:[{t:6,h:5,txt:'시장 골목에서 사렌이 희귀한 마법 재료를 툭 던져줬다. "공짜야. 넌 그냥… 자꾸 눈이 가서."'},{t:14,h:8,txt:'사렌이 고향 바다 이야기를 들려주다 당신을 물끄러미 봤다. "너랑 있으면 이상하게 집 생각이 안 나."',choices:['더 이야기해달라고 한다','왜 그렇게 보는지 묻는다','시선을 피한다'],res:[{h:6,txt:'사렌은 웃으며 당신 쪽으로 더 가까이 몸을 기울였다.'},{h:5,txt:'"들켰네." 그는 답 대신 눈웃음으로 넘겼다.'},{h:3,txt:'사렌이 피식 웃었다. "도망가도 늦었어."'}]},{t:24,h:11,txt:'야시장의 불빛 아래, 사렌이 당신 소매를 붙잡았다. "잠깐만. 지금 다른 데 가지 마."'},{t:34,h:13,txt:'사렌이 옥상에서 별을 가리켰다. "우리 나라 말로 저 별은 그리움이야. 근데 지금은… 네 이름으로 부르고 싶네."'},{t:46,h:15,txt:'멀리 떠나야 하는 거래 전날, 사렌은 떠나는 대신 당신 곁에 앉아 있었다. "솔직히 말하면, 지금 떠나기 싫어."'},{t:58,h:18,txt:'새벽 항구. 사렌이 손을 내밀었다. "이번엔 장난 아니야. 같이 갈래? 네가 있으면 어디든 집이 될 것 같아."'}]},
+{id:'vain',icon:'🌑',name:'베인',title:'금지된 마법사',desc:'추방된 천재 마도사. 서늘하고 위험하지만, 당신에게만은 설명할 수 없는 집착을 드러낸다.',meet:t=>t>=6,events:[{t:8,h:5,txt:'금지된 서고에서 베인과 마주쳤다. "또 너군." 차갑게 말했지만, 그는 당신을 쫓아내지 않았다.'},{t:16,h:7,txt:'베인이 금서의 일부를 보여주며 말했다. "이건 누구에게도 보여주지 않았어. 그런데 넌… 이상하게 괜찮군."',choices:['왜 나만 예외냐고 묻는다','조용히 읽는다','위험하지 않냐고 묻는다'],res:[{h:6,txt:'베인이 눈을 내리깔았다. "...네가 다치면 싫으니까."'},{h:8,txt:'베인은 흥미롭다는 듯 당신 옆에 가까이 앉았다.'},{h:5,txt:'"너랑 있으면 두렵지 않아." 베인의 시선이 흔들렸다.'}]},{t:26,h:11,txt:'금지된 마력의 반동으로 당신이 휘청이자 베인이 즉시 붙잡았다. "말했잖아. 내 앞에서 무모해지지 말라고."'},{t:36,h:13,txt:'깊은 밤, 베인은 당신 이름을 작게 부르며 손등에 입술을 스쳤다. "가끔은 확인하고 싶어. 네가 진짜 여기 있는지."'},{t:48,h:16,txt:'베인이 어둠 속에서 당신 어깨를 감쌌다. "세상이 다 등을 돌려도 상관없어. 네가 나를 버리지 않으면."'},{t:60,h:20,txt:'수련의 마지막 밤, 베인이 시선을 떼지 않은 채 속삭였다. "이제 선택해. 빛으로 갈지, 나와 함께 갈지."'}]},
+{id:'elias',icon:'🌿',name:'엘리아스',title:'마을 약제사',desc:'부드럽고 따뜻한 약제사. 곁에 있으면 마음이 진정되는 사람, 그리고 언제나 가장 먼저 당신을 걱정하는 사람.',meet:t=>t>=1,events:[{t:2,h:5,txt:'약제사 가게에서 엘리아스가 미소 지으며 차를 건넸다. "오늘은 조금 지쳐 보이네요. 잠깐 쉬었다 가요."'},{t:9,h:7,txt:'피로 회복제를 건네며 엘리아스가 속삭였다. "당신이 무리하는 걸 보면… 자꾸 마음이 쓰여요."',choices:['고맙다고 받는다','괜찮다고 말한다','왜 그렇게 신경 쓰냐고 묻는다'],res:[{h:5,txt:'엘리아스가 안도한 듯 웃었다. "다행이다."'},{h:3,txt:'그는 약병을 슬며시 당신 손에 쥐여주었다. "그래도 가져가요."'},{h:7,txt:'엘리아스가 붉어진 얼굴로 시선을 내렸다. "그건… 당신이라서."'}]},{t:18,h:10,txt:'비 오는 날, 엘리아스가 우산을 들고 조용히 기다리고 있었다. "혹시 올 것 같아서."'},{t:28,h:12,txt:'함께 약을 만들다 손이 겹쳤다. 엘리아스는 놀라면서도 손을 빼지 않았다.'},{t:40,h:14,txt:'늦은 저녁, 엘리아스가 당신을 위해 허브차를 끓였다. "당신이 오는 시간대엔, 이상하게 매번 준비하게 돼요."'},{t:52,h:18,txt:'작은 약초원 한가운데서 엘리아스가 웃으며 말했다. "수련이 끝나도… 제 곁에 있어줄 수 있나요?"'}]},
+{id:'jaiden',icon:'⚔️',name:'제이든',title:'라이벌 수련생',desc:'늘 툴툴거리지만 가장 많이 신경 쓰는 라이벌. 싸우고 부딪히며 점점 더 서로를 의식하게 된다.',meet:t=>t>=1,events:[{t:2,h:4,txt:'"흥, 그 정도 마법은 나도 해." 제이든은 틱틱댔지만, 끝내 당신의 실수는 먼저 고쳐줬다.'},{t:11,h:7,txt:'시험 도중 슬쩍 힌트를 주며 제이든이 중얼거렸다. "착각하지 마. 네가 너무 못하면 재미없으니까."',choices:['고맙다고 솔직히 말한다','같이 공부하자고 한다','도발로 받아친다'],res:[{h:4,txt:'제이든이 얼굴을 붉히며 고개를 홱 돌렸다.'},{h:7,txt:'"하? 누가 너랑..." 말은 그랬지만 다음 날 먼저 와 있었다.'},{h:5,txt:'말다툼 끝에 둘 다 웃어버렸다. 이상하게 기분이 좋았다.'}]},{t:21,h:10,txt:'축제 인파 속, 제이든이 당신 손목을 덥석 잡았다. "놓치면 귀찮잖아. 그냥 따라와."'},{t:33,h:12,txt:'결투 훈련 후 숨을 고르던 제이든이 낮게 말했다. "너랑 붙는 건… 다른 애들이랑 달라."'},{t:45,h:15,txt:'제이든은 당신이 다친 걸 보자 평소와 다르게 화를 냈다. "왜 이렇게 막 굴어? 네가 다치면… 내가 짜증나잖아."'},{t:57,h:18,txt:'해 질 무렵 옥상. 제이든이 시선을 피하며 중얼거렸다. "젠장… 이제 인정할게. 네가 없으면 재미없어. 너무."'}]},
+{id:'oliver',icon:'🤝',name:'올리버',title:'절친한 친구',desc:'논리적이고 침착한 친구. 가장 오래 곁을 지켜본 만큼, 자신도 모르게 당신에게 마음이 깊어져 있다.',meet:t=>t>=1,events:[{t:3,h:4,txt:'"이 방법은 비효율적이야." 올리버는 차분히 설명하면서도 끝까지 당신 옆에 남아 도와줬다.'},{t:13,h:7,txt:'올리버가 조용히 노트를 내밀었다. "네가 쓰면 더 잘 맞을 것 같아서 정리해뒀어."',choices:['고맙다고 한다','이렇게까지 해주는 이유를 묻는다','같이 공부하자고 한다'],res:[{h:4,txt:'올리버가 헛기침했다. "당연한 일이야."'},{h:6,txt:'"...네가 중요하니까." 그는 말한 뒤 한참 눈을 마주치지 못했다.'},{h:7,txt:'그날 이후 둘의 공부 시간은 자연스럽게 늘어났다.'}]},{t:23,h:10,txt:'계획 없이 산책하자는 제안에 올리버가 잠시 멈췄다가 말했다. "...비효율적이지만, 너랑이면 괜찮아."'},{t:35,h:12,txt:'늦은 도서관, 졸린 눈으로 책을 읽던 당신에게 올리버가 자신의 어깨를 내어줬다. "잠깐만 기대도 돼."'},{t:47,h:15,txt:'올리버가 문득 말했다. "감정은 변수라고 생각했는데, 이상하게 너만큼은 계산이 안 돼."'},{t:59,h:18,txt:'수련 종료를 앞둔 밤, 올리버가 고개를 숙였다. "논리적으로 따지면… 난 이미 오래전부터 너를 좋아하고 있었어."'}]}
+];
+
+const MINI_ROMANCE={
+leon:['레온이 멀리서 당신을 발견하자마자 곧장 다가왔다. "오늘은 꼭 네 얼굴 먼저 보고 싶었어."','짧게 스친 순간에도 레온의 시선은 오래 남았다. 그는 장난스럽게 웃었지만 눈빛은 다정했다.','레온이 당신 어깨 위 먼지를 가볍게 털어주며 말했다. "이 정도는 해도 되지?"'],
+cassian:['카시안은 아무 말 없이 당신의 짐을 대신 들어주었다. 손끝이 스치는 순간 심장이 이상하게 빨라졌다.','복도 구석에서 카시안이 낮게 물었다. "오늘은 괜찮으십니까?" 그 짧은 한마디가 오래 남았다.','카시안은 당신이 보일 때마다 아주 미세하게 표정이 풀린다. 이제는 그걸 알아볼 수 있었다.'],
+saren:['사렌이 웃으며 당신 곁에 기대왔다. "이상하지, 사람 많은데도 네 옆이 제일 편해."','사렌은 장난스레 말을 걸었지만, 마지막엔 꼭 진심 같은 눈으로 당신을 본다.','야시장 한복판, 사렌이 당신 소매 끝을 잠깐 잡았다 놓았다. 사소한 접촉이 더 신경 쓰였다.'],
+vain:['베인은 지나가던 걸음을 멈추고 당신만 바라봤다. "또 무리했군." 냉담한 말인데도 어딘가 다정했다.','어둑한 서고에서 베인이 책 한 권을 밀어줬다. "읽어. 네가 좋아할 것 같았어."','베인은 언제나 말수가 적었지만, 당신 곁에 설 때만큼은 이상하리만치 오래 머물렀다.'],
+elias:['엘리아스가 따뜻한 차를 건네며 미소 지었다. "오늘은 얼굴이 조금 피곤해 보여요."','약초 향이 스민 손끝이 잠깐 닿았다. 엘리아스는 놀라면서도 손을 거두지 않았다.','엘리아스는 당신이 들어올 시간을 아는 사람처럼, 늘 맞춰 준비되어 있었다.'],
+jaiden:['제이든이 또 투덜거리며 말을 걸었지만, 결국 가장 먼저 당신 곁에 와 있었다.','훈련 중 제이든의 시선이 유난히 자주 마주쳤다. 그는 들키자마자 헛기침을 했다.','제이든은 당신 얘기만 나오면 괜히 예민해진다. 그 이유를 이제는 모르는 척하기 어렵다.'],
+oliver:['올리버는 당신 몫까지 정리된 노트를 내밀었다. "겸사겸사였어." 하지만 그런 표정은 아니었다.','도서관 창가, 올리버는 책보다 당신 쪽을 더 자주 보고 있었다.','올리버는 짧은 침묵 속에서도 편안했다. 당신과 함께 있을 때만은 더욱 그랬다.']
 };
 
-const SOLO_ENDING = {
-  ttl:'솔로 엔딩 — 혼자여도 괜찮아',
-  txt:'5년의 수련이 끝났지만, 이번엔 누구의 손도 잡지 않았다. 조금은 쓸쓸했지만 이상하게 후회는 없었다. 당신은 스스로의 힘으로 여기까지 왔고, 앞으로의 길도 충분히 걸어갈 수 있다. 누군가와 함께하는 미래는 아직 열려 있다. 다만, 이번 주인공은 오롯이 당신 자신이었다.'
+const ACTS=[
+{id:'apothecary_job',type:'job',unlock:1,icon:'🧪',name:'약방 보조',stat:{know:1},fat:10,gold:17,npc:'elias',nc:.30,fail:.05,fstat:{gold:-3},ftxt:'재고를 헷갈려 보수가 깎였다. -3G'},
+{id:'market_delivery',type:'job',unlock:1,icon:'📦',name:'시장 배달',stat:{body:1},fat:14,gold:19,npc:'saren',nc:.24,fail:.09,fstat:{fat:8},ftxt:'짐이 많아져 추가 노동! 피로 +8'},
+{id:'library_sorting',type:'job',unlock:1,icon:'🗂️',name:'서고 정리',stat:{know:1},fat:8,gold:15,npc:'oliver',nc:.26,fail:.04,fstat:{gold:-2},ftxt:'고서를 잘못 분류해 보수 -2G'},
+{id:'alchemy_assist',type:'job',unlock:1,icon:'⚗️',name:'연금 조수',stat:{mana:1},fat:12,gold:18,npc:'vain',nc:.16,fail:.12,fstat:{gold:-4,mana:-1},ftxt:'연금 반응이 꼬였다. 보수 -4G, 마력 -1'},
+{id:'wall_guard',type:'job',unlock:2,icon:'🛡️',name:'성벽 경비',stat:{body:1},fat:16,gold:20,npc:'cassian',nc:.28,fail:.09,fstat:{fat:10},ftxt:'경비가 길어졌다. 피로 +10'},
+{id:'banquet_service',type:'job',unlock:2,icon:'🍷',name:'연회장 서빙',stat:{social:1},fat:12,gold:16,npc:'leon',nc:.32,fail:.07,fstat:{social:-1},ftxt:'작은 실수로 민망해졌다. 사교 -1'},
+{id:'elemental_class',type:'class',unlock:1,icon:'✨',name:'기초 원소 마법',stat:{mana:2},fat:10,gold:-7,npc:'vain',nc:.16,fail:.08,fstat:{mana:-1},ftxt:'집중이 흔들렸다. 마력 -1'},
+{id:'ancient_texts',type:'class',unlock:1,icon:'📚',name:'고대 문헌학',stat:{know:2},fat:8,gold:-7,npc:'oliver',nc:.20,fail:.05,fstat:{know:-1},ftxt:'해석 실수. 지식 -1'},
+{id:'alchemy_practicum',type:'class',unlock:1,icon:'🔬',name:'연금술 실습',stat:{mana:1,know:1},fat:11,gold:-12,npc:'elias',nc:.16,fail:.10,fstat:{gold:-4},ftxt:'재료를 다시 구매했다. 추가 비용 -4G'},
+{id:'martial_basics',type:'class',unlock:1,icon:'💪',name:'체술 기초',stat:{body:2},fat:14,gold:-5,npc:'cassian',nc:.20,fail:.10,fstat:{fat:7},ftxt:'훈련이 길어졌다. 피로 +7'},
+{id:'court_etiquette',type:'class',unlock:2,icon:'👑',name:'궁정 예법',stat:{social:2},fat:8,gold:-9,npc:'leon',nc:.24,fail:.07,fstat:{social:-1},ftxt:'예법을 틀렸다. 사교 -1'},
+{id:'forbidden_decoding',type:'class',unlock:3,icon:'🌑',name:'금서 해독',stat:{mana:2,know:1},fat:14,gold:-15,npc:'vain',nc:.32,fail:.14,fstat:{mana:-2,fat:10},ftxt:'금서의 반동을 받았다. 마력 -2, 피로 +10',forbidden:true},
+{id:'royal_tea',type:'social',unlock:1,icon:'🫖',name:'왕궁 티파티',stat:{social:1},fat:8,gold:-13,npc:'leon',nc:.38,fail:.05,fstat:{social:-1},ftxt:'대화가 어색하게 꼬였다. 사교 -1'},
+{id:'night_market',type:'social',unlock:1,icon:'🏮',name:'야시장 산책',stat:{social:1},fat:5,gold:-5,npc:'saren',nc:.36,fail:.05,fstat:{gold:-4},ftxt:'충동구매를 더 했다. -4G'},
+{id:'herb_tea_circle',type:'social',unlock:1,icon:'🌿',name:'약초차 모임',stat:{social:1},fat:-8,gold:-6,npc:'elias',nc:.34,fail:.02,fstat:{},ftxt:'잔잔한 시간만 흘렀다.'},
+{id:'knight_stands',type:'social',unlock:2,icon:'🏇',name:'기사단 관람',stat:{social:1,body:1},fat:7,gold:-7,npc:'cassian',nc:.30,fail:.05,fstat:{fat:4},ftxt:'오래 서 있어 피로 +4'},
+{id:'festival',type:'social',unlock:2,icon:'🎉',name:'왕국 축제',stat:{social:2},fat:12,gold:-15,npc:'jaiden',nc:.28,fail:.08,fstat:{gold:-5},ftxt:'축제에서 돈을 더 써버렸다. -5G'},
+{id:'secret_archive',type:'social',unlock:3,icon:'🕯️',name:'비밀 서고 탐방',stat:{know:1},fat:9,gold:-9,npc:'vain',nc:.38,fail:.10,fstat:{fat:7},ftxt:'수상한 기운 탓에 피로 +7',forbidden:true},
+{id:'self_practice',type:'free',unlock:1,icon:'🔮',name:'자율 연습',stat:{mana:1},fat:8,gold:0,npc:null,nc:0,fail:.06,fstat:{mana:-1},ftxt:'마법식이 꼬였다. 마력 -1'},
+{id:'note_review',type:'free',unlock:1,icon:'📝',name:'복습 정리',stat:{know:1},fat:6,gold:0,npc:null,nc:0,fail:.04,fstat:{},ftxt:'정리가 더뎠다.'},
+{id:'walk',type:'free',unlock:1,icon:'🚶',name:'산책',stat:{social:1},fat:-8,gold:0,npc:'saren',nc:.14,fail:0,fstat:{},ftxt:''},
+{id:'nap',type:'free',unlock:1,icon:'😴',name:'낮잠',stat:{},fat:-24,gold:0,npc:null,nc:0,fail:0,fstat:{},ftxt:''},
+{id:'meditate',type:'free',unlock:2,icon:'🧘',name:'명상',stat:{mana:1},fat:-10,gold:0,npc:null,nc:0,fail:.02,fstat:{},ftxt:'잡념이 많았다.'}
+];
+
+const SHOP=[
+{id:'pot',name:'🧪 피로 회복제',cost:36,eff:{fat:-35},desc:'피로 −35'},
+{id:'book',name:'📖 마법 주석서',cost:54,eff:{know:3},desc:'지식 +3'},
+{id:'crys',name:'💎 마력 수정',cost:68,eff:{mana:4},desc:'마력 +4'},
+{id:'herb',name:'🌺 고급 약초',cost:46,eff:{body:3},desc:'체력 +3'},
+{id:'chrm',name:'💌 행운 부적',cost:80,eff:{social:4},desc:'사교 +4'}
+];
+
+const RANDS=[
+{ico:'⛈️',ttl:'폭풍우',txt:'폭풍우로 야간 수련이 완전히 꼬였다.',eff:{mana:-2,fat:8},tags:['마력 −2','피로 +8']},
+{ico:'🌟',ttl:'마법 각성',txt:'수련 중 갑자기 마력이 솟구쳤다!',eff:{mana:3},tags:['마력 +3']},
+{ico:'📜',ttl:'고서 발견',txt:'먼지 쌓인 서고에서 귀한 마법 고서를 발견했다.',eff:{know:3},tags:['지식 +3']},
+{ico:'🐉',ttl:'드래곤 소동',txt:'왕국 외곽 소동으로 예정이 꼬였다.',eff:{fat:18},tags:['피로 +18']},
+{ico:'🍀',ttl:'행운의 날',txt:'오늘은 이상하게 모든 게 잘 풀린다.',eff:{mana:1,know:1,body:1,social:1},tags:['전 스탯 +1']},
+{ico:'💸',ttl:'세금 징수',txt:'예상치 못한 왕실 세금이 부과됐다.',eff:{gold:-22},tags:['골드 −22G']},
+{ico:'🌸',ttl:'왕국 축제',txt:'잠시 수련을 잊고 축제를 즐겼다.',eff:{social:2,fat:-8},tags:['사교 +2','피로 −8']},
+{ico:'🌡️',ttl:'병치레',txt:'몸 상태가 좋지 않아 회복에 시간을 썼다.',eff:{body:-2,fat:20,gold:-10},tags:['체력 −2','피로 +20','골드 −10G']},
+{ico:'🎖️',ttl:'칭찬장',txt:'이번 달 성실함을 인정받아 포상금을 받았다.',eff:{gold:18,know:1},tags:['골드 +18G','지식 +1']}
+];
+
+const DATE_EVS={
+leon:[{req:25,fat:10,h:8,txt:'레온과 왕궁 정원을 산책했다. 그는 걸음을 느리게 맞추며 당신만 바라봤다.',choices:['시선을 마주친다','고개를 살짝 숙인다'],res:[{h:5,txt:'레온이 작게 웃었다. "이렇게 마주 보는 거, 좋다."'},{h:4,txt:'레온은 더 가까이 다가와 목소리를 낮췄다. "부끄러운 거야?"'}]},{req:50,fat:12,h:11,txt:'레온이 비밀 정원으로 당신을 초대했다. 아무도 없는 곳에서 둘만의 시간이 흘렀다.',choices:['손을 먼저 잡는다','조용히 곁에 선다'],res:[{h:7,txt:'레온이 굳었다가 곧 손을 꼭 맞잡았다.'},{h:5,txt:'레온은 당신 어깨에 살짝 기대며 숨을 고르게 내쉬었다.'}]},{req:75,fat:14,h:14,txt:'왕궁의 야경 아래, 레온은 당신을 향한 감정을 숨기지 않았다. "더 가까워지고 싶어."'}],
+cassian:[{req:25,fat:12,h:7,txt:'카시안이 개인 훈련을 봐주었다. 그의 손이 직접 자세를 고쳐주자 얼굴이 가까워졌다.',choices:['집중한다','일부러 못하는 척한다'],res:[{h:4,txt:'카시안이 만족스럽게 고개를 끄덕였다.'},{h:6,txt:'"...이렇게, 더 가까이." 카시안의 목소리가 낮아졌다.'}]},{req:50,fat:10,h:10,txt:'달빛 아래 성벽을 함께 걸었다. 침묵조차 편안했다.'},{req:75,fat:12,h:14,txt:'카시안은 더 이상 거리를 두지 않았다. "이제는 지키는 것만으로는 부족합니다."'}],
+saren:[{req:25,fat:8,h:7,txt:'사렌이 이국적인 간식을 사주며 웃었다. "먹어봐. 네 표정 보는 게 재밌거든."',choices:['맛있다고 한다','너도 먹어보라고 건넨다'],res:[{h:4,txt:'사렌이 웃음 섞인 눈으로 당신을 바라봤다.'},{h:6,txt:'사렌이 당신 손가락 끝을 스치듯 받아 먹었다.'}]},{req:50,fat:9,h:11,txt:'사렌과 옥상에서 별을 봤다. 바람이 불 때마다 그의 어깨가 가볍게 닿았다.'},{req:75,fat:10,h:14,txt:'사렌이 당신 이마에 가볍게 입맞췄다. "미안, 참으려 했는데 잘 안 되네."'}],
+vain:[{req:25,fat:10,h:8,txt:'베인이 금지된 책 일부를 당신에게만 허락했다. 가까이 앉은 채 낮은 목소리로 설명했다.',choices:['함께 읽는다','위험하지 않냐고 묻는다'],res:[{h:6,txt:'베인은 거의 붙어 앉다시피 한 채 페이지를 넘겼다.'},{h:7,txt:'"너랑 있으면 위험도 견딜 만해." 베인의 시선이 흔들렸다.'}]},{req:50,fat:12,h:11,txt:'베인은 자신의 비밀을 처음으로 털어놓았다. 그날 밤, 당신만이 그의 어둠을 알게 되었다.'},{req:75,fat:14,h:15,txt:'베인은 당신 손등을 붙잡고 속삭였다. "이젠 놓을 생각 없어. 네가 원치 않아도."'}],
+elias:[{req:25,fat:7,h:7,txt:'엘리아스의 가게에서 함께 약을 만들었다. 손이 겹쳐도 그는 천천히 웃기만 했다.',choices:['계속 가르쳐달라 한다','손을 빼지 않는다'],res:[{h:4,txt:'엘리아스가 부드럽게 설명을 이어갔다.'},{h:6,txt:'엘리아스는 조용히 숨을 들이쉬며 미소 지었다.'}]},{req:50,fat:6,h:10,txt:'엘리아스와 따뜻한 차를 마시며 밤늦게까지 이야기를 나눴다. 이상하게 시간이 너무 빨랐다.'},{req:75,fat:6,h:14,txt:'엘리아스가 당신 이마에 살짝 손을 얹으며 말했다. "당신과 있는 시간이, 제일 편안해요."'}],
+jaiden:[{req:25,fat:9,h:8,txt:'제이든이 투덜거리며 같이 식사하자고 했다. 결국 가장 좋은 자리도 당신 옆이었다.',choices:['고맙다고 한다','장난으로 놀린다'],res:[{h:4,txt:'제이든이 얼굴을 붉히며 젓가락질만 했다.'},{h:6,txt:'"하? 놀리지 마." 그러면서도 웃고 있었다.'}]},{req:50,fat:10,h:11,txt:'야간 훈련 후 단둘이 남았다. 제이든은 숨을 고르며 당신에게서 눈을 떼지 못했다.'},{req:75,fat:10,h:14,txt:'제이든은 결국 당신을 붙잡았다. "도망가지 마. 이제 와서 혼자 좋아한 나만 바보 되는 건 싫으니까."'}],
+oliver:[{req:25,fat:7,h:7,txt:'올리버와 도서관 창가에 나란히 앉아 공부했다. 책보다 서로에게 더 신경 쓰이는 순간이 늘었다.',choices:['집중한다','조용히 웃는다'],res:[{h:4,txt:'올리버는 평소보다 더 가까이 노트를 밀어주었다.'},{h:6,txt:'올리버가 시선을 피하다가 작게 따라 웃었다.'}]},{req:50,fat:8,h:10,txt:'목적 없는 산책 중 올리버가 한참 침묵하다 말했다. "...너랑 있으면 계획이 틀어져도 괜찮아."'},{req:75,fat:8,h:14,txt:'올리버는 당신 손끝을 조심스럽게 잡았다. "이 감정은 비효율적이지만, 포기할 생각은 없어."'}]
 };
 
-const NPCS = [
-  { id:'leon', icon:'🤴', name:'레온', title:'왕국의 왕자',
-    desc:'빛나는 금발과 다정한 미소를 가진 왕자. 누구에게나 친절하지만, 당신 앞에서는 유독 더 가까이 다가온다.',
-    meet:t=>t>=2,
-    events:[
-      { t:4,  h:7, txt:'왕궁 복도에서 레온이 먼저 말을 걸어왔다. "오늘도 수련하러 가는 거지? 네 얼굴 보면 이상하게 기분이 좋아져."'},
-      { t:12, h:8, txt:'저녁 정원에서 레온이 당신에게 꽃을 건넸다. "이건 네 눈이랑 잘 어울릴 것 같아서."',
-        choices:['고맙다고 받는다','왜 나를 챙기냐고 묻는다','살짝 웃는다'],
-        res:[
-          {h:4,txt:'레온이 환하게 웃었다. "역시 웃는 얼굴이 제일 예뻐."'},
-          {h:6,txt:'"그건… 네가 특별하니까?" 레온이 장난스럽게 말했지만 시선은 진지했다.'},
-          {h:5,txt:'짧은 미소 하나에 레온의 귀가 빨갛게 달아올랐다.'}
-        ]},
-      { t:22, h:10, txt:'연회 뒤편 발코니, 레온이 한숨을 쉬며 말했다. "다들 나를 왕자로만 보는데, 넌 다르게 봐주잖아."'},
-      { t:32, h:12, txt:'레온이 성의 비밀 정원으로 당신을 불렀다. "이곳엔 아무도 못 들어와. 너만은 예외야."',
-        choices:['조용히 곁에 선다','손을 먼저 내민다'],
-        res:[
-          {h:6,txt:'말 없이 나란히 선 순간, 레온은 당신의 어깨에 살짝 기대 왔다.'},
-          {h:8,txt:'레온이 놀란 듯 굳었다가, 곧 손가락을 맞잡았다.'}
-        ]},
-      { t:44, h:14, txt:'비가 오는 날, 레온은 망토 안으로 당신을 끌어당겼다. "감기 걸리면 곤란해. 네가 아프면… 내가 싫거든."'},
-      { t:56, h:18, txt:'왕궁의 최고층. 레온이 낮게 속삭였다. "이제 더는 숨기기 싫어. 내가 원하는 건 왕좌보다 네 곁이야."'}
-    ]},
-
-  { id:'cassian', icon:'🗡️', name:'카시안', title:'왕실 근위기사',
-    desc:'과묵하고 단단한 기사. 늘 한 걸음 뒤에서 지키지만, 당신이 위험하면 누구보다 먼저 움직인다.',
-    meet:t=>t>=1,
-    events:[
-      { t:3,  h:6, txt:'훈련장에서 넘어지자 카시안이 즉시 손을 내밀었다. "다치지 않았습니까?" 그의 목소리는 놀랄 만큼 다정했다.'},
-      { t:10, h:7, txt:'야간 순찰 중 카시안이 당신의 발걸음을 맞춰 걸었다. "혼자 다니는 습관은 고치시는 게 좋습니다."',
-        choices:['걱정해줘서 고맙다고 한다','왜 신경 쓰냐고 묻는다','앞으로 같이 걸어달라 한다'],
-        res:[
-          {h:4,txt:'카시안이 짧게 고개를 끄덕였다. 하지만 귀 끝이 붉었다.'},
-          {h:6,txt:'"...제가 원해서입니다." 그 한마디 뒤로 침묵이 무거워졌다.'},
-          {h:8,txt:'카시안이 시선을 피한 채 답했다. "원하신다면, 언제든."'}
-        ]},
-      { t:20, h:9, txt:'임무 중 상처를 입은 카시안의 붕대를 감아주자, 그가 당신 손목을 잠깐 붙잡았다. "이 손, 떨고 있습니다."'},
-      { t:30, h:12, txt:'폭풍우 치는 밤, 카시안은 문밖에 서 있었다. "혹시라도 불안하실까 봐…" 그는 끝내 말을 잇지 못했다.'},
-      { t:42, h:14, txt:'훈련이 끝난 뒤, 카시안이 뒤에서 조용히 검을 잡아주며 자세를 바로잡았다. 서로의 숨이 닿을 만큼 가까웠다.'},
-      { t:54, h:18, txt:'성벽 위 달빛 아래서 카시안이 고개를 숙였다. "기사의 맹세보다 앞선 감정이 생겨버렸습니다. 그것이… 당신입니다."'}
-    ]},
-
-  { id:'saren', icon:'🌊', name:'사렌', title:'이방인 상인',
-    desc:'먼 나라에서 온 자유로운 상인. 능청스럽고 가벼워 보여도, 당신에게만은 자꾸 진심을 흘린다.',
-    meet:t=>t>=4,
-    events:[
-      { t:6,  h:5, txt:'시장 골목에서 사렌이 희귀한 마법 재료를 툭 던져줬다. "공짜야. 넌 그냥… 자꾸 눈이 가서."'},
-      { t:14, h:8, txt:'사렌이 고향 바다 이야기를 들려주다 당신을 물끄러미 봤다. "너랑 있으면 이상하게 집 생각이 안 나."',
-        choices:['더 이야기해달라고 한다','왜 그렇게 보는지 묻는다','시선을 피한다'],
-        res:[
-          {h:6,txt:'사렌은 웃으며 당신 쪽으로 더 가까이 몸을 기울였다.'},
-          {h:5,txt:'"들켰네." 그는 답 대신 눈웃음으로 넘겼다.'},
-          {h:3,txt:'사렌이 피식 웃었다. "도망가도 늦었어."'}
-        ]},
-      { t:24, h:11, txt:'야시장의 불빛 아래, 사렌이 당신 소매를 붙잡았다. "잠깐만. 지금 다른 데 가지 마."'},
-      { t:34, h:13, txt:'사렌이 옥상에서 별을 가리켰다. "우리 나라 말로 저 별은 그리움이야. 근데 지금은… 네 이름으로 부르고 싶네."'},
-      { t:46, h:15, txt:'멀리 떠나야 하는 거래 전날, 사렌은 떠나는 대신 당신 곁에 앉아 있었다. "솔직히 말하면, 지금 떠나기 싫어."'},
-      { t:58, h:18, txt:'새벽 항구. 사렌이 손을 내밀었다. "이번엔 장난 아니야. 같이 갈래? 네가 있으면 어디든 집이 될 것 같아."'}
-    ]},
-
-  { id:'vain', icon:'🌑', name:'베인', title:'금지된 마법사',
-    desc:'추방된 천재 마도사. 서늘하고 위험하지만, 당신에게만은 설명할 수 없는 집착을 드러낸다.',
-    meet:t=>t>=6,
-    events:[
-      { t:8,  h:5, txt:'금지된 서고에서 베인과 마주쳤다. "또 너군." 차갑게 말했지만, 그는 당신을 쫓아내지 않았다.'},
-      { t:16, h:7, txt:'베인이 금서의 일부를 보여주며 말했다. "이건 누구에게도 보여주지 않았어. 그런데 넌… 이상하게 괜찮군."',
-        choices:['왜 나만 예외냐고 묻는다','조용히 읽는다','위험하지 않냐고 묻는다'],
-        res:[
-          {h:6,txt:'베인이 눈을 내리깔았다. "...네가 다치면 싫으니까."'},
-          {h:8,txt:'베인은 흥미롭다는 듯 당신 옆에 가까이 앉았다.'},
-          {h:5,txt:'"너랑 있으면 두렵지 않아." 베인의 시선이 흔들렸다.'}
-        ]},
-      { t:26, h:11, txt:'금지된 마력의 반동으로 당신이 휘청이자 베인이 즉시 붙잡았다. "말했잖아. 내 앞에서 무모해지지 말라고."'},
-      { t:36, h:13, txt:'깊은 밤, 베인은 당신 이름을 작게 부르며 손등에 입술을 스쳤다. "가끔은 확인하고 싶어. 네가 진짜 여기 있는지."'},
-      { t:48, h:16, txt:'베인이 어둠 속에서 당신 어깨를 감쌌다. "세상이 다 등을 돌려도 상관없어. 네가 나를 버리지 않으면."'},
-      { t:60, h:20, txt:'수련의 마지막 밤, 베인이 시선을 떼지 않은 채 속삭였다. "이제 선택해. 빛으로 갈지, 나와 함께 갈지."'}
-    ]},
-
-  { id:'elias', icon:'🌿', name:'엘리아스', title:'마을 약제사',
-    desc:'부드럽고 따뜻한 약제사. 곁에 있으면 마음이 진정되는 사람, 그리고 언제나 가장 먼저 당신을 걱정하는 사람.',
-    meet:t=>t>=1,
-    events:[
-      { t:2,  h:5, txt:'약제사 가게에서 엘리아스가 미소 지으며 차를 건넸다. "오늘은 조금 지쳐 보이네요. 잠깐 쉬었다 가요."'},
-      { t:9,  h:7, txt:'피로 회복제를 건네며 엘리아스가 속삭였다. "당신이 무리하는 걸 보면… 자꾸 마음이 쓰여요."',
-        choices:['고맙다고 받는다','괜찮다고 말한다','왜 그렇게 신경 쓰냐고 묻는다'],
-        res:[
-          {h:5,txt:'엘리아스가 안도한 듯 웃었다. "다행이다."'},
-          {h:3,txt:'그는 약병을 슬며시 당신 손에 쥐여주었다. "그래도 가져가요."'},
-          {h:7,txt:'엘리아스가 붉어진 얼굴로 시선을 내렸다. "그건… 당신이라서."'}
-        ]},
-      { t:18, h:10, txt:'비 오는 날, 엘리아스가 우산을 들고 조용히 기다리고 있었다. "혹시 올 것 같아서."'},
-      { t:28, h:12, txt:'함께 약을 만들다 손이 겹쳤다. 엘리아스는 놀라면서도 손을 빼지 않았다.'},
-      { t:40, h:14, txt:'늦은 저녁, 엘리아스가 당신을 위해 허브차를 끓였다. "당신이 오는 시간대엔, 이상하게 매번 준비하게 돼요."'},
-      { t:52, h:18, txt:'작은 약초원 한가운데서 엘리아스가 웃으며 말했다. "수련이 끝나도… 제 곁에 있어줄 수 있나요?"'}
-    ]},
-
-  { id:'jaiden', icon:'⚔️', name:'제이든', title:'라이벌 수련생',
-    desc:'늘 툴툴거리지만 가장 많이 신경 쓰는 라이벌. 싸우고 부딪히며 점점 더 서로를 의식하게 된다.',
-    meet:t=>t>=1,
-    events:[
-      { t:2,  h:4, txt:'"흥, 그 정도 마법은 나도 해." 제이든은 틱틱댔지만, 끝내 당신의 실수는 먼저 고쳐줬다.'},
-      { t:11, h:7, txt:'시험 도중 슬쩍 힌트를 주며 제이든이 중얼거렸다. "착각하지 마. 네가 너무 못하면 재미없으니까."',
-        choices:['고맙다고 솔직히 말한다','같이 공부하자고 한다','도발로 받아친다'],
-        res:[
-          {h:4,txt:'제이든이 얼굴을 붉히며 고개를 홱 돌렸다.'},
-          {h:7,txt:'"하? 누가 너랑..." 말은 그랬지만 다음 날 먼저 와 있었다.'},
-          {h:5,txt:'말다툼 끝에 둘 다 웃어버렸다. 이상하게 기분이 좋았다.'}
-        ]},
-      { t:21, h:10, txt:'축제 인파 속, 제이든이 당신 손목을 덥석 잡았다. "놓치면 귀찮잖아. 그냥 따라와."'},
-      { t:33, h:12, txt:'결투 훈련 후 숨을 고르던 제이든이 낮게 말했다. "너랑 붙는 건… 다른 애들이랑 달라."'},
-      { t:45, h:15, txt:'제이든은 당신이 다친 걸 보자 평소와 다르게 화를 냈다. "왜 이렇게 막 굴어? 네가 다치면… 내가 짜증나잖아."'},
-      { t:57, h:18, txt:'해 질 무렵 옥상. 제이든이 시선을 피하며 중얼거렸다. "젠장… 이제 인정할게. 네가 없으면 재미없어. 너무."'}
-    ]},
-
-  { id:'oliver', icon:'🤝', name:'올리버', title:'절친한 친구',
-    desc:'논리적이고 침착한 친구. 가장 오래 곁을 지켜본 만큼, 자신도 모르게 당신에게 마음이 깊어져 있다.',
-    meet:t=>t>=1,
-    events:[
-      { t:3,  h:4, txt:'"이 방법은 비효율적이야." 올리버는 차분히 설명하면서도 끝까지 당신 옆에 남아 도와줬다.'},
-      { t:13, h:7, txt:'올리버가 조용히 노트를 내밀었다. "네가 쓰면 더 잘 맞을 것 같아서 정리해뒀어."',
-        choices:['고맙다고 한다','이렇게까지 해주는 이유를 묻는다','같이 공부하자고 한다'],
-        res:[
-          {h:4,txt:'올리버가 헛기침했다. "당연한 일이야."'},
-          {h:6,txt:'"...네가 중요하니까." 그는 말한 뒤 한참 눈을 마주치지 못했다.'},
-          {h:7,txt:'그날 이후 둘의 공부 시간은 자연스럽게 늘어났다.'}
-        ]},
-      { t:23, h:10, txt:'계획 없이 산책하자는 제안에 올리버가 잠시 멈췄다가 말했다. "...비효율적이지만, 너랑이면 괜찮아."'},
-      { t:35, h:12, txt:'늦은 도서관, 졸린 눈으로 책을 읽던 당신에게 올리버가 자신의 어깨를 내어줬다. "잠깐만 기대도 돼."'},
-      { t:47, h:15, txt:'올리버가 문득 말했다. "감정은 변수라고 생각했는데, 이상하게 너만큼은 계산이 안 돼."'},
-      { t:59, h:18, txt:'수련 종료를 앞둔 밤, 올리버가 고개를 숙였다. "논리적으로 따지면… 난 이미 오래전부터 너를 좋아하고 있었어."'}
-    ]}
+const MAIN_ENDINGS=[
+{id:'legend',ico:'✨',ttl:'전설의 대마법사',cond:s=>s.mana>=65&&s.know>=65&&s.body>=42&&s.social>=42&&s.scholarship>=2,txt:'5년 동안 네 분야를 가리지 않고 빛난 당신은 세대에 한 번 나올까 말까 한 천재로 기록되었다. 수백 년이 지나도 그 이름은 전설로 남는다.'},
+{id:'forbidden',ico:'🌑',ttl:'금지된 마도의 계승자',cond:s=>s.forbidden>=6&&s.mana>=50&&s.npc.vain>=55,txt:'당신은 금지된 지식의 매력을 끝내 외면하지 않았다. 사람들은 두려워했지만, 당신은 누구보다 깊은 진실에 닿았다.'},
+{id:'archmage',ico:'👑',ttl:'왕실 수석 마법사',cond:s=>s.mana>=55&&s.know>=55,txt:'5년의 수련을 마친 당신은 왕국 역사상 가장 어린 수석 마법사로 임명되었다. 왕실은 당신의 이름을 공식 기록에 남겼다.'},
+{id:'battle',ico:'⚔️',ttl:'전투 마도사단 단장',cond:s=>s.mana>=45&&s.body>=52,txt:'마법과 전투를 겸비한 당신은 왕국 최정예 전투 마도사단의 지휘를 맡았다. 전장에서는 당신의 명령 하나가 승부를 갈랐다.'},
+{id:'professor',ico:'🎓',ttl:'아카데미 교수',cond:s=>s.know>=62&&s.classCount>=26,txt:'당신은 아카데미에 남아 차세대 마법사들을 가르치게 되었다. 학생들은 당신의 수업을 듣기 위해 길게 줄을 섰다.'},
+{id:'diplomat',ico:'🕊️',ttl:'궁정 외교 마법사',cond:s=>s.social>=55&&s.know>=40,txt:'마법만큼이나 말의 힘을 이해한 당신은 여러 왕국 사이를 오가며 외교를 이끌었다. 전쟁을 막아낸 것은 종종 당신의 한마디였다.'},
+{id:'alchemist',ico:'⚗️',ttl:'대연금술사',cond:s=>s.know>=44&&s.mana>=40&&s.alchemyCount>=12,txt:'연금술에 깊이 몰두한 당신은 새로운 조합법과 포션을 잇달아 만들어냈다. 귀족과 상인들이 당신의 공방을 찾기 시작했다.'},
+{id:'merchant',ico:'💰',ttl:'자수성가한 마법 상인',cond:s=>s.gold>=260&&s.jobCount>=26&&s.social>=28,txt:'당신은 아르바이트와 거래를 발판 삼아 자신만의 인맥과 자본을 만들었다. 마법사이자 사업가로서, 당신의 가게는 곧 작은 제국이 되었다.'},
+{id:'burnout',ico:'🥀',ttl:'번아웃한 수련생',cond:s=>s.burnout>=3||(s.fatigue>=85&&s.freeCount<10),txt:'당신은 누구보다 열심히 달렸지만, 끝내 자신을 돌보지 못했다. 손에 쥔 것은 많았지만 마음과 몸은 지쳐 있었다.'},
+{id:'debt',ico:'💸',ttl:'빚더미 수련생',cond:s=>s.debt>=5,txt:'수업과 사교를 쫓는 동안 지갑은 점점 가벼워졌고, 결국 생활비조차 빠듯해졌다. 그래도 이 경험은 다음 삶의 교훈이 될 것이다.'},
+{id:'normal',ico:'📘',ttl:'무난한 졸업생',cond:s=>(s.mana+s.know+s.body+s.social)>=130,txt:'눈부신 전설은 아니더라도, 당신은 분명히 5년의 수련을 완주했다. 이제 진짜 마법사의 삶이 당신 앞에 펼쳐진다.'},
+{id:'bad',ico:'💀',ttl:'유급 수련생',cond:()=>true,txt:'5년이 지났지만 아직은 조금 부족했다. 하지만 완전히 끝난 것은 아니다. 다시 시작한다면 이번엔 더 멀리 갈 수 있다.'}
 ];
 
-const MINI_ROMANCE = {
-  leon:[
-    '레온이 멀리서 당신을 발견하자마자 곧장 다가왔다. "오늘은 꼭 네 얼굴 먼저 보고 싶었어."',
-    '짧게 스친 순간에도 레온의 시선은 오래 남았다. 그는 장난스럽게 웃었지만 눈빛은 다정했다.',
-    '레온이 당신 어깨 위 먼지를 가볍게 털어주며 말했다. "이 정도는 해도 되지?"'
-  ],
-  cassian:[
-    '카시안은 아무 말 없이 당신의 짐을 대신 들어주었다. 손끝이 스치는 순간 심장이 이상하게 빨라졌다.',
-    '복도 구석에서 카시안이 낮게 물었다. "오늘은 괜찮으십니까?" 그 짧은 한마디가 오래 남았다.',
-    '카시안은 당신이 보일 때마다 아주 미세하게 표정이 풀린다. 이제는 그걸 알아볼 수 있었다.'
-  ],
-  saren:[
-    '사렌이 웃으며 당신 곁에 기대왔다. "이상하지, 사람 많은데도 네 옆이 제일 편해."',
-    '사렌은 장난스레 말을 걸었지만, 마지막엔 꼭 진심 같은 눈으로 당신을 본다.',
-    '야시장 한복판, 사렌이 당신 소매 끝을 잠깐 잡았다 놓았다. 사소한 접촉이 더 신경 쓰였다.'
-  ],
-  vain:[
-    '베인은 지나가던 걸음을 멈추고 당신만 바라봤다. "또 무리했군." 냉담한 말인데도 어딘가 다정했다.',
-    '어둑한 서고에서 베인이 책 한 권을 밀어줬다. "읽어. 네가 좋아할 것 같았어."',
-    '베인은 언제나 말수가 적었지만, 당신 곁에 설 때만큼은 이상하리만치 오래 머물렀다.'
-  ],
-  elias:[
-    '엘리아스가 따뜻한 차를 건네며 미소 지었다. "오늘은 얼굴이 조금 피곤해 보여요."',
-    '약초 향이 스민 손끝이 잠깐 닿았다. 엘리아스는 놀라면서도 손을 거두지 않았다.',
-    '엘리아스는 당신이 들어올 시간을 아는 사람처럼, 늘 맞춰 준비되어 있었다.'
-  ],
-  jaiden:[
-    '제이든이 또 투덜거리며 말을 걸었지만, 결국 가장 먼저 당신 곁에 와 있었다.',
-    '훈련 중 제이든의 시선이 유난히 자주 마주쳤다. 그는 들키자마자 헛기침을 했다.',
-    '제이든은 당신 얘기만 나오면 괜히 예민해진다. 그 이유를 이제는 모르는 척하기 어렵다.'
-  ],
-  oliver:[
-    '올리버는 당신 몫까지 정리된 노트를 내밀었다. "겸사겸사였어." 하지만 그런 표정은 아니었다.',
-    '도서관 창가, 올리버는 책보다 당신 쪽을 더 자주 보고 있었다.',
-    '올리버는 짧은 침묵 속에서도 편안했다. 당신과 함께 있을 때만은 더욱 그랬다.'
-  ]
-};
-
-const ACTS = [
-  { id:'apothecary_job', type:'job', unlock:1, icon:'🧪', name:'약방 보조', stat:{know:1}, fat:10, gold:17, npc:'elias', nc:.30, fail:.05, fstat:{gold:-3}, ftxt:'재고를 헷갈려 보수가 깎였다. -3G' },
-  { id:'market_delivery', type:'job', unlock:1, icon:'📦', name:'시장 배달', stat:{body:1}, fat:14, gold:19, npc:'saren', nc:.24, fail:.09, fstat:{fat:8}, ftxt:'짐이 많아져 추가 노동! 피로 +8' },
-  { id:'library_sorting', type:'job', unlock:1, icon:'🗂️', name:'서고 정리', stat:{know:1}, fat:8, gold:15, npc:'oliver', nc:.26, fail:.04, fstat:{gold:-2}, ftxt:'고서를 잘못 분류해 보수 -2G' },
-  { id:'alchemy_assist', type:'job', unlock:1, icon:'⚗️', name:'연금 조수', stat:{mana:1}, fat:12, gold:18, npc:'vain', nc:.16, fail:.12, fstat:{gold:-4,mana:-1}, ftxt:'연금 반응이 꼬였다. 보수 -4G, 마력 -1' },
-  { id:'wall_guard', type:'job', unlock:2, icon:'🛡️', name:'성벽 경비', stat:{body:1}, fat:16, gold:20, npc:'cassian', nc:.28, fail:.09, fstat:{fat:10}, ftxt:'경비가 길어졌다. 피로 +10' },
-  { id:'banquet_service', type:'job', unlock:2, icon:'🍷', name:'연회장 서빙', stat:{social:1}, fat:12, gold:16, npc:'leon', nc:.32, fail:.07, fstat:{social:-1}, ftxt:'작은 실수로 민망해졌다. 사교 -1' },
-
-  { id:'elemental_class', type:'class', unlock:1, icon:'✨', name:'기초 원소 마법', stat:{mana:2}, fat:10, gold:-7, npc:'vain', nc:.16, fail:.08, fstat:{mana:-1}, ftxt:'집중이 흔들렸다. 마력 -1' },
-  { id:'ancient_texts', type:'class', unlock:1, icon:'📚', name:'고대 문헌학', stat:{know:2}, fat:8, gold:-7, npc:'oliver', nc:.20, fail:.05, fstat:{know:-1}, ftxt:'해석 실수. 지식 -1' },
-  { id:'alchemy_practicum', type:'class', unlock:1, icon:'🔬', name:'연금술 실습', stat:{mana:1,know:1}, fat:11, gold:-12, npc:'elias', nc:.16, fail:.10, fstat:{gold:-4}, ftxt:'재료를 다시 구매했다. 추가 비용 -4G' },
-  { id:'martial_basics', type:'class', unlock:1, icon:'💪', name:'체술 기초', stat:{body:2}, fat:14, gold:-5, npc:'cassian', nc:.20, fail:.10, fstat:{fat:7}, ftxt:'훈련이 길어졌다. 피로 +7' },
-  { id:'court_etiquette', type:'class', unlock:2, icon:'👑', name:'궁정 예법', stat:{social:2}, fat:8, gold:-9, npc:'leon', nc:.24, fail:.07, fstat:{social:-1}, ftxt:'예법을 틀렸다. 사교 -1' },
-  { id:'forbidden_decoding', type:'class', unlock:3, icon:'🌑', name:'금서 해독', stat:{mana:2,know:1}, fat:14, gold:-15, npc:'vain', nc:.32, fail:.14, fstat:{mana:-2,fat:10}, ftxt:'금서의 반동을 받았다. 마력 -2, 피로 +10', forbidden:true },
-
-  { id:'royal_tea', type:'social', unlock:1, icon:'🫖', name:'왕궁 티파티', stat:{social:1}, fat:8, gold:-13, npc:'leon', nc:.38, fail:.05, fstat:{social:-1}, ftxt:'대화가 어색하게 꼬였다. 사교 -1' },
-  { id:'night_market', type:'social', unlock:1, icon:'🏮', name:'야시장 산책', stat:{social:1}, fat:5, gold:-5, npc:'saren', nc:.36, fail:.05, fstat:{gold:-4}, ftxt:'충동구매를 더 했다. -4G' },
-  { id:'herb_tea_circle', type:'social', unlock:1, icon:'🌿', name:'약초차 모임', stat:{social:1}, fat:-8, gold:-6, npc:'elias', nc:.34, fail:.02, fstat:{}, ftxt:'잔잔한 시간만 흘렀다.' },
-  { id:'knight_stands', type:'social', unlock:2, icon:'🏇', name:'기사단 관람', stat:{social:1,body:1}, fat:7, gold:-7, npc:'cassian', nc:.30, fail:.05, fstat:{fat:4}, ftxt:'오래 서 있어 피로 +4' },
-  { id:'festival', type:'social', unlock:2, icon:'🎉', name:'왕국 축제', stat:{social:2}, fat:12, gold:-15, npc:'jaiden', nc:.28, fail:.08, fstat:{gold:-5}, ftxt:'축제에서 돈을 더 써버렸다. -5G' },
-  { id:'secret_archive', type:'social', unlock:3, icon:'🕯️', name:'비밀 서고 탐방', stat:{know:1}, fat:9, gold:-9, npc:'vain', nc:.38, fail:.10, fstat:{fat:7}, ftxt:'수상한 기운 탓에 피로 +7', forbidden:true },
-
-  { id:'self_practice', type:'free', unlock:1, icon:'🔮', name:'자율 연습', stat:{mana:1}, fat:8, gold:0, npc:null, nc:0, fail:.06, fstat:{mana:-1}, ftxt:'마법식이 꼬였다. 마력 -1' },
-  { id:'note_review', type:'free', unlock:1, icon:'📝', name:'복습 정리', stat:{know:1}, fat:6, gold:0, npc:null, nc:0, fail:.04, fstat:{}, ftxt:'정리가 더뎠다.' },
-  { id:'walk', type:'free', unlock:1, icon:'🚶', name:'산책', stat:{social:1}, fat:-8, gold:0, npc:'saren', nc:.14, fail:0, fstat:{}, ftxt:'' },
-  { id:'nap', type:'free', unlock:1, icon:'😴', name:'낮잠', stat:{}, fat:-24, gold:0, npc:null, nc:0, fail:0, fstat:{}, ftxt:'' },
-  { id:'meditate', type:'free', unlock:2, icon:'🧘', name:'명상', stat:{mana:1}, fat:-10, gold:0, npc:null, nc:0, fail:.02, fstat:{}, ftxt:'잡념이 많았다.' }
+const ROMANCE_ENDINGS=[
+{id:'vain',ico:'🌑',ttl:'베인 — 어둠 속 유일한 빛',cond:s=>s.npc.vain>=60&&s.mana>=24&&s.forbidden>=1,txt:'세상은 베인을 경계했지만, 그는 당신 앞에서만 조용히 무너졌다. 금지된 밤들 속에서도 당신만은 그의 유일한 빛이었다.'},
+{id:'leon',ico:'💍',ttl:'레온 — 왕궁의 동반자',cond:s=>s.npc.leon>=60&&s.social>=20,txt:'레온은 수많은 시선 앞에서도 망설이지 않았다. 왕궁의 정원에서 그는 당신의 손을 잡고, 평생 함께하자고 말했다.'},
+{id:'cassian',ico:'🗡️',ttl:'카시안 — 기사의 맹세',cond:s=>s.npc.cassian>=60&&s.body>=20,txt:'카시안은 더 이상 임무라는 말 뒤에 숨지 않았다. 당신 곁을 지키는 것이 자신의 진짜 소원이라고, 그가 낮게 고백했다.'},
+{id:'saren',ico:'🌊',ttl:'사렌 — 미지의 땅으로',cond:s=>s.npc.saren>=58&&s.social>=16,txt:'사렌은 마지막까지 장난스럽게 웃었지만, 떠나는 순간엔 누구보다 진지했다. 당신은 그의 손을 잡고 낯선 바다 너머로 향했다.'},
+{id:'elias',ico:'🌿',ttl:'엘리아스 — 약초원의 평화',cond:s=>s.npc.elias>=58,txt:'엘리아스와 함께하는 삶은 화려하진 않아도 따뜻했다. 작은 약초원과 차 향기, 그리고 서로를 기다리는 저녁이 매일을 채웠다.'},
+{id:'jaiden',ico:'⚔️',ttl:'제이든 — 영원한 라이벌',cond:s=>s.npc.jaiden>=60&&s.body>=18,txt:'서로를 밀어붙이며 성장하던 두 사람은 결국 가장 가까운 사람이 되었다. 투덜거리면서도, 그는 언제나 가장 먼저 당신을 찾았다.'},
+{id:'oliver',ico:'🤝',ttl:'올리버 — 현자의 동반자',cond:s=>s.npc.oliver>=58&&s.know>=20,txt:'올리버는 끝내 감정을 공식처럼 설명하지 못했다. 하지만 당신과 함께 있을 때만큼은, 그 침묵 자체가 가장 분명한 대답이었다.'}
 ];
 
-const SHOP = [
-  { id:'pot',  name:'🧪 피로 회복제',  cost:36, eff:{fat:-35},  desc:'피로 −35' },
-  { id:'book', name:'📖 마법 주석서',  cost:54, eff:{know:3},   desc:'지식 +3' },
-  { id:'crys', name:'💎 마력 수정',    cost:68, eff:{mana:4},   desc:'마력 +4' },
-  { id:'herb', name:'🌺 고급 약초',    cost:46, eff:{body:3},   desc:'체력 +3' },
-  { id:'chrm', name:'💌 행운 부적',    cost:80, eff:{social:4}, desc:'사교 +4' },
-];
+let G={};
+let alloc={mana:5,know:5,body:5,social:5};
+let _q=[],_qi=0,_evCb=null,_lvCb=null,_lvNpc=null,_lvMark=null,_warnCb=null;
+let bgmFallbackHooked=false,bgmEnabled=true,bgmUserPaused=false;
 
-const RANDS = [
-  { ico:'⛈️', ttl:'폭풍우',      txt:'폭풍우로 야간 수련이 완전히 꼬였다.',              eff:{mana:-2,fat:8},             tags:['마력 −2','피로 +8'] },
-  { ico:'🌟', ttl:'마법 각성',   txt:'수련 중 갑자기 마력이 솟구쳤다!',                  eff:{mana:3},                    tags:['마력 +3'] },
-  { ico:'📜', ttl:'고서 발견',   txt:'먼지 쌓인 서고에서 귀한 마법 고서를 발견했다.',    eff:{know:3},                    tags:['지식 +3'] },
-  { ico:'🐉', ttl:'드래곤 소동', txt:'왕국 외곽 소동으로 예정이 꼬였다.',                 eff:{fat:18},                    tags:['피로 +18'] },
-  { ico:'🍀', ttl:'행운의 날',   txt:'오늘은 이상하게 모든 게 잘 풀린다.',                eff:{mana:1,know:1,body:1,social:1}, tags:['전 스탯 +1'] },
-  { ico:'💸', ttl:'세금 징수',   txt:'예상치 못한 왕실 세금이 부과됐다.',                 eff:{gold:-22},                  tags:['골드 −22G'] },
-  { ico:'🌸', ttl:'왕국 축제',   txt:'잠시 수련을 잊고 축제를 즐겼다.',                   eff:{social:2,fat:-8},           tags:['사교 +2','피로 −8'] },
-  { ico:'🌡️', ttl:'병치레',      txt:'몸 상태가 좋지 않아 회복에 시간을 썼다.',            eff:{body:-2,fat:20,gold:-10},   tags:['체력 −2','피로 +20','골드 −10G'] },
-  { ico:'🎖️', ttl:'칭찬장',      txt:'이번 달 성실함을 인정받아 포상금을 받았다.',         eff:{gold:18,know:1},            tags:['골드 +18G','지식 +1'] },
-];
+function baseCounts(){return{job:0,class:0,social:0,free:0,forbidden:0,dates:0,scholarship:0,burnout:0,debt:0,byAct:{}};}
+function calcPts(){return 40-(alloc.mana+alloc.know+alloc.body+alloc.social);}
+function clamp(v,mn=0,mx=100){return Math.max(mn,Math.min(mx,v));}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');syncFloatingUi();}
+function syncFloatingUi(){const inGame=document.getElementById('screen-game').classList.contains('active');document.getElementById('bgm-toggle').style.bottom=inGame?'74px':'18px';}
+function getYear(){return Math.ceil(G.turn/12)}
+function getMonth(){return ((G.turn-1)%12)+1}
+function getSeason(){const m=getMonth();if(m<=3)return['봄','sp'];if(m<=6)return['여름','su'];if(m<=9)return['가을','au'];return['겨울','wi'];}
+function isDateSlot(v){return typeof v==='string'&&v.startsWith('date:')}
+function getActById(id){return ACTS.find(a=>a.id===id)}
+function getAvailableActs(){return ACTS.filter(a=>getYear()>=(a.unlock||1))}
+function applyEff(eff){for(const[k,v]of Object.entries(eff||{})){if(k==='fat')G.fatigue=clamp(G.fatigue+v);else if(k==='gold')G.gold=Math.max(0,G.gold+v);else if(G.stats[k]!==undefined)G.stats[k]=Math.max(0,G.stats[k]+v);}}
+function addLog(txt,cls='',mark=null){const label=mark||`${getYear()}년 ${getMonth()}월`;G.log.unshift({mark:label,txt,cls});if(G.log.length>60)G.log.pop();renderLog();}
+function renderLog(){const p=document.getElementById('log-panel');let h='<div class="px9" style="color:var(--dim);margin-bottom:6px">— 최근 기록 —</div>';G.log.slice(0,28).forEach(item=>{h+=`<div class="le${item.cls?` le-${item.cls}`:''}">[${item.mark}] ${item.txt}</div>`});p.innerHTML=h;}
+function initGame(name,stats){G={name,turn:1,totalTurns:60,gold:240,fatigue:0,stats:{mana:stats.mana,know:stats.know,body:stats.body,social:stats.social},npc:{leon:0,cassian:0,saren:0,vain:0,elias:0,jaiden:0,oliver:0},counts:baseCounts(),selAM:null,selPM:null,forcedRest:false,triggered:{},log:[],activeTab:'train'};}
+function normalizeGameState(src){const counts=Object.assign(baseCounts(),src.counts||{});counts.byAct=counts.byAct||{};return{name:src.name||'아리아',turn:Math.max(1,src.turn||1),totalTurns:60,gold:Math.max(0,src.gold??240),fatigue:clamp(src.fatigue??0),stats:{mana:Math.max(0,src.stats?.mana??5),know:Math.max(0,src.stats?.know??5),body:Math.max(0,src.stats?.body??5),social:Math.max(0,src.stats?.social??5)},npc:{leon:clamp(src.npc?.leon??0),cassian:clamp(src.npc?.cassian??0),saren:clamp(src.npc?.saren??0),vain:clamp(src.npc?.vain??0),elias:clamp(src.npc?.elias??0),jaiden:clamp(src.npc?.jaiden??0),oliver:clamp(src.npc?.oliver??0)},counts,selAM:src.selAM??null,selPM:src.selPM??null,forcedRest:!!src.forcedRest,triggered:src.triggered||{},log:Array.isArray(src.log)?src.log:[],activeTab:src.activeTab||'train'};}
+function migrateLegacySave(old){return normalizeGameState({name:old.name,turn:old.turn,totalTurns:60,gold:old.gold,fatigue:old.fatigue,stats:old.stats,npc:old.npc,forcedRest:old.forcedRest,triggered:old.triggered,log:(old.log||[]).map(item=>typeof item==='string'?{mark:'기록',txt:item,cls:''}:{mark:item.mark||'기록',txt:item.txt||'',cls:item.cls||''})});}
+function saveGame(){if(Object.keys(G).length)localStorage.setItem(SAVE_KEY,JSON.stringify(G));}
+function clearSave(){[SAVE_KEY,'mageAcad_v5','mageAcad_v4','mageAcad_v3','mageAcad_v2'].forEach(k=>localStorage.removeItem(k));}
 
-const DATE_EVS = {
-  leon:[
-    { req:25, fat:10, h:8, txt:'레온과 왕궁 정원을 산책했다. 그는 걸음을 느리게 맞추며 당신만 바라봤다.',
-      choices:['시선을 마주친다','고개를 살짝 숙인다'],
-      res:[{h:5,txt:'레온이 작게 웃었다. "이렇게 마주 보는 거, 좋다."'},
-           {h:4,txt:'레온은 더 가까이 다가와 목소리를 낮췄다. "부끄러운 거야?"'}]},
-    { req:50, fat:12, h:11, txt:'레온이 비밀 정원으로 당신을 초대했다. 아무도 없는 곳에서 둘만의 시간이 흘렀다.',
-      choices:['손을 먼저 잡는다','조용히 곁에 선다'],
-      res:[{h:7,txt:'레온이 굳었다가 곧 손을 꼭 맞잡았다.'},
-           {h:5,txt:'레온은 당신 어깨에 살짝 기대며 숨을 고르게 내쉬었다.'}]},
-    { req:75, fat:14, h:14, txt:'왕궁의 야경 아래, 레온은 당신을 향한 감정을 숨기지 않았다. "더 가까워지고 싶어."'}
-  ],
-  cassian:[
-    { req:25, fat:12, h:7, txt:'카시안이 개인 훈련을 봐주었다. 그의 손이 직접 자세를 고쳐주자 얼굴이 가까워졌다.',
-      choices:['집중한다','일부러 못하는 척한다'],
-      res:[{h:4,txt:'카시안이 만족스럽게 고개를 끄덕였다.'},
-           {h:6,txt:'"...이렇게, 더 가까이." 카시안의 목소리가 낮아졌다.'}]},
-    { req:50, fat:10, h:10, txt:'달빛 아래 성벽을 함께 걸었다. 침묵조차 편안했다.'},
-    { req:75, fat:12, h:14, txt:'카시안은 더 이상 거리를 두지 않았다. "이제는 지키는 것만으로는 부족합니다."'}
-  ],
-  saren:[
-    { req:25, fat:8, h:7, txt:'사렌이 이국적인 간식을 사주며 웃었다. "먹어봐. 네 표정 보는 게 재밌거든."',
-      choices:['맛있다고 한다','너도 먹어보라고 건넨다'],
-      res:[{h:4,txt:'사렌이 웃음 섞인 눈으로 당신을 바라봤다.'},
-           {h:6,txt:'사렌이 당신 손가락 끝을 스치듯 받아 먹었다.'}]},
-    { req:50, fat:9, h:11, txt:'사렌과 옥상에서 별을 봤다. 바람이 불 때마다 그의 어깨가 가볍게 닿았다.'},
-    { req:75, fat:10, h:14, txt:'사렌이 당신 이마에 가볍게 입맞췄다. "미안, 참으려 했는데 잘 안 되네."'}
-  ],
-  vain:[
-    { req:25, fat:10, h:8, txt:'베인이 금지된 책 일부를 당신에게만 허락했다. 가까이 앉은 채 낮은 목소리로 설명했다.',
-      choices:['함께 읽는다','위험하지 않냐고 묻는다'],
-      res:[{h:6,txt:'베인은 거의 붙어 앉다시피 한 채 페이지를 넘겼다.'},
-           {h:7,txt:'"너랑 있으면 위험도 견딜 만해." 베인의 시선이 흔들렸다.'}]},
-    { req:50, fat:12, h:11, txt:'베인은 자신의 비밀을 처음으로 털어놓았다. 그날 밤, 당신만이 그의 어둠을 알게 되었다.'},
-    { req:75, fat:14, h:15, txt:'베인은 당신 손등을 붙잡고 속삭였다. "이젠 놓을 생각 없어. 네가 원치 않아도."'}
-  ],
-  elias:[
-    { req:25, fat:7, h:7, txt:'엘리아스의 가게에서 함께 약을 만들었다. 손이 겹쳐도 그는 천천히 웃기만 했다.',
-      choices:['계속 가르쳐달라 한다','손을 빼지 않는다'],
-      res:[{h:4,txt:'엘리아스가 부드럽게 설명을 이어갔다.'},
-           {h:6,txt:'엘리아스는 조용히 숨을 들이쉬며 미소 지었다.'}]},
-    { req:50, fat:6, h:10, txt:'엘리아스와 따뜻한 차를 마시며 밤늦게까지 이야기를 나눴다. 이상하게 시간이 너무 빨랐다.'},
-    { req:75, fat:6, h:14, txt:'엘리아스가 당신 이마에 살짝 손을 얹으며 말했다. "당신과 있는 시간이, 제일 편안해요."'}
-  ],
-  jaiden:[
-    { req:25, fat:9, h:8, txt:'제이든이 투덜거리며 같이 식사하자고 했다. 결국 가장 좋은 자리도 당신 옆이었다.',
-      choices:['고맙다고 한다','장난으로 놀린다'],
-      res:[{h:4,txt:'제이든이 얼굴을 붉히며 젓가락질만 했다.'},
-           {h:6,txt:'"하? 놀리지 마." 그러면서도 웃고 있었다.'}]},
-    { req:50, fat:10, h:11, txt:'야간 훈련 후 단둘이 남았다. 제이든은 숨을 고르며 당신에게서 눈을 떼지 못했다.'},
-    { req:75, fat:10, h:14, txt:'제이든은 결국 당신을 붙잡았다. "도망가지 마. 이제 와서 혼자 좋아한 나만 바보 되는 건 싫으니까."'}
-  ],
-  oliver:[
-    { req:25, fat:7, h:7, txt:'올리버와 도서관 창가에 나란히 앉아 공부했다. 책보다 서로에게 더 신경 쓰이는 순간이 늘었다.',
-      choices:['집중한다','조용히 웃는다'],
-      res:[{h:4,txt:'올리버는 평소보다 더 가까이 노트를 밀어주었다.'},
-           {h:6,txt:'올리버가 시선을 피하다가 작게 따라 웃었다.'}]},
-    { req:50, fat:8, h:10, txt:'목적 없는 산책 중 올리버가 한참 침묵하다 말했다. "...너랑 있으면 계획이 틀어져도 괜찮아."'},
-    { req:75, fat:8, h:14, txt:'올리버는 당신 손끝을 조심스럽게 잡았다. "이 감정은 비효율적이지만, 포기할 생각은 없어."'}
-  ]
-};
+function getBgm(){return document.getElementById('bgm')}
+function updateBgmButton(isPlaying){const btn=document.getElementById('bgm-toggle');if(bgmEnabled&&isPlaying){btn.textContent='🔊 BGM ON';btn.classList.remove('off');}else{btn.textContent='🔇 BGM OFF';btn.classList.add('off');}}
+async function tryStartBgm(force=false){const bgm=getBgm();if(!bgm)return false;if((!bgmEnabled||bgmUserPaused)&&!force){updateBgmButton(false);return false;}bgm.volume=.35;bgm.muted=false;try{await bgm.play();unhookBgmFallback();updateBgmButton(true);return true;}catch(e){hookBgmFallback();updateBgmButton(false);return false;}}
+function stopBgm(){const bgm=getBgm();if(!bgm)return;bgm.pause();updateBgmButton(false)}
+async function toggleBgm(){const bgm=getBgm();if(!bgm)return;if(!bgm.paused&&!bgm.ended){bgmEnabled=false;bgmUserPaused=true;stopBgm();return;}bgmEnabled=true;bgmUserPaused=false;await tryStartBgm(true);}
+function bgmFallbackHandler(){if(bgmEnabled&&!bgmUserPaused)tryStartBgm();}
+function hookBgmFallback(){if(bgmFallbackHooked)return;bgmFallbackHooked=true;['pointerdown','keydown','touchstart'].forEach(evt=>document.addEventListener(evt,bgmFallbackHandler,true));}
+function unhookBgmFallback(){if(!bgmFallbackHooked)return;bgmFallbackHooked=false;['pointerdown','keydown','touchstart'].forEach(evt=>document.removeEventListener(evt,bgmFallbackHandler,true));}
 
-const MAIN_ENDINGS = [
-  {
-    id:'legend', ico:'✨', ttl:'전설의 대마법사',
-    cond:s => s.mana >= 65 && s.know >= 65 && s.body >= 42 && s.social >= 42 && s.scholarship >= 2,
-    txt:'5년 동안 네 분야를 가리지 않고 빛난 당신은 세대에 한 번 나올까 말까 한 천재로 기록되었다. 수백 년이 지나도 그 이름은 전설로 남는다.'
-  },
-  {
-    id:'forbidden', ico:'🌑', ttl:'금지된 마도의 계승자',
-    cond:s => s.forbidden >= 6 && s.mana >= 50 && s.npc.vain >= 55,
-    txt:'당신은 금지된 지식의 매력을 끝내 외면하지 않았다. 사람들은 두려워했지만, 당신은 누구보다 깊은 진실에 닿았다.'
-  },
-  {
-    id:'archmage', ico:'👑', ttl:'왕실 수석 마법사',
-    cond:s => s.mana >= 55 && s.know >= 55,
-    txt:'5년의 수련을 마친 당신은 왕국 역사상 가장 어린 수석 마법사로 임명되었다. 왕실은 당신의 이름을 공식 기록에 남겼다.'
-  },
-  {
-    id:'battle', ico:'⚔️', ttl:'전투 마도사단 단장',
-    cond:s => s.mana >= 45 && s.body >= 52,
-    txt:'마법과 전투를 겸비한 당신은 왕국 최정예 전투 마도사단의 지휘를 맡았다. 전장에서는 당신의 명령 하나가 승부를 갈랐다.'
-  },
-  {
-    id:'professor', ico:'🎓', ttl:'아카데미 교수',
-    cond:s => s.know >= 62 && s.classCount >= 26,
-    txt:'당신은 아카데미에 남아 차세대 마법사들을 가르치게 되었다. 학생들은 당신의 수업을 듣기 위해 길게 줄을 섰다.'
-  },
-  {
-    id:'diplomat', ico:'🕊️', ttl:'궁정 외교 마법사',
-    cond:s => s.social >= 55 && s.know >= 40,
-    txt:'마법만큼이나 말의 힘을 이해한 당신은 여러 왕국 사이를 오가며 외교를 이끌었다. 전쟁을 막아낸 것은 종종 당신의 한마디였다.'
-  },
-  {
-    id:'alchemist', ico:'⚗️', ttl:'대연금술사',
-    cond:s => s.know >= 44 && s.mana >= 40 && s.alchemyCount >= 12,
-    txt:'연금술에 깊이 몰두한 당신은 새로운 조합법과 포션을 잇달아 만들어냈다. 귀족과 상인들이 당신의 공방을 찾기 시작했다.'
-  },
-  {
-    id:'merchant', ico:'💰', ttl:'자수성가한 마법 상인',
-    cond:s => s.gold >= 260 && s.jobCount >= 26 && s.social >= 28,
-    txt:'당신은 아르바이트와 거래를 발판 삼아 자신만의 인맥과 자본을 만들었다. 마법사이자 사업가로서, 당신의 가게는 곧 작은 제국이 되었다.'
-  },
-  {
-    id:'burnout', ico:'🥀', ttl:'번아웃한 수련생',
-    cond:s => s.burnout >= 3 || (s.fatigue >= 85 && s.freeCount < 10),
-    txt:'당신은 누구보다 열심히 달렸지만, 끝내 자신을 돌보지 못했다. 손에 쥔 것은 많았지만 마음과 몸은 지쳐 있었다.'
-  },
-  {
-    id:'debt', ico:'💸', ttl:'빚더미 수련생',
-    cond:s => s.debt >= 5,
-    txt:'수업과 사교를 쫓는 동안 지갑은 점점 가벼워졌고, 결국 생활비조차 빠듯해졌다. 그래도 이 경험은 다음 삶의 교훈이 될 것이다.'
-  },
-  {
-    id:'normal', ico:'📘', ttl:'무난한 졸업생',
-    cond:s => (s.mana + s.know + s.body + s.social) >= 130,
-    txt:'눈부신 전설은 아니더라도, 당신은 분명히 5년의 수련을 완주했다. 이제 진짜 마법사의 삶이 당신 앞에 펼쳐진다.'
-  },
-  {
-    id:'bad', ico:'💀', ttl:'유급 수련생',
-    cond:() => true,
-    txt:'5년이 지났지만 아직은 조금 부족했다. 하지만 완전히 끝난 것은 아니다. 다시 시작한다면 이번엔 더 멀리 갈 수 있다.'
-  }
-];
+function startCreate(){alloc={mana:5,know:5,body:5,social:5};document.getElementById('char-name').value='';showScreen('screen-create');renderAlloc();}
+function renderAlloc(){const defs=[['mana','✨ 마력','s-mana'],['know','📚 지식','s-know'],['body','💪 체력','s-body'],['social','💬 사교','s-soc']];let h='';for(const[k,lbl,cls]of defs){const v=alloc[k];h+=`<div class="srow ${cls}"><span class="slbl">${lbl}</span><div class="sbw"><div class="sbf" style="width:${v*2.5}%"></div></div><span class="sn">${v}</span><button class="sbtn" onclick="adj('${k}',-1)">−</button><button class="sbtn" onclick="adj('${k}',1)">+</button></div>`;}document.getElementById('stat-alloc').innerHTML=h;document.getElementById('pts').textContent=calcPts();}
+function adj(k,d){const pts=calcPts();if(d>0&&pts<=0)return;if(d<0&&alloc[k]<=1)return;alloc[k]+=d;renderAlloc();}
+function randomizeAlloc(){let remain=40;const keys=['mana','know','body','social'];alloc={mana:1,know:1,body:1,social:1};remain-=4;while(remain>0){alloc[keys[Math.floor(Math.random()*keys.length)]]++;remain--;}renderAlloc();}
+function confirmCreate(){const name=document.getElementById('char-name').value.trim()||'아리아';initGame(name,{...alloc});startGame();}
 
-const ROMANCE_ENDINGS = [
-  {
-    id:'vain', ico:'🌑', ttl:'베인 — 어둠 속 유일한 빛',
-    cond:s => s.npc.vain >= 60 && s.mana >= 24 && s.forbidden >= 1,
-    txt:'세상은 베인을 경계했지만, 그는 당신 앞에서만 조용히 무너졌다. 금지된 밤들 속에서도 당신만은 그의 유일한 빛이었다.'
-  },
-  {
-    id:'leon', ico:'💍', ttl:'레온 — 왕궁의 동반자',
-    cond:s => s.npc.leon >= 60 && s.social >= 20,
-    txt:'레온은 수많은 시선 앞에서도 망설이지 않았다. 왕궁의 정원에서 그는 당신의 손을 잡고, 평생 함께하자고 말했다.'
-  },
-  {
-    id:'cassian', ico:'🗡️', ttl:'카시안 — 기사의 맹세',
-    cond:s => s.npc.cassian >= 60 && s.body >= 20,
-    txt:'카시안은 더 이상 임무라는 말 뒤에 숨지 않았다. 당신 곁을 지키는 것이 자신의 진짜 소원이라고, 그가 낮게 고백했다.'
-  },
-  {
-    id:'saren', ico:'🌊', ttl:'사렌 — 미지의 땅으로',
-    cond:s => s.npc.saren >= 58 && s.social >= 16,
-    txt:'사렌은 마지막까지 장난스럽게 웃었지만, 떠나는 순간엔 누구보다 진지했다. 당신은 그의 손을 잡고 낯선 바다 너머로 향했다.'
-  },
-  {
-    id:'elias', ico:'🌿', ttl:'엘리아스 — 약초원의 평화',
-    cond:s => s.npc.elias >= 58,
-    txt:'엘리아스와 함께하는 삶은 화려하진 않아도 따뜻했다. 작은 약초원과 차 향기, 그리고 서로를 기다리는 저녁이 매일을 채웠다.'
-  },
-  {
-    id:'jaiden', ico:'⚔️', ttl:'제이든 — 영원한 라이벌',
-    cond:s => s.npc.jaiden >= 60 && s.body >= 18,
-    txt:'서로를 밀어붙이며 성장하던 두 사람은 결국 가장 가까운 사람이 되었다. 투덜거리면서도, 그는 언제나 가장 먼저 당신을 찾았다.'
-  },
-  {
-    id:'oliver', ico:'🤝', ttl:'올리버 — 현자의 동반자',
-    cond:s => s.npc.oliver >= 58 && s.know >= 20,
-    txt:'올리버는 끝내 감정을 공식처럼 설명하지 못했다. 하지만 당신과 함께 있을 때만큼은, 그 침묵 자체가 가장 분명한 대답이었다.'
-  }
-];
+function startGame(){showScreen('screen-game');if(!G.activeTab)G.activeTab='train';renderAll();}
+function setTab(tab){G.activeTab=tab;document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.getElementById(`tab-${tab}`).classList.add('active');document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));saveGame();}
+function renderAll(){renderHUD();renderTrain();renderRelations();renderShop();renderStatus();renderLog();setTab(G.activeTab||'train');saveGame();}
+function renderHUD(){document.getElementById('hd-name').textContent=G.name;document.getElementById('hd-gold').textContent=G.gold;document.getElementById('hd-prog').style.width=(Math.min(G.turn,G.totalTurns)/G.totalTurns*100)+'%';document.getElementById('hd-turn').textContent=Math.min(G.turn,G.totalTurns)+'/'+G.totalTurns;const[sn,sc]=getSeason();document.getElementById('hd-date').textContent=`${getYear()}년차 ${getMonth()}월`;document.getElementById('hd-season').innerHTML=`<span class="stag ${sc}">${sn}</span>`;}
+function slotText(v){if(!v)return{txt:'선택 안 함',empty:true};if(isDateSlot(v)){const npc=NPCS.find(n=>n.id===v.split(':')[1]);return{txt:npc?`💕 ${npc.name} 데이트`:'💕 데이트',empty:false};}const a=getActById(v);return a?{txt:`${a.icon} ${a.name}`,empty:false}:{txt:'선택 안 함',empty:true};}
+function getComboPreview(am,pm){const out={mana:0,know:0,body:0,social:0,gold:0,heart:0,notes:[]};if(!am||!pm||isDateSlot(am)||isDateSlot(pm))return out;const pair=[am,pm].sort().join('|');if(pair==['alchemy_assist','alchemy_practicum'].sort().join('|')){out.mana+=1;out.know+=1;out.gold+=5;out.notes.push('연금 시너지');}else if(pair==['wall_guard','martial_basics'].sort().join('|')){out.body+=1;out.notes.push('전투 시너지');}else if(pair==['banquet_service','royal_tea'].sort().join('|')){out.social+=2;out.notes.push('궁정 인맥 시너지');}else if(pair==['market_delivery','night_market'].sort().join('|')){out.social+=1;out.gold+=8;out.notes.push('시장 인맥 시너지');}else if(pair==['library_sorting','ancient_texts'].sort().join('|')){out.know+=1;out.notes.push('연구 시너지');}else if(pair==['forbidden_decoding','secret_archive'].sort().join('|')){out.mana+=2;out.know+=1;out.notes.push('금지 지식 공명');}return out;}
+function getDatePreview(npcId){const evList=DATE_EVS[npcId]||[];return evList.filter(e=>G.npc[npcId]>=e.req).pop()||{fat:8,h:5};}
+function getPreviewResult(){const res={mana:0,know:0,body:0,social:0,gold:0,fat:0,heart:0,notes:[]};for(const slot of [G.selAM,G.selPM]){if(!slot)continue;if(isDateSlot(slot)){const npcId=slot.split(':')[1],ev=getDatePreview(npcId);res.fat+=(ev.fat||8);res.heart+=(ev.h||5);const npc=NPCS.find(n=>n.id===npcId);if(npc)res.notes.push(`${npc.name} 호감도 +${ev.h||5}`);}else{const a=getActById(slot);if(!a)continue;for(const[k,v]of Object.entries(a.stat||{}))res[k]+=v;res.gold+=(a.gold||0);res.fat+=(a.fat||0);}}
+const combo=getComboPreview(G.selAM,G.selPM);['mana','know','body','social','gold','heart'].forEach(k=>res[k]+=combo[k]||0);res.notes.push(...combo.notes);res.gold-=10;res.endGold=Math.max(0,G.gold+res.gold);res.endFat=clamp(G.fatigue+res.fat);res.forced=res.endFat>=90;return res;}
+function fmtDelta(n,v,suffix=''){if(!v)return'';const label={mana:'마력',know:'지식',body:'체력',social:'사교',gold:'골드',fat:'피로'}[n]||n;const sign=v>0?'+':'';return `${label} ${sign}${v}${suffix}`;}
+function renderPreview(){const p=getPreviewResult();const chosen=!!(G.selAM||G.selPM);if(!chosen){document.getElementById('preview-main').textContent='활동을 고르면 예상 변화가 표시돼요.';document.getElementById('preview-sub').textContent='';return;}const parts=[fmtDelta('mana',p.mana),fmtDelta('know',p.know),fmtDelta('body',p.body),fmtDelta('social',p.social),fmtDelta('gold',p.gold,'G'),fmtDelta('fat',p.fat)].filter(Boolean);document.getElementById('preview-main').textContent=parts.join(' / ')||'큰 변화 없음';const notes=[];notes.push(`월말 예상 골드 ${p.endGold}G`);notes.push(`예상 피로 ${p.endFat}/100`);if(p.heart)notes.push(`데이트 포함 호감도 +${p.heart}`);if(p.notes.length)notes.push(p.notes.join(', '));if(p.forced)notes.push('⚠️ 이 상태면 다음 달 강제 휴식 가능');const sub=document.getElementById('preview-sub');sub.textContent=notes.join(' · ');sub.className='preview-sub'+(p.forced?' preview-warn':'');}
+function renderTrain(){const am=slotText(G.selAM),pm=slotText(G.selPM);const amEl=document.getElementById('slot-am'),pmEl=document.getElementById('slot-pm');amEl.textContent=am.txt;pmEl.textContent=pm.txt;amEl.classList.toggle('empty',am.empty);pmEl.classList.toggle('empty',pm.empty);document.getElementById('m-info').textContent=G.forcedRest?`⚠️ ${getYear()}년차 ${getMonth()}월 — 강제 휴식 (활동 불가)`:`${getYear()}년차 ${getMonth()}월 — 이달의 활동을 선택하세요`;if(G.forcedRest){document.getElementById('act-grid').innerHTML='<div class="cat-head">🛌 이달은 강제 휴식입니다.</div>';renderPreview();return;}const groups=[{key:'job',label:'🧹 아르바이트 — 돈 벌기 / 성장 적음'},{key:'class',label:'📚 수업 — 돈 쓰기 / 성장 큼'},{key:'social',label:'🎭 사교 — 돈 쓰기 / 이벤트 강화'},{key:'free',label:'😴 무료 행동 — 회복 / 소성장'}];let h='';for(const g of groups){const list=getAvailableActs().filter(a=>a.type===g.key);if(!list.length)continue;h+=`<div class="cat-head">${g.label}</div>`;for(const a of list){const selected=G.selAM===a.id||G.selPM===a.id;const disabled=!(a.gold<0&&G.gold<Math.abs(a.gold));const statStr=Object.entries(a.stat||{}).map(([k,v])=>({mana:'마력',know:'지식',body:'체력',social:'사교'}[k]+(v>0?'+':'')+v)).join(' ');const goldStr=a.gold?(a.gold>0?` 💰+${a.gold}G`:` 💸${a.gold}G`):'';const fatStr=a.fat?`${a.fat>0?'+':''}${a.fat}피로`:'';h+=`<button class="ab${selected?' sel':''}${disabled?'':' dis'}" onclick="selAct('${a.id}')"><span class="ai">${a.icon}</span><span class="an">${a.name}</span><span class="ac">${statStr||'변화 적음'}${goldStr}<br>${fatStr}</span></button>`;}}
+ document.getElementById('act-grid').innerHTML=h;renderPreview();}
+function selAct(id){if(G.forcedRest)return;const a=getActById(id);if(!a)return;if(a.gold<0&&G.gold<Math.abs(a.gold)){addLog(`💸 ${a.name} 비용이 부족합니다.`,'bad');return;}if(G.selAM===id){G.selAM=null;renderTrain();saveGame();return;}if(G.selPM===id){G.selPM=null;renderTrain();saveGame();return;}const pmIsDate=isDateSlot(G.selPM);if(!G.selAM)G.selAM=id;else if(!G.selPM)G.selPM=id;else if(pmIsDate)G.selAM=id;else{G.selAM=G.selPM;G.selPM=id;}renderTrain();saveGame();}
 
-let G = {};
-let alloc = { mana:5, know:5, body:5, social:5 };
-let pts = 20;
+function renderRelations(){let h='',anyDate=false;for(const npc of NPCS){const met=npc.meet(G.turn),heart=G.npc[npc.id];if(heart>=25&&met)anyDate=true;h+=`<div class="nc${met?'':' locked'}" ${met?`onclick="openNpcModal('${npc.id}')"`:''}><img src="${IMG[npc.id]}" class="npc-img" alt="${npc.name}"><div style="flex:1;min-width:0"><span class="nn">${npc.name}${met?'':' 🔒'}</span><div class="nh"><div class="nhf" style="width:${heart}%"></div></div></div><span class="hnum">${met?heart:'?'}</span></div>`;}document.getElementById('npc-list').innerHTML=h;const db=document.getElementById('date-btn');db.style.display=(anyDate&&!G.forcedRest)?'block':'none';db.textContent=isDateSlot(G.selPM)?'💕 데이트 변경':'💕 데이트 신청';}
+function renderShop(){let h='';for(const it of SHOP){h+=`<div class="sh-item"><div><div class="sh-name">${it.name}</div><div class="sh-desc">${it.desc}</div></div><button class="btn btn-xs" onclick="buyItem('${it.id}')" ${G.gold<it.cost?'disabled':''}>${it.cost}G</button></div>`;}document.getElementById('shop-list').innerHTML=h;}
+function renderStatus(){const defs=[['mana','✨ 마력','sd-mana'],['know','📚 지식','sd-know'],['body','💪 체력','sd-body'],['social','💬 사교','sd-soc']];let h='';for(const[k,lbl,cls]of defs){const v=Math.min(G.stats[k],100);h+=`<div class="sdr ${cls}"><span class="sdlbl">${lbl}</span><div class="sdb"><div class="sdf" style="width:${v}%"></div></div><span class="sdn">${G.stats[k]}</span></div>`;}document.getElementById('stat-panel').innerHTML=h;document.getElementById('fat-num').textContent=G.fatigue+'/100';const ff=document.getElementById('fat-fill');ff.style.width=G.fatigue+'%';ff.style.background=G.fatigue>=80?'#ff4040':G.fatigue>=50?'#ff9040':'#40e880';let b='';if(G.fatigue>=80)b+='<span class="badge b-bad">⚠️ 과로</span>';else if(G.fatigue>=50)b+='<span class="badge b-warn">😰 피로</span>';else b+='<span class="badge b-ok">✅ 정상</span>';if(G.forcedRest)b+='<span class="badge b-bad">🛌 강제 휴식</span>';if(G.gold<30)b+='<span class="badge b-warn">💸 자금 부족</span>';if(G.counts.forbidden>=3)b+='<span class="badge b-warn">🌑 금지 지식</span>';document.getElementById('badges').innerHTML=b;}
 
-let _q = [];
-let _qi = 0;
+function getEmptySlotWarning(){if(G.forcedRest)return'';const am=!G.selAM,pm=!G.selPM;if(am&&pm)return'오전/오후 활동이 모두 비어 있어요. 이번 달을 그대로 넘길까요?';if(am)return'오전 활동을 선택하지 않았어요. 그대로 진행할까요?';if(pm)return'오후 활동을 선택하지 않았어요. 그대로 진행할까요?';return'';}
+function openWarnModal(text,cb){document.getElementById('warn-text').textContent=text;_warnCb=cb;document.getElementById('warn-modal').classList.add('open');}
+function closeWarnModal(run=false){document.getElementById('warn-modal').classList.remove('open');if(run&&_warnCb){const f=_warnCb;_warnCb=null;f();}else _warnCb=null;}
+function attemptConfirmMonth(){const msg=getEmptySlotWarning();if(msg){openWarnModal(msg,processMonth);}else processMonth();}
 
-let _evCb = null;
-let _lvCb = null;
-let _lvNpc = null;
-let _lvMark = null;
+let _monthAM=null,_monthPM=null,_monthMark=null;
+function processMonth(){if(!G.forcedRest&&!G.selAM&&!G.selPM){addLog('활동을 최소 1개 선택하세요.');return;} _monthMark=`${getYear()}년 ${getMonth()}월`;_monthAM=G.selAM;_monthPM=G.selPM;_q=[];_qi=0;if(G.forcedRest){G.fatigue=clamp(G.fatigue-45);addLog('🛌 강제 휴식. 피로 −45','good',_monthMark);G.forcedRest=false;}else{for(const slot of [_monthAM,_monthPM]){if(!slot)continue;if(isDateSlot(slot))doDateActivity(slot.split(':')[1],_monthMark);else{const act=getActById(slot);if(act)doActivity(act,_monthMark);}}applyComboBonus(_monthAM,_monthPM,_monthMark);}applyLivingCost(_monthMark);applySemesterScholarship(_monthMark);maybeQueueMiniRomance(_monthMark);if(G.fatigue>=90&&!G.forcedRest){G.forcedRest=true;G.counts.burnout++;_q.push({type:'sys',ico:'🛌',ttl:'과로로 쓰러짐',txt:'극심한 피로로 쓰러졌다. 다음 달은 강제 휴식이다.',tags:['다음 달 강제 휴식'],mark:_monthMark});addLog('⚠️ 과로 쓰러짐! 다음 달 강제 휴식','bad',_monthMark);}for(const npc of NPCS){for(const ev of npc.events){const key=npc.id+'_'+ev.t;if(ev.t===G.turn&&!G.triggered[key]&&npc.meet(G.turn)){G.triggered[key]=true;_q.push({type:'npc',npc,ev,mark:_monthMark});}}}if(Math.random()<0.12)_q.push({type:'rand',ev:RANDS[Math.floor(Math.random()*RANDS.length)],mark:_monthMark});G.selAM=null;G.selPM=null;G.turn++;renderAll();runQueue();}
+function doActivity(act,mark){if(act.gold<0&&G.gold<Math.abs(act.gold)){addLog(`💸 ${act.name} 비용이 부족해 참여하지 못했다.`,'bad',mark);_q.push({type:'sys',ico:'💸',ttl:'비용 부족',txt:`${act.name} 비용이 부족해 참여하지 못했다.`,tags:['행동 무효'],mark});return;}if(act.fail&&Math.random()<act.fail){for(const[k,v]of Object.entries(act.fstat||{})){if(k==='fat')G.fatigue=clamp(G.fatigue+v);else if(k==='gold')G.gold=Math.max(0,G.gold+v);else G.stats[k]=Math.max(0,(G.stats[k]||0)+v);}addLog('❌ '+act.ftxt,'bad',mark);_q.push({type:'sys',ico:'❌',ttl:'활동 실패',txt:act.ftxt,tags:[],mark});return;}for(const[k,v]of Object.entries(act.stat||{}))G.stats[k]=Math.max(0,(G.stats[k]||0)+v);G.fatigue=clamp(G.fatigue+(act.fat||0));if(act.gold)G.gold=Math.max(0,G.gold+act.gold);G.counts[act.type]=(G.counts[act.type]||0)+1;G.counts.byAct[act.id]=(G.counts.byAct[act.id]||0)+1;if(act.forbidden)G.counts.forbidden++;const statStr=Object.entries(act.stat||{}).map(([k,v])=>({mana:'마력',know:'지식',body:'체력',social:'사교'}[k]+(v>0?'+':'')+v)).join(' ');addLog(`${act.icon} ${act.name}${statStr?' ('+statStr+')':''}${act.gold?((act.gold>0?' +':' ')+act.gold+'G'):''}`,'good',mark);if(act.npc&&Math.random()<(act.nc||0)){const npc=NPCS.find(n=>n.id===act.npc);if(npc&&npc.meet(G.turn)){const gain=act.type==='social'?4:3;G.npc[act.npc]=clamp(G.npc[act.npc]+gain);addLog(`❤️ ${npc.name}와(과) 가까워졌다. 호감도 +${gain}`,'heart',mark);}}}
+function doDateActivity(npcId,mark){const npc=NPCS.find(n=>n.id===npcId);if(!npc)return;let ev=(DATE_EVS[npcId]||[]).filter(e=>G.npc[npcId]>=e.req).pop();if(!ev)ev={fat:8,h:5,txt:`${npc.name}와(과) 조용한 시간을 보냈다. 짧았지만 분명히 마음이 가까워졌다.`};G.fatigue=clamp(G.fatigue+(ev.fat||8));G.counts.dates++;_q.push({type:'date',npc,ev,mark});}
+function applyComboBonus(am,pm,mark){if(!am||!pm||isDateSlot(am)||isDateSlot(pm))return;const pair=[am,pm].sort().join('|');if(pair===['alchemy_assist','alchemy_practicum'].sort().join('|')){G.stats.mana+=1;G.stats.know+=1;G.gold+=5;addLog('🔗 연금 시너지! 마력 +1, 지식 +1, 골드 +5G','good',mark);}else if(pair===['wall_guard','martial_basics'].sort().join('|')){G.stats.body+=1;G.npc.cassian=clamp(G.npc.cassian+2);addLog('🔗 전투 시너지! 체력 +1, 카시안 호감도 +2','heart',mark);}else if(pair===['banquet_service','royal_tea'].sort().join('|')){G.stats.social+=2;G.npc.leon=clamp(G.npc.leon+2);addLog('🔗 궁정 인맥 시너지! 사교 +2, 레온 호감도 +2','heart',mark);}else if(pair===['market_delivery','night_market'].sort().join('|')){G.stats.social+=1;G.gold+=8;G.npc.saren=clamp(G.npc.saren+2);addLog('🔗 시장 인맥 시너지! 사교 +1, 골드 +8G, 사렌 호감도 +2','heart',mark);}else if(pair===['library_sorting','ancient_texts'].sort().join('|')){G.stats.know+=1;G.npc.oliver=clamp(G.npc.oliver+2);addLog('🔗 연구 시너지! 지식 +1, 올리버 호감도 +2','heart',mark);}else if(pair===['forbidden_decoding','secret_archive'].sort().join('|')){G.stats.mana+=2;G.stats.know+=1;G.counts.forbidden++;G.npc.vain=clamp(G.npc.vain+3);addLog('🔗 금지 지식 공명! 마력 +2, 지식 +1, 베인 호감도 +3','heart',mark);}}
+function applyLivingCost(mark){if(G.gold>=10){G.gold-=10;addLog('💸 생활비 10G 차감','bad',mark);}else{G.counts.debt++;G.stats.social=Math.max(0,G.stats.social-2);addLog('⚠️ 생활비 부족! 사교 −2','bad',mark);}if(G.gold===0)G.counts.debt++;}
+function applySemesterScholarship(mark){if(G.turn%6!==0)return;const score=G.stats.mana+G.stats.know+G.stats.body+G.stats.social+(G.counts.class*2);let reward=0;if(score>=150)reward=45;else if(score>=120)reward=28;if(reward>0){G.gold+=reward;G.counts.scholarship++;addLog(`🏅 학기 장학금 +${reward}G`,'good',mark);_q.push({type:'sys',ico:'🏅',ttl:'학기 장학금',txt:`이번 학기 성적이 우수하여 장학금 ${reward}G를 받았다.`,tags:[`골드 +${reward}G`],mark});}}
+function maybeQueueMiniRomance(mark){const candidates=NPCS.filter(n=>n.meet(G.turn)&&G.npc[n.id]>=15);if(!candidates.length||Math.random()>=0.38)return;candidates.sort((a,b)=>G.npc[b.id]-G.npc[a.id]);const pool=candidates.slice(0,Math.min(3,candidates.length));const npc=pool[Math.floor(Math.random()*pool.length)];const lines=MINI_ROMANCE[npc.id]||[];const txt=lines[Math.floor(Math.random()*lines.length)]||'';const gain=G.npc[npc.id]>=60?4:G.npc[npc.id]>=30?3:2;_q.push({type:'mini',npc,txt,h:gain,mark});}
+function runQueue(){if(_qi>=_q.length){checkEnding();return;}const item=_q[_qi++];if(item.type==='sys'){showEvModal(item.ico,item.ttl,item.txt,item.tags||[],runQueue,null);}else if(item.type==='rand'){applyEff(item.ev.eff);renderAll();addLog('🌀 '+item.ev.ttl,'ev',item.mark);showEvModal(item.ev.ico,item.ev.ttl,item.ev.txt,item.ev.tags,runQueue,null);}else if(item.type==='mini'){G.npc[item.npc.id]=clamp(G.npc[item.npc.id]+item.h);addLog(`💞 ${item.npc.name}와 작은 순간. 호감도 +${item.h}`,'heart',item.mark);renderAll();showEvModal(item.npc.icon,`${item.npc.name} — 작은 순간`,item.txt,[`호감도 +${item.h}`],runQueue,IMG[item.npc.id]);}else if(item.type==='npc'){showLoveScene(item.npc,item.ev,runQueue,'이벤트',item.mark);}else if(item.type==='date'){showLoveScene(item.npc,item.ev,runQueue,'데이트',item.mark);}}
 
-let bgmFallbackHooked = false;
-let bgmEnabled = true;
-let bgmUserPaused = false;
+function showEvModal(ico,ttl,txt,tags,cb,imgSrc=null){const evImg=document.getElementById('ev-img');if(imgSrc){evImg.src=imgSrc;evImg.style.display='block';}else{evImg.style.display='none';evImg.removeAttribute('src');}document.getElementById('ev-ico').textContent=ico;document.getElementById('ev-ttl').textContent=ttl;document.getElementById('ev-txt').textContent=txt;document.getElementById('ev-tags').innerHTML=(tags||[]).map(t=>`<span class="tag ${(String(t).includes('−')||String(t).includes('-'))?'tn':'tp'}">${t}</span>`).join('');_evCb=cb;document.getElementById('ev-modal').classList.add('open');}
+function closeEvModal(){document.getElementById('ev-modal').classList.remove('open');if(_evCb){const f=_evCb;_evCb=null;renderAll();f();}}
+function showLoveScene(npc,ev,cb,label='이벤트',mark=null){const baseGain=ev.h||0;if(baseGain)G.npc[npc.id]=clamp(G.npc[npc.id]+baseGain);addLog(`${label==='데이트'?'💕':'💌'} ${npc.name} ${label}! 호감도 +${baseGain}`,'heart',mark);renderAll();_lvNpc=npc;_lvCb=cb;_lvMark=mark;window._lvRes=ev.res||[];document.getElementById('lv-img').src=IMG[npc.id];document.getElementById('lv-ico').textContent=npc.icon;document.getElementById('lv-ttl').textContent=`${npc.name} — ${label}`;document.getElementById('lv-txt').textContent=ev.txt;const cl=document.getElementById('lv-choices');if(ev.choices&&ev.choices.length){cl.innerHTML=ev.choices.map((c,i)=>`<button class="chbtn" onclick="pickNpcChoice(${i})">${c}</button>`).join('');}else cl.innerHTML=`<button class="btn btn-sm" onclick="closeLvModal()">확인</button>`;document.getElementById('lv-modal').classList.add('open');}
+function pickNpcChoice(i){const res=(window._lvRes||[])[i];if(!res)return;if(_lvNpc){G.npc[_lvNpc.id]=clamp(G.npc[_lvNpc.id]+(res.h||0));addLog(`💬 ${res.txt} 호감도 +${res.h||0}`,'heart',_lvMark);}document.getElementById('lv-txt').textContent=res.txt;document.getElementById('lv-choices').innerHTML=`<button class="btn btn-sm" onclick="closeLvModal()">확인</button>`;window._lvRes=[];renderAll();}
+function closeLvModal(){document.getElementById('lv-modal').classList.remove('open');_lvMark=null;if(_lvCb){const f=_lvCb;_lvCb=null;_lvNpc=null;window._lvRes=[];renderAll();f();}else{_lvNpc=null;window._lvRes=[];renderAll();}}
 
-function baseCounts() {
-  return {
-    job:0,
-    class:0,
-    social:0,
-    free:0,
-    forbidden:0,
-    dates:0,
-    scholarship:0,
-    burnout:0,
-    debt:0,
-    byAct:{}
-  };
-}
+function openDateMenu(){if(G.forcedRest)return;const list=NPCS.filter(n=>G.npc[n.id]>=25&&n.meet(G.turn));if(!list.length)return;document.getElementById('date-choices').innerHTML=list.map(n=>`<button class="chbtn" onclick="startDate('${n.id}')">${n.icon} ${n.name} <span style="color:var(--pink);font-family:var(--px);font-size:8px">❤️${G.npc[n.id]}</span></button>`).join('');document.getElementById('date-modal').classList.add('open');}
+function closeDateModal(){document.getElementById('date-modal').classList.remove('open');}
+function startDate(npcId){closeDateModal();G.selPM=`date:${npcId}`;G.activeTab='train';renderAll();}
 
-function initGame(name, stats) {
-  G = {
-    name,
-    turn:1,
-    totalTurns:60,
-    gold:240,
-    fatigue:0,
-    stats:{
-      mana:stats.mana,
-      know:stats.know,
-      body:stats.body,
-      social:stats.social
-    },
-    npc:{
-      leon:0,cassian:0,saren:0,vain:0,elias:0,jaiden:0,oliver:0
-    },
-    counts: baseCounts(),
-    selAM:null,
-    selPM:null,
-    forcedRest:false,
-    triggered:{},
-    log:[]
-  };
-}
+function getLoveStage(h){if(h>=80)return'💖 연인 직전';if(h>=60)return'💗 감정 자각';if(h>=40)return'🩷 신경 쓰임';if(h>=20)return'🤝 친해짐';return'👤 지인';}
+function openNpcModal(id){const npc=NPCS.find(n=>n.id===id);if(!npc)return;const h=G.npc[id];document.getElementById('nm-img').src=IMG[id];document.getElementById('nm-name').textContent=npc.name;document.getElementById('nm-title').textContent=npc.title;document.getElementById('nm-desc').textContent=npc.desc;document.getElementById('nm-hf').style.width=h+'%';document.getElementById('nm-hn').textContent=h+'/100';document.getElementById('nm-stage').textContent=getLoveStage(h);const nxt=npc.events.find(e=>!G.triggered[npc.id+'_'+e.t]&&e.t>=G.turn);document.getElementById('nm-next').textContent=nxt?`다음 주요 이벤트까지 약 ${nxt.t-G.turn+1}개월`:'주요 이벤트 완료 ✨';document.getElementById('npc-modal').classList.add('open');}
+function closeNpcModal(){document.getElementById('npc-modal').classList.remove('open');}
 
-function normalizeGameState(src) {
-  const counts = Object.assign(baseCounts(), src.counts || {});
-  counts.byAct = counts.byAct || {};
-  return {
-    name: src.name || '아리아',
-    turn: Math.max(1, src.turn || 1),
-    totalTurns: 60,
-    gold: Math.max(0, src.gold ?? 240),
-    fatigue: clamp(src.fatigue ?? 0),
-    stats: {
-      mana: Math.max(0, src.stats?.mana ?? 5),
-      know: Math.max(0, src.stats?.know ?? 5),
-      body: Math.max(0, src.stats?.body ?? 5),
-      social: Math.max(0, src.stats?.social ?? 5),
-    },
-    npc: {
-      leon: clamp(src.npc?.leon ?? 0),
-      cassian: clamp(src.npc?.cassian ?? 0),
-      saren: clamp(src.npc?.saren ?? 0),
-      vain: clamp(src.npc?.vain ?? 0),
-      elias: clamp(src.npc?.elias ?? 0),
-      jaiden: clamp(src.npc?.jaiden ?? 0),
-      oliver: clamp(src.npc?.oliver ?? 0),
-    },
-    counts,
-    selAM: src.selAM ?? null,
-    selPM: src.selPM ?? null,
-    forcedRest: !!src.forcedRest,
-    triggered: src.triggered || {},
-    log: Array.isArray(src.log) ? src.log : []
-  };
-}
+function getTopNpc(){let best=null;for(const npc of NPCS){const v=G.npc[npc.id];if(!best||v>best.v)best={id:npc.id,name:npc.name,v};}return best;}
+function getBuildType(){const arr=[['마력',G.stats.mana],['지식',G.stats.know],['체력',G.stats.body],['사교',G.stats.social]].sort((a,b)=>b[1]-a[1]);return `${arr[0][0]} 중심 성장형`}
+function openMeModal(fromCreate=false){const name=Object.keys(G).length?G.name:(document.getElementById('char-name').value.trim()||'수련생');const stats=Object.keys(G).length?G.stats:alloc;const fatigue=Object.keys(G).length?G.fatigue:0;const gold=Object.keys(G).length?G.gold:240;const top=Object.keys(G).length?getTopNpc():null;const lines=[`이름: ${name}`,`성장 성향: ${Object.keys(G).length?getBuildType():'초기 배분 확인 중'}`,`마력 ${stats.mana} / 지식 ${stats.know} / 체력 ${stats.body} / 사교 ${stats.social}`,`피로도 ${fatigue}/100`,`골드 ${gold}G`];if(top&&top.v>0)lines.push(`가장 가까운 인물: ${top.name} (${top.v})`);if(Object.keys(G).length&&G.counts.forbidden>0)lines.push(`금지 지식 노출: ${G.counts.forbidden}회`);document.getElementById('me-meta-list').innerHTML=lines.map(t=>`<div>${t}</div>`).join('');let desc='지금은 아직 수련의 초입이다. 어떤 마법사가 될지는 당신의 선택에 달려 있다.';if(Object.keys(G).length){if(fatigue>=80)desc='최근 너무 무리하고 있다. 조금 쉬지 않으면 다음 달에 쓰러질 수도 있다.';else if(fatigue>=50)desc='꾸준히 성장 중이지만 피로가 꽤 쌓였다. 이번 달 선택은 회복도 고려하는 편이 좋다.';else desc='지금 흐름은 안정적이다. 전략적으로 고르면 원하는 엔딩 쪽으로 더 빠르게 기울 수 있다.';}document.getElementById('me-desc').textContent=desc;document.getElementById('me-modal').classList.add('open');if(!fromCreate&&Object.keys(G).length)G.activeTab='relations';}
+function closeMeModal(){document.getElementById('me-modal').classList.remove('open');}
 
-function migrateLegacySave(old) {
-  return normalizeGameState({
-    name: old.name,
-    turn: old.turn,
-    totalTurns: 60,
-    gold: old.gold,
-    fatigue: old.fatigue,
-    stats: old.stats,
-    npc: old.npc,
-    selAM: null,
-    selPM: null,
-    forcedRest: old.forcedRest,
-    triggered: old.triggered,
-    log: (old.log || []).map(item => {
-      if (typeof item === 'string') return { mark:'기록', txt:item, cls:'' };
-      return { mark:item.mark || '기록', txt:item.txt || '', cls:item.cls || '' };
-    })
-  });
-}
+function buyItem(id){const it=SHOP.find(x=>x.id===id);if(!it||G.gold<it.cost)return;G.gold-=it.cost;applyEff(it.eff);addLog(`🛍️ ${it.name} 구매 (${it.desc})`,'good');renderAll();}
 
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
+function getEndingSnapshot(){return{mana:G.stats.mana,know:G.stats.know,body:G.stats.body,social:G.stats.social,gold:G.gold,fatigue:G.fatigue,npc:G.npc,scholarship:G.counts.scholarship,forbidden:G.counts.forbidden,burnout:G.counts.burnout,debt:G.counts.debt,dates:G.counts.dates,jobCount:G.counts.job,classCount:G.counts.class,socialCount:G.counts.social,freeCount:G.counts.free,alchemyCount:(G.counts.byAct.alchemy_assist||0)+(G.counts.byAct.alchemy_practicum||0)};}
+function checkEnding(){if(G.turn<=G.totalTurns)return;const s=getEndingSnapshot();const main=MAIN_ENDINGS.find(e=>e.cond(s))||MAIN_ENDINGS[MAIN_ENDINGS.length-1];const romanceCandidates=ROMANCE_ENDINGS.filter(r=>r.cond(s));let romance=null;if(romanceCandidates.length)romance=romanceCandidates.sort((a,b)=>(G.npc[b.id]||0)-(G.npc[a.id]||0))[0];showEnding(main,romance);}
+function showEnding(main,romance){document.getElementById('en-ico').textContent=main.ico;document.getElementById('en-main-ttl').textContent=main.ttl;document.getElementById('en-main-txt').textContent=main.txt;const sideWrap=document.getElementById('en-side-wrap'),sideLabel=document.getElementById('en-side-label'),sideTtl=document.getElementById('en-side-ttl'),sideTxt=document.getElementById('en-side-txt');sideWrap.style.display='block';if(romance){sideLabel.textContent='💕 로맨스 에필로그';sideLabel.style.color='var(--pink)';sideTtl.style.color='var(--pink)';sideTtl.textContent=romance.ttl;sideTxt.textContent=romance.txt;}else{sideLabel.textContent='🌙 솔로 에필로그';sideLabel.style.color='var(--silver)';sideTtl.style.color='var(--silver)';sideTtl.textContent=SOLO_ENDING.ttl;sideTxt.textContent=SOLO_ENDING.txt;}document.getElementById('en-meta').innerHTML=`총 아르바이트 <span style="color:var(--gold)">${G.counts.job}</span>회 / 수업 <span style="color:var(--know)">${G.counts.class}</span>회 / 사교 <span style="color:var(--pink)">${G.counts.social}</span>회 / 무료 행동 <span style="color:var(--grn)">${G.counts.free}</span>회<br>데이트 <span style="color:var(--pink)">${G.counts.dates}</span>회 / 장학금 <span style="color:var(--gold)">${G.counts.scholarship}</span>회 / 금지 지식 <span style="color:#b18cff">${G.counts.forbidden}</span>회`;const cols={mana:'#9050ff',know:'#40b0ff',body:'#40e880',social:'#ffaa40'};document.getElementById('en-stats').innerHTML=[['✨ 마력',G.stats.mana,'mana'],['📚 지식',G.stats.know,'know'],['💪 체력',G.stats.body,'body'],['💬 사교',G.stats.social,'social'],['💰 골드',G.gold,'gold']].map(([l,v,k])=>`<div class="en-st" style="border-color:${cols[k]||'#e8b830'};color:${cols[k]||'#e8b830'}">${l}<br>${v}</div>`).join('');clearSave();showScreen('screen-ending');}
 
-function getYear() { return Math.ceil(G.turn / 12); }
-function getMonth() { return ((G.turn - 1) % 12) + 1; }
+function loadGame(){const v6=localStorage.getItem(SAVE_KEY);const v5=localStorage.getItem('mageAcad_v5');const v4=localStorage.getItem('mageAcad_v4');const v3=localStorage.getItem('mageAcad_v3');const v2=localStorage.getItem('mageAcad_v2');if(v6)G=normalizeGameState(JSON.parse(v6));else if(v5){G=normalizeGameState(JSON.parse(v5));saveGame();}else if(v4){G=normalizeGameState(JSON.parse(v4));saveGame();}else if(v3){G=normalizeGameState(JSON.parse(v3));saveGame();}else if(v2){G=migrateLegacySave(JSON.parse(v2));saveGame();}else return;startGame();}
+function restartGame(){showScreen('screen-title');}
 
-function getSeason() {
-  const m = getMonth();
-  if (m <= 3) return ['봄','sp'];
-  if (m <= 6) return ['여름','su'];
-  if (m <= 9) return ['가을','au'];
-  return ['겨울','wi'];
-}
+window.adj=adj;window.openNpcModal=openNpcModal;window.selAct=selAct;window.startDate=startDate;window.pickNpcChoice=pickNpcChoice;window.openMeModal=openMeModal;window.buyItem=buyItem;
 
-function clamp(v, mn=0, mx=100) { return Math.max(mn, Math.min(mx, v)); }
-
-function isDateSlot(v) {
-  return typeof v === 'string' && v.startsWith('date:');
-}
-
-function applyEff(eff) {
-  for (const [k, v] of Object.entries(eff || {})) {
-    if (k === 'fat') G.fatigue = clamp(G.fatigue + v);
-    else if (k === 'gold') G.gold = Math.max(0, G.gold + v);
-    else if (G.stats[k] !== undefined) G.stats[k] = Math.max(0, G.stats[k] + v);
-  }
-}
-
-function addLog(txt, cls='', mark=null) {
-  const label = mark || `${getYear()}년 ${getMonth()}월`;
-  G.log.unshift({ mark:label, txt, cls });
-  if (G.log.length > 60) G.log.pop();
-  renderLog();
-}
-
-function renderLog() {
-  const p = document.getElementById('log-panel');
-  let h = '<div class="px7" style="color:var(--dim);margin-bottom:4px">— 기록 —</div>';
-  const slice = G.log.slice(0, 26);
-  for (const item of slice) {
-    const cls = item.cls ? ' le-' + item.cls : '';
-    h += `<div class="le${cls}">[${item.mark}] ${item.txt}</div>`;
-  }
-  p.innerHTML = h;
-}
-
-function saveGame() {
-  localStorage.setItem(SAVE_KEY, JSON.stringify(G));
-}
-
-function clearSave() {
-  localStorage.removeItem(SAVE_KEY);
-  localStorage.removeItem('mageAcad_v5');
-  localStorage.removeItem('mageAcad_v4');
-  localStorage.removeItem('mageAcad_v3');
-  localStorage.removeItem('mageAcad_v2');
-}
-
-function getAvailableActs() {
-  return ACTS.filter(a => getYear() >= (a.unlock || 1));
-}
-function getActById(id) {
-  return ACTS.find(a => a.id === id);
-}
-
-function slotText(v) {
-  if (!v) return { txt:'선택 안 함', empty:true };
-  if (isDateSlot(v)) {
-    const npcId = v.split(':')[1];
-    const npc = NPCS.find(n => n.id === npcId);
-    return { txt: npc ? `💕 ${npc.name} 데이트` : '💕 데이트', empty:false };
-  }
-  const a = getActById(v);
-  return a ? { txt:`${a.icon} ${a.name}`, empty:false } : { txt:'선택 안 함', empty:true };
-}
-
-function getLoveStage(h) {
-  if (h >= 80) return '💖 연인 직전';
-  if (h >= 60) return '💗 감정 자각';
-  if (h >= 40) return '🩷 신경 쓰임';
-  if (h >= 20) return '🤝 친해짐';
-  return '👤 지인';
-}
-
-/* BGM */
-function getBgm() {
-  return document.getElementById('bgm');
-}
-
-function updateBgmButton(isPlaying) {
-  const btn = document.getElementById('bgm-toggle');
-  if (!btn) return;
-
-  if (bgmEnabled && isPlaying) {
-    btn.textContent = '🔊 BGM ON';
-    btn.classList.remove('off');
-  } else {
-    btn.textContent = '🔇 BGM OFF';
-    btn.classList.add('off');
-  }
-}
-
-async function tryStartBgm(force = false) {
-  const bgm = getBgm();
-  if (!bgm) return false;
-  if ((!bgmEnabled || bgmUserPaused) && !force) {
-    updateBgmButton(false);
-    return false;
-  }
-
-  bgm.volume = 0.35;
-  bgm.muted = false;
-
-  try {
-    await bgm.play();
-    unhookBgmFallback();
-    updateBgmButton(true);
-    return true;
-  } catch (err) {
-    hookBgmFallback();
-    updateBgmButton(false);
-    return false;
-  }
-}
-
-function stopBgm() {
-  const bgm = getBgm();
-  if (!bgm) return;
-  bgm.pause();
-  updateBgmButton(false);
-}
-
-async function toggleBgm() {
-  const bgm = getBgm();
-  if (!bgm) return;
-
-  if (!bgm.paused && !bgm.ended) {
-    bgmEnabled = false;
-    bgmUserPaused = true;
-    stopBgm();
-    return;
-  }
-
-  bgmEnabled = true;
-  bgmUserPaused = false;
-  await tryStartBgm(true);
-}
-
-function bgmFallbackHandler() {
-  if (bgmEnabled && !bgmUserPaused) {
-    tryStartBgm();
-  }
-}
-
-function hookBgmFallback() {
-  if (bgmFallbackHooked) return;
-  bgmFallbackHooked = true;
-  document.addEventListener('pointerdown', bgmFallbackHandler, true);
-  document.addEventListener('keydown', bgmFallbackHandler, true);
-  document.addEventListener('touchstart', bgmFallbackHandler, true);
-}
-
-function unhookBgmFallback() {
-  if (!bgmFallbackHooked) return;
-  bgmFallbackHooked = false;
-  document.removeEventListener('pointerdown', bgmFallbackHandler, true);
-  document.removeEventListener('keydown', bgmFallbackHandler, true);
-  document.removeEventListener('touchstart', bgmFallbackHandler, true);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  for (let i = 0; i < 70; i++) {
-    const s = document.createElement('div');
-    s.className = 'star';
-    s.style.cssText = `
-      left:${Math.random()*100}%;
-      top:${Math.random()*100}%;
-      width:${Math.random()*2+1}px;
-      height:${Math.random()*2+1}px;
-      animation-delay:${Math.random()*3}s;
-      animation-duration:${2+Math.random()*3}s
-    `;
-    document.body.appendChild(s);
-  }
-
-  if (
-    localStorage.getItem(SAVE_KEY) ||
-    localStorage.getItem('mageAcad_v5') ||
-    localStorage.getItem('mageAcad_v4') ||
-    localStorage.getItem('mageAcad_v3') ||
-    localStorage.getItem('mageAcad_v2')
-  ) {
-    document.getElementById('load-btn').style.display = 'inline-block';
-  }
-
-  document.getElementById('new-game-btn').addEventListener('click', () => {
-    tryStartBgm();
-    startCreate();
-  });
-  document.getElementById('load-btn').addEventListener('click', () => {
-    tryStartBgm();
-    loadGame();
-  });
-  document.getElementById('back-btn').addEventListener('click', () => {
-    tryStartBgm();
-    showScreen('screen-title');
-  });
-  document.getElementById('start-btn').addEventListener('click', () => {
-    tryStartBgm();
-    confirmCreate();
-  });
-  document.getElementById('confirm-btn').addEventListener('click', () => {
-    tryStartBgm();
-    confirmMonth();
-  });
-  document.getElementById('date-btn').addEventListener('click', () => {
-    tryStartBgm();
-    openDateMenu();
-  });
-  document.getElementById('restart-btn').addEventListener('click', () => {
-    tryStartBgm();
-    restartGame();
-  });
-  document.getElementById('ev-close-btn').addEventListener('click', () => {
-    tryStartBgm();
-    closeEvModal();
-  });
-  document.getElementById('date-cancel-btn').addEventListener('click', closeDateModal);
-  document.getElementById('npc-close-btn').addEventListener('click', closeNpcModal);
-  document.getElementById('bgm-toggle').addEventListener('click', toggleBgm);
-  document.getElementById('random-stat-btn').addEventListener('click', randomizeAlloc);
-
-  ['ev-modal','npc-modal','date-modal'].forEach(id => {
-    document.getElementById(id).addEventListener('click', e => {
-      if (e.target === e.currentTarget) document.getElementById(id).classList.remove('open');
-    });
-  });
-
-  document.getElementById('lv-modal').addEventListener('click', e => {
-    if (e.target === e.currentTarget) closeLvModal();
-  });
-
-  tryStartBgm();
-
-  window.addEventListener('load', () => {
-    tryStartBgm();
-    setTimeout(() => tryStartBgm(), 250);
-  });
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && bgmEnabled && !bgmUserPaused) {
-      tryStartBgm();
-    }
-  });
+document.addEventListener('DOMContentLoaded',()=>{
+ for(let i=0;i<70;i++){const s=document.createElement('div');s.className='star';s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()*2+1}px;height:${Math.random()*2+1}px;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*3}s`;document.body.appendChild(s);}
+ if([SAVE_KEY,'mageAcad_v5','mageAcad_v4','mageAcad_v3','mageAcad_v2'].some(k=>localStorage.getItem(k)))document.getElementById('load-btn').style.display='inline-block';
+ document.getElementById('new-game-btn').addEventListener('click',()=>{tryStartBgm();startCreate();});
+ document.getElementById('load-btn').addEventListener('click',()=>{tryStartBgm();loadGame();});
+ document.getElementById('back-btn').addEventListener('click',()=>{tryStartBgm();showScreen('screen-title');});
+ document.getElementById('start-btn').addEventListener('click',()=>{tryStartBgm();confirmCreate();});
+ document.getElementById('confirm-btn').addEventListener('click',()=>{tryStartBgm();attemptConfirmMonth();});
+ document.getElementById('random-stat-btn').addEventListener('click',randomizeAlloc);
+ document.getElementById('date-btn').addEventListener('click',()=>{tryStartBgm();openDateMenu();});
+ document.getElementById('restart-btn').addEventListener('click',()=>{tryStartBgm();restartGame();});
+ document.getElementById('ev-close-btn').addEventListener('click',()=>{tryStartBgm();closeEvModal();});
+ document.getElementById('date-cancel-btn').addEventListener('click',closeDateModal);
+ document.getElementById('npc-close-btn').addEventListener('click',closeNpcModal);
+ document.getElementById('me-close-btn').addEventListener('click',closeMeModal);
+ document.getElementById('warn-cancel-btn').addEventListener('click',()=>closeWarnModal(false));
+ document.getElementById('warn-ok-btn').addEventListener('click',()=>closeWarnModal(true));
+ document.getElementById('bgm-toggle').addEventListener('click',toggleBgm);
+ document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>setTab(btn.dataset.tab)));
+ ['ev-modal','npc-modal','date-modal','me-modal','warn-modal'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{if(e.target===e.currentTarget)document.getElementById(id).classList.remove('open');});});
+ document.getElementById('lv-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeLvModal();});
+ tryStartBgm();window.addEventListener('load',()=>{tryStartBgm();setTimeout(()=>tryStartBgm(),250);});document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&bgmEnabled&&!bgmUserPaused)tryStartBgm();});
+ syncFloatingUi();
 });
-
-/* Create */
-function startCreate() {
-  alloc = { mana:5, know:5, body:5, social:5 };
-  pts = 20;
-  document.getElementById('char-name').value = '';
-  showScreen('screen-create');
-  renderAlloc();
-}
-
-function renderAlloc() {
-  const defs = [
-    ['mana','✨ 마력','s-mana'],
-    ['know','📚 지식','s-know'],
-    ['body','💪 체력','s-body'],
-    ['social','💬 사교','s-soc']
-  ];
-
-  let h = '';
-  for (const [k, lbl, cls] of defs) {
-    const v = alloc[k];
-    h += `
-      <div class="srow ${cls}">
-        <span class="slbl">${lbl}</span>
-        <div class="sbw"><div class="sbf" style="width:${v * 4}%"></div></div>
-        <span class="sn">${v}</span>
-        <button class="sbtn" onclick="adj('${k}',-1)">−</button>
-        <button class="sbtn" onclick="adj('${k}',1)">+</button>
-      </div>
-    `;
-  }
-  document.getElementById('stat-alloc').innerHTML = h;
-  document.getElementById('pts').textContent = pts;
-}
-
-function adj(k, d) {
-  if (d > 0 && pts <= 0) return;
-  if (d < 0 && alloc[k] <= 1) return;
-  alloc[k] += d;
-  pts -= d;
-  renderAlloc();
-}
-
-function randomizeAlloc() {
-  alloc = { mana:5, know:5, body:5, social:5 };
-  pts = 20;
-
-  const keys = ['mana', 'know', 'body', 'social'];
-  for (let i = 0; i < 20; i++) {
-    const pick = keys[Math.floor(Math.random() * keys.length)];
-    alloc[pick] += 1;
-    pts -= 1;
-  }
-
-  renderAlloc();
-}
-
-function confirmCreate() {
-  const name = document.getElementById('char-name').value.trim() || '아리아';
-  initGame(name, { ...alloc });
-  startGame();
-}
-
-/* Render */
-function startGame() {
-  showScreen('screen-game');
-  renderAll();
-}
-
-function renderAll() {
-  renderHUD();
-  renderStatPanel();
-  renderActGrid();
-  renderNpcList();
-  renderShop();
-  renderLog();
-}
-
-function renderHUD() {
-  document.getElementById('hd-name').textContent = G.name;
-  document.getElementById('hd-gold').textContent = G.gold;
-  document.getElementById('hd-prog').style.width = (Math.min(G.turn, G.totalTurns) / G.totalTurns * 100) + '%';
-  document.getElementById('hd-turn').textContent = Math.min(G.turn, G.totalTurns) + '/' + G.totalTurns;
-  document.getElementById('me-img').src = IMG.me;
-
-  const [sn, sc] = getSeason();
-  document.getElementById('hd-date').textContent = `${getYear()}년차 ${getMonth()}월`;
-  document.getElementById('hd-season').innerHTML = `<span class="stag ${sc}">${sn}</span>`;
-  document.getElementById('m-info').textContent = G.forcedRest
-    ? `⚠️ ${getYear()}년차 ${getMonth()}월 — 강제 휴식 (활동 불가)`
-    : `${getYear()}년차 ${getMonth()}월 — 이달의 활동을 선택하세요`;
-}
-
-function renderStatPanel() {
-  const defs = [
-    ['mana','✨ 마력','sd-mana'],
-    ['know','📚 지식','sd-know'],
-    ['body','💪 체력','sd-body'],
-    ['social','💬 사교','sd-soc']
-  ];
-
-  let h = '';
-  for (const [k, lbl, cls] of defs) {
-    const v = Math.min(G.stats[k], 100);
-    h += `
-      <div class="sdr ${cls}">
-        <span class="sdlbl">${lbl}</span>
-        <div class="sdb"><div class="sdf" style="width:${v}%"></div></div>
-        <span class="sdn">${G.stats[k]}</span>
-      </div>
-    `;
-  }
-  document.getElementById('stat-panel').innerHTML = h;
-
-  document.getElementById('fat-num').textContent = G.fatigue + '/100';
-  const ff = document.getElementById('fat-fill');
-  ff.style.width = G.fatigue + '%';
-  ff.style.background = G.fatigue >= 80 ? '#ff4040' : G.fatigue >= 50 ? '#ff9040' : '#40e880';
-
-  let b = '';
-  if (G.fatigue >= 80) b += '<span class="badge b-bad">⚠️ 과로</span>';
-  else if (G.fatigue >= 50) b += '<span class="badge b-warn">😰 피로</span>';
-  else b += '<span class="badge b-ok">✅ 정상</span>';
-  if (G.forcedRest) b += '<span class="badge b-bad">🛌 강제 휴식</span>';
-  if (G.gold < 30) b += '<span class="badge b-warn">💸 자금 부족</span>';
-  if (G.counts.forbidden >= 3) b += '<span class="badge b-warn">🌑 금지 지식</span>';
-
-  document.getElementById('badges').innerHTML = b;
-}
-
-function renderActGrid() {
-  const am = slotText(G.selAM);
-  const pm = slotText(G.selPM);
-
-  const amEl = document.getElementById('slot-am');
-  const pmEl = document.getElementById('slot-pm');
-
-  amEl.textContent = am.txt;
-  pmEl.textContent = pm.txt;
-  amEl.classList.toggle('empty', am.empty);
-  pmEl.classList.toggle('empty', pm.empty);
-
-  if (G.forcedRest) {
-    document.getElementById('act-grid').innerHTML =
-      '<div class="px8" style="color:var(--red);grid-column:span 4;text-align:center;padding:18px;line-height:2">🛌 이달은 강제 휴식입니다.<br>휴식만이 허락됩니다.</div>';
-    return;
-  }
-
-  const groups = [
-    { key:'job', label:'🧹 아르바이트 — 돈 벌기 / 성장 적음' },
-    { key:'class', label:'📚 수업 — 돈 쓰기 / 성장 큼' },
-    { key:'social', label:'🎭 사교 — 돈 쓰기 / 이벤트 강화' },
-    { key:'free', label:'😴 무료 행동 — 회복 / 소성장' }
-  ];
-
-  const acts = getAvailableActs();
-  let h = '';
-
-  for (const g of groups) {
-    const list = acts.filter(a => a.type === g.key);
-    if (!list.length) continue;
-
-    h += `<div class="cat-head">${g.label}</div>`;
-
-    for (const a of list) {
-      const selected = G.selAM === a.id || G.selPM === a.id;
-      const individuallyAffordable = !(a.gold < 0 && G.gold < Math.abs(a.gold));
-      const disabledClass = individuallyAffordable ? '' : ' dis';
-
-      const statStr = Object.entries(a.stat || {})
-        .map(([k,v]) => ({ mana:'마력', know:'지식', body:'체력', social:'사교' }[k] + (v > 0 ? '+' : '') + v))
-        .join(' ');
-
-      const goldStr = a.gold !== 0 ? (a.gold > 0 ? ` 💰+${a.gold}G` : ` 💸${a.gold}G`) : '';
-      const fatStr = a.fat !== 0 ? (a.fat > 0 ? ` 피로+${a.fat}` : ` 피로${a.fat}`) : '';
-
-      h += `
-        <button class="ab${selected ? ' sel' : ''}${disabledClass}" onclick="selAct('${a.id}')">
-          <span class="ai">${a.icon}</span>
-          <span class="an">${a.name}</span>
-          <span class="ac">${statStr || '변화 적음'}${goldStr}<br>${fatStr}</span>
-        </button>
-      `;
-    }
-  }
-
-  document.getElementById('act-grid').innerHTML = h;
-}
-
-function selAct(id) {
-  if (G.forcedRest) return;
-  const act = getActById(id);
-  if (!act) return;
-
-  if (act.gold < 0 && G.gold < Math.abs(act.gold)) {
-    addLog(`💸 ${act.name} 비용이 부족합니다.`, 'bad');
-    return;
-  }
-
-  if (G.selAM === id) {
-    G.selAM = null; renderActGrid(); saveGame(); return;
-  }
-  if (G.selPM === id) {
-    G.selPM = null; renderActGrid(); saveGame(); return;
-  }
-
-  const pmIsDate = isDateSlot(G.selPM);
-
-  if (!G.selAM) G.selAM = id;
-  else if (!G.selPM) G.selPM = id;
-  else if (pmIsDate) G.selAM = id;
-  else {
-    G.selAM = G.selPM;
-    G.selPM = id;
-  }
-
-  renderActGrid();
-  saveGame();
-}
-
-function renderNpcList() {
-  let h = '';
-  let anyDate = false;
-
-  for (const npc of NPCS) {
-    const met = npc.meet(G.turn);
-    const heart = G.npc[npc.id];
-    if (heart >= 25 && met) anyDate = true;
-
-    h += `
-      <div class="nc${met ? '' : ' locked'}" ${met ? `onclick="openNpcModal('${npc.id}')"` : ''}>
-        <img src="${IMG[npc.id]}" class="npc-img" alt="${npc.name}">
-        <div style="flex:1;min-width:0">
-          <span class="nn">${npc.name}${met ? '' : ' 🔒'}</span>
-          <div class="nh"><div class="nhf" style="width:${heart}%"></div></div>
-        </div>
-        <span class="hnum">${met ? heart : '?'}</span>
-      </div>
-    `;
-  }
-
-  document.getElementById('npc-list').innerHTML = h;
-  const db = document.getElementById('date-btn');
-  db.style.display = (anyDate && !G.forcedRest) ? 'block' : 'none';
-  db.textContent = isDateSlot(G.selPM) ? '💕 데이트 변경' : '💕 데이트 신청';
-}
-
-function renderShop() {
-  let h = '';
-  for (const it of SHOP) {
-    h += `
-      <div class="sh-item">
-        <span style="font-size:11px;line-height:1.5">${it.name}</span>
-        <button class="btn btn-xs" onclick="buyItem('${it.id}')" ${G.gold < it.cost ? 'disabled' : ''} title="${it.desc}">
-          ${it.cost}G
-        </button>
-      </div>
-    `;
-  }
-  document.getElementById('shop-list').innerHTML = h;
-}
-
-/* Progress */
-let _monthAM = null;
-let _monthPM = null;
-let _monthMark = null;
-
-function confirmMonth() {
-  if (!G.forcedRest && !G.selAM && !G.selPM) {
-    addLog('활동을 최소 1개 선택하세요.');
-    return;
-  }
-
-  _monthMark = `${getYear()}년 ${getMonth()}월`;
-  _monthAM = G.selAM;
-  _monthPM = G.selPM;
-
-  _q = [];
-  _qi = 0;
-
-  if (G.forcedRest) {
-    G.fatigue = clamp(G.fatigue - 45);
-    addLog('🛌 강제 휴식. 피로 −45', 'good', _monthMark);
-    G.forcedRest = false;
-  } else {
-    for (const slot of [_monthAM, _monthPM]) {
-      if (!slot) continue;
-      if (isDateSlot(slot)) doDateActivity(slot.split(':')[1], _monthMark);
-      else {
-        const act = getActById(slot);
-        if (act) doActivity(act, _monthMark);
-      }
-    }
-    applyComboBonus(_monthAM, _monthPM, _monthMark);
-  }
-
-  applyLivingCost(_monthMark);
-  applySemesterScholarship(_monthMark);
-  maybeQueueMiniRomance(_monthMark);
-
-  if (G.fatigue >= 90 && !G.forcedRest) {
-    G.forcedRest = true;
-    G.counts.burnout++;
-    _q.push({
-      type:'sys', ico:'🛌', ttl:'과로로 쓰러짐',
-      txt:'극심한 피로로 쓰러졌다. 다음 달은 강제 휴식이다.',
-      tags:['다음 달 강제 휴식'], mark:_monthMark
-    });
-    addLog('⚠️ 과로 쓰러짐! 다음 달 강제 휴식', 'bad', _monthMark);
-  }
-
-  for (const npc of NPCS) {
-    for (const ev of npc.events) {
-      const key = npc.id + '_' + ev.t;
-      if (ev.t === G.turn && !G.triggered[key] && npc.meet(G.turn)) {
-        G.triggered[key] = true;
-        _q.push({ type:'npc', npc, ev, mark:_monthMark });
-      }
-    }
-  }
-
-  if (Math.random() < 0.12) {
-    _q.push({ type:'rand', ev:RANDS[Math.floor(Math.random() * RANDS.length)], mark:_monthMark });
-  }
-
-  G.selAM = null;
-  G.selPM = null;
-  G.turn++;
-
-  saveGame();
-  renderAll();
-  runQueue();
-}
-
-function doActivity(act, monthMark) {
-  if (act.gold < 0 && G.gold < Math.abs(act.gold)) {
-    addLog(`💸 ${act.name} 비용이 부족해 참여하지 못했다.`, 'bad', monthMark);
-    _q.push({
-      type:'sys', ico:'💸', ttl:'비용 부족',
-      txt:`${act.name} 비용이 부족해 참여하지 못했다.`,
-      tags:['행동 무효'], mark:monthMark
-    });
-    return;
-  }
-
-  if (act.fail && Math.random() < act.fail) {
-    const fs = act.fstat || {};
-    for (const [k, v] of Object.entries(fs)) {
-      if (k === 'fat') G.fatigue = clamp(G.fatigue + v);
-      else if (k === 'gold') G.gold = Math.max(0, G.gold + v);
-      else G.stats[k] = Math.max(0, (G.stats[k] || 0) + v);
-    }
-    addLog('❌ ' + act.ftxt, 'bad', monthMark);
-    _q.push({ type:'sys', ico:'❌', ttl:'활동 실패', txt:act.ftxt, tags:[], mark:monthMark });
-    return;
-  }
-
-  for (const [k, v] of Object.entries(act.stat || {})) {
-    G.stats[k] = Math.max(0, (G.stats[k] || 0) + v);
-  }
-  G.fatigue = clamp(G.fatigue + (act.fat || 0));
-  if (act.gold) G.gold = Math.max(0, G.gold + act.gold);
-
-  G.counts[act.type] = (G.counts[act.type] || 0) + 1;
-  G.counts.byAct[act.id] = (G.counts.byAct[act.id] || 0) + 1;
-  if (act.forbidden) G.counts.forbidden++;
-
-  const statStr = Object.entries(act.stat || {})
-    .map(([k, v]) => ({ mana:'마력', know:'지식', body:'체력', social:'사교' }[k] + (v > 0 ? '+' : '') + v))
-    .join(' ');
-
-  addLog(
-    `${act.icon} ${act.name}${statStr ? ' (' + statStr + ')' : ''}${act.gold ? (act.gold > 0 ? ' +' : ' ') + act.gold + 'G' : ''}`,
-    'good', monthMark
-  );
-
-  if (act.npc && Math.random() < (act.nc || 0)) {
-    const npc = NPCS.find(n => n.id === act.npc);
-    if (npc && npc.meet(G.turn)) {
-      const gain = act.type === 'social' ? 4 : 3;
-      G.npc[act.npc] = clamp(G.npc[act.npc] + gain);
-      addLog(`❤️ ${npc.name}와(과) 가까워졌다. 호감도 +${gain}`, 'heart', monthMark);
-    }
-  }
-}
-
-function doDateActivity(npcId, monthMark) {
-  const npc = NPCS.find(n => n.id === npcId);
-  if (!npc) return;
-
-  const evList = DATE_EVS[npcId] || [];
-  let ev = evList.filter(e => G.npc[npcId] >= e.req).pop();
-
-  if (!ev) {
-    ev = {
-      fat:8,
-      h:5,
-      txt:`${npc.name}와(과) 조용한 시간을 보냈다. 짧았지만 분명히 마음이 가까워졌다.`
-    };
-  }
-
-  G.fatigue = clamp(G.fatigue + (ev.fat || 8));
-  G.counts.dates++;
-  _q.push({ type:'date', npc, ev, mark:monthMark });
-}
-
-function applyComboBonus(am, pm, monthMark) {
-  if (!am || !pm) return;
-  if (isDateSlot(am) || isDateSlot(pm)) return;
-
-  const pair = [am, pm].sort().join('|');
-
-  if (pair === ['alchemy_assist','alchemy_practicum'].sort().join('|')) {
-    G.stats.mana += 1; G.stats.know += 1; G.gold += 5;
-    addLog('🔗 연금 시너지! 마력 +1, 지식 +1, 골드 +5G', 'good', monthMark);
-  }
-  else if (pair === ['wall_guard','martial_basics'].sort().join('|')) {
-    G.stats.body += 1; G.npc.cassian = clamp(G.npc.cassian + 2);
-    addLog('🔗 전투 시너지! 체력 +1, 카시안 호감도 +2', 'heart', monthMark);
-  }
-  else if (pair === ['banquet_service','royal_tea'].sort().join('|')) {
-    G.stats.social += 2; G.npc.leon = clamp(G.npc.leon + 2);
-    addLog('🔗 궁정 인맥 시너지! 사교 +2, 레온 호감도 +2', 'heart', monthMark);
-  }
-  else if (pair === ['market_delivery','night_market'].sort().join('|')) {
-    G.stats.social += 1; G.gold += 8; G.npc.saren = clamp(G.npc.saren + 2);
-    addLog('🔗 시장 인맥 시너지! 사교 +1, 골드 +8G, 사렌 호감도 +2', 'heart', monthMark);
-  }
-  else if (pair === ['library_sorting','ancient_texts'].sort().join('|')) {
-    G.stats.know += 1; G.npc.oliver = clamp(G.npc.oliver + 2);
-    addLog('🔗 연구 시너지! 지식 +1, 올리버 호감도 +2', 'heart', monthMark);
-  }
-  else if (pair === ['forbidden_decoding','secret_archive'].sort().join('|')) {
-    G.stats.mana += 2; G.stats.know += 1; G.counts.forbidden++; G.npc.vain = clamp(G.npc.vain + 3);
-    addLog('🔗 금지 지식 공명! 마력 +2, 지식 +1, 베인 호감도 +3', 'heart', monthMark);
-  }
-}
-
-function applyLivingCost(monthMark) {
-  if (G.gold >= 10) {
-    G.gold -= 10;
-    addLog('💸 생활비 10G 차감', 'bad', monthMark);
-  } else {
-    G.counts.debt++;
-    G.stats.social = Math.max(0, G.stats.social - 2);
-    addLog('⚠️ 생활비 부족! 사교 −2', 'bad', monthMark);
-  }
-  if (G.gold === 0) G.counts.debt++;
-}
-
-function applySemesterScholarship(monthMark) {
-  if (G.turn % 6 !== 0) return;
-
-  const score =
-    G.stats.mana +
-    G.stats.know +
-    G.stats.body +
-    G.stats.social +
-    (G.counts.class * 2);
-
-  let reward = 0;
-  if (score >= 150) reward = 45;
-  else if (score >= 120) reward = 28;
-
-  if (reward > 0) {
-    G.gold += reward;
-    G.counts.scholarship++;
-    addLog(`🏅 학기 장학금 +${reward}G`, 'good', monthMark);
-    _q.push({
-      type:'sys', ico:'🏅', ttl:'학기 장학금',
-      txt:`이번 학기 성적이 우수하여 장학금 ${reward}G를 받았다.`,
-      tags:[`골드 +${reward}G`], mark:monthMark
-    });
-  }
-}
-
-function maybeQueueMiniRomance(monthMark) {
-  const candidates = NPCS.filter(n => n.meet(G.turn) && G.npc[n.id] >= 15);
-  if (!candidates.length) return;
-  if (Math.random() >= 0.38) return;
-
-  candidates.sort((a,b)=>G.npc[b.id]-G.npc[a.id]);
-  const pool = candidates.slice(0, Math.min(3, candidates.length));
-  const npc = pool[Math.floor(Math.random() * pool.length)];
-  const lines = MINI_ROMANCE[npc.id] || [];
-  const txt = lines[Math.floor(Math.random() * lines.length)];
-  const gain = G.npc[npc.id] >= 60 ? 4 : G.npc[npc.id] >= 30 ? 3 : 2;
-
-  _q.push({ type:'mini', npc, txt, h:gain, mark:monthMark });
-}
-
-function runQueue() {
-  if (_qi >= _q.length) {
-    checkEnding();
-    return;
-  }
-
-  const item = _q[_qi++];
-
-  if (item.type === 'sys') {
-    showEvModal(item.ico, item.ttl, item.txt, item.tags || [], runQueue, null);
-  }
-  else if (item.type === 'rand') {
-    applyEff(item.ev.eff);
-    renderAll();
-    addLog('🌀 ' + item.ev.ttl, 'ev', item.mark);
-    showEvModal(item.ev.ico, item.ev.ttl, item.ev.txt, item.ev.tags, runQueue, null);
-  }
-  else if (item.type === 'mini') {
-    G.npc[item.npc.id] = clamp(G.npc[item.npc.id] + item.h);
-    addLog(`💞 ${item.npc.name}와 작은 순간. 호감도 +${item.h}`, 'heart', item.mark);
-    renderAll();
-    showEvModal(item.npc.icon, `${item.npc.name} — 작은 순간`, item.txt, [`호감도 +${item.h}`], runQueue, IMG[item.npc.id]);
-  }
-  else if (item.type === 'npc') {
-    showLoveScene(item.npc, item.ev, runQueue, '이벤트', item.mark);
-  }
-  else if (item.type === 'date') {
-    showLoveScene(item.npc, item.ev, runQueue, '데이트', item.mark);
-  }
-}
-
-/* Modals */
-function showEvModal(ico, ttl, txt, tags, cb, imgSrc=null) {
-  const evImg = document.getElementById('ev-img');
-  if (imgSrc) {
-    evImg.src = imgSrc;
-    evImg.style.display = 'block';
-  } else {
-    evImg.style.display = 'none';
-    evImg.removeAttribute('src');
-  }
-
-  document.getElementById('ev-ico').textContent = ico;
-  document.getElementById('ev-ttl').textContent = ttl;
-  document.getElementById('ev-txt').textContent = txt;
-  document.getElementById('ev-tags').innerHTML = (tags || []).map(t =>
-    `<span class="tag ${String(t).includes('−') || String(t).includes('-') ? 'tn' : 'tp'}">${t}</span>`
-  ).join('');
-
-  _evCb = cb;
-  document.getElementById('ev-modal').classList.add('open');
-}
-
-function closeEvModal() {
-  document.getElementById('ev-modal').classList.remove('open');
-  if (_evCb) {
-    const f = _evCb;
-    _evCb = null;
-    f();
-  }
-}
-
-function showLoveScene(npc, ev, cb, label='이벤트', mark=null) {
-  const baseGain = ev.h || 0;
-  if (baseGain) G.npc[npc.id] = clamp(G.npc[npc.id] + baseGain);
-
-  addLog(`${label === '데이트' ? '💕' : '💌'} ${npc.name} ${label}! 호감도 +${baseGain}`, 'heart', mark);
-  renderAll();
-
-  _lvNpc = npc;
-  _lvCb = cb;
-  _lvMark = mark;
-  window._lvRes = ev.res || [];
-
-  document.getElementById('lv-img').src = IMG[npc.id];
-  document.getElementById('lv-ico').textContent = npc.icon;
-  document.getElementById('lv-ttl').textContent = `${npc.name} — ${label}`;
-  document.getElementById('lv-txt').textContent = ev.txt;
-
-  const cl = document.getElementById('lv-choices');
-  if (ev.choices && ev.choices.length) {
-    cl.innerHTML = ev.choices.map((c, i) =>
-      `<button class="chbtn" onclick="pickNpcChoice(${i})">${c}</button>`
-    ).join('');
-  } else {
-    cl.innerHTML = `<button class="btn btn-sm" onclick="closeLvModal()">확인</button>`;
-  }
-
-  document.getElementById('lv-modal').classList.add('open');
-}
-
-function pickNpcChoice(i) {
-  const res = (window._lvRes || [])[i];
-  if (!res) return;
-
-  if (_lvNpc) {
-    G.npc[_lvNpc.id] = clamp(G.npc[_lvNpc.id] + (res.h || 0));
-    addLog(`💬 ${res.txt} 호감도 +${res.h || 0}`, 'heart', _lvMark);
-  }
-
-  document.getElementById('lv-txt').textContent = res.txt;
-  document.getElementById('lv-choices').innerHTML = `<button class="btn btn-sm" onclick="closeLvModal()">확인</button>`;
-  window._lvRes = [];
-  renderAll();
-  saveGame();
-}
-
-function closeLvModal() {
-  document.getElementById('lv-modal').classList.remove('open');
-  _lvMark = null;
-
-  if (_lvCb) {
-    const f = _lvCb;
-    _lvCb = null;
-    _lvNpc = null;
-    window._lvRes = [];
-    f();
-  } else {
-    _lvNpc = null;
-    window._lvRes = [];
-  }
-}
-
-/* Date */
-function openDateMenu() {
-  if (G.forcedRest) return;
-  const list = NPCS.filter(n => G.npc[n.id] >= 25 && n.meet(G.turn));
-  if (!list.length) return;
-
-  document.getElementById('date-choices').innerHTML = list.map(n =>
-    `<button class="chbtn" onclick="startDate('${n.id}')">${n.icon} ${n.name} <span style="color:var(--pink);font-family:var(--px);font-size:7px">❤️${G.npc[n.id]}</span></button>`
-  ).join('');
-
-  document.getElementById('date-modal').classList.add('open');
-}
-function closeDateModal() {
-  document.getElementById('date-modal').classList.remove('open');
-}
-function startDate(npcId) {
-  closeDateModal();
-  G.selPM = `date:${npcId}`;
-  renderActGrid();
-  renderNpcList();
-  saveGame();
-}
-
-/* NPC Detail */
-function openNpcModal(id) {
-  const npc = NPCS.find(n => n.id === id);
-  if (!npc) return;
-  const h = G.npc[id];
-
-  document.getElementById('nm-img').src = IMG[id];
-  document.getElementById('nm-name').textContent = npc.name;
-  document.getElementById('nm-title').textContent = npc.title;
-  document.getElementById('nm-desc').textContent = npc.desc;
-  document.getElementById('nm-hf').style.width = h + '%';
-  document.getElementById('nm-hn').textContent = h + '/100';
-  document.getElementById('nm-stage').textContent = getLoveStage(h);
-
-  const nxt = npc.events.find(e => !G.triggered[npc.id + '_' + e.t] && e.t >= G.turn);
-  document.getElementById('nm-next').textContent = nxt
-    ? `다음 주요 이벤트까지 약 ${nxt.t - G.turn + 1}개월`
-    : '주요 이벤트 완료 ✨';
-
-  document.getElementById('npc-modal').classList.add('open');
-}
-function closeNpcModal() {
-  document.getElementById('npc-modal').classList.remove('open');
-}
-
-/* Shop */
-function buyItem(id) {
-  const it = SHOP.find(x => x.id === id);
-  if (!it || G.gold < it.cost) return;
-
-  tryStartBgm();
-  G.gold -= it.cost;
-  applyEff(it.eff);
-  addLog(`🛍️ ${it.name} 구매 (${it.desc})`, 'good');
-  renderAll();
-  saveGame();
-}
-
-/* Endings */
-function getEndingSnapshot() {
-  return {
-    mana: G.stats.mana,
-    know: G.stats.know,
-    body: G.stats.body,
-    social: G.stats.social,
-    gold: G.gold,
-    fatigue: G.fatigue,
-    npc: G.npc,
-    scholarship: G.counts.scholarship,
-    forbidden: G.counts.forbidden,
-    burnout: G.counts.burnout,
-    debt: G.counts.debt,
-    dates: G.counts.dates,
-    jobCount: G.counts.job,
-    classCount: G.counts.class,
-    socialCount: G.counts.social,
-    freeCount: G.counts.free,
-    alchemyCount: (G.counts.byAct.alchemy_assist || 0) + (G.counts.byAct.alchemy_practicum || 0)
-  };
-}
-
-function checkEnding() {
-  if (G.turn <= G.totalTurns) return;
-
-  const s = getEndingSnapshot();
-  const main = MAIN_ENDINGS.find(e => e.cond(s)) || MAIN_ENDINGS[MAIN_ENDINGS.length - 1];
-
-  const romanceCandidates = ROMANCE_ENDINGS.filter(r => r.cond(s));
-  let romance = null;
-  if (romanceCandidates.length) {
-    romance = romanceCandidates.sort((a, b) => (G.npc[b.id] || 0) - (G.npc[a.id] || 0))[0];
-  }
-
-  showEnding(main, romance);
-}
-
-function showEnding(main, romance) {
-  document.getElementById('en-ico').textContent = main.ico;
-  document.getElementById('en-main-ttl').textContent = main.ttl;
-  document.getElementById('en-main-txt').textContent = main.txt;
-
-  const sideWrap = document.getElementById('en-side-wrap');
-  const sideLabel = document.getElementById('en-side-label');
-  const sideTtl = document.getElementById('en-side-ttl');
-  const sideTxt = document.getElementById('en-side-txt');
-
-  sideWrap.style.display = 'block';
-
-  if (romance) {
-    sideLabel.textContent = '💕 로맨스 에필로그';
-    sideLabel.style.color = 'var(--pink)';
-    sideLabel.style.textShadow = '0 0 8px var(--pink)';
-    sideTtl.style.color = 'var(--pink)';
-    sideTtl.textContent = romance.ttl;
-    sideTxt.textContent = romance.txt;
-  } else {
-    sideLabel.textContent = '🌙 솔로 에필로그';
-    sideLabel.style.color = 'var(--silver)';
-    sideLabel.style.textShadow = '0 0 8px rgba(184,204,224,.5)';
-    sideTtl.style.color = 'var(--silver)';
-    sideTtl.textContent = SOLO_ENDING.ttl;
-    sideTxt.textContent = SOLO_ENDING.txt;
-  }
-
-  document.getElementById('en-meta').innerHTML = `
-    총 아르바이트 <span style="color:var(--gold)">${G.counts.job}</span>회 /
-    수업 <span style="color:var(--know)">${G.counts.class}</span>회 /
-    사교 <span style="color:var(--pink)">${G.counts.social}</span>회 /
-    무료 행동 <span style="color:var(--grn)">${G.counts.free}</span>회<br>
-    데이트 <span style="color:var(--pink)">${G.counts.dates}</span>회 /
-    장학금 <span style="color:var(--gold)">${G.counts.scholarship}</span>회 /
-    금지 지식 <span style="color:#b18cff">${G.counts.forbidden}</span>회
-  `;
-
-  const cols = { mana:'#9050ff', know:'#40b0ff', body:'#40e880', social:'#ffaa40' };
-  document.getElementById('en-stats').innerHTML = [
-    ['✨ 마력', G.stats.mana, 'mana'],
-    ['📚 지식', G.stats.know, 'know'],
-    ['💪 체력', G.stats.body, 'body'],
-    ['💬 사교', G.stats.social, 'social'],
-    ['💰 골드', G.gold, 'social']
-  ].map(([l, v, k]) =>
-    `<div class="en-st" style="border-color:${cols[k] || '#e8b830'};color:${cols[k] || '#e8b830'}">${l}<br>${v}</div>`
-  ).join('');
-
-  clearSave();
-  showScreen('screen-ending');
-}
-
-/* Save */
-function loadGame() {
-  const v5 = localStorage.getItem(SAVE_KEY) || localStorage.getItem('mageAcad_v5');
-  const v4 = localStorage.getItem('mageAcad_v4');
-  const v3 = localStorage.getItem('mageAcad_v3');
-  const v2 = localStorage.getItem('mageAcad_v2');
-
-  if (v5) {
-    G = normalizeGameState(JSON.parse(v5));
-  } else if (v4) {
-    G = normalizeGameState(JSON.parse(v4));
-    saveGame();
-  } else if (v3) {
-    G = normalizeGameState(JSON.parse(v3));
-    saveGame();
-  } else if (v2) {
-    G = migrateLegacySave(JSON.parse(v2));
-    saveGame();
-  } else {
-    return;
-  }
-
-  startGame();
-}
-
-function restartGame() {
-  showScreen('screen-title');
-}
 </script>
 </body>
 </html>
