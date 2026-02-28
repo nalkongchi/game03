@@ -97,11 +97,11 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
 .preview-sub{font-size:12px;line-height:1.8;color:var(--dim);margin-top:6px}
 .preview-warn{color:var(--ora)}
 
-/* 카테고리 (아코디언) UI */
+/* 카테고리 (아코디언) UI - 크기 키움 */
 .cat-wrap { margin-bottom: 12px; }
-.cat-head { padding: 8px 10px; font-family: var(--px); font-size: 9px; color: var(--silver); border-left: 3px solid var(--bdr2); background: rgba(94, 68, 170, .12); cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+.cat-head { padding: 12px 14px; font-family: var(--px); font-size: 11px; color: var(--silver); border-left: 3px solid var(--bdr2); background: rgba(94, 68, 170, .12); cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
 .cat-head:hover { background: rgba(94, 68, 170, .22); }
-.cat-head::after { content: '▼'; font-size: 8px; transition: transform 0.2s; color: var(--dim); }
+.cat-head::after { content: '▼'; font-size: 10px; transition: transform 0.2s; color: var(--dim); }
 .cat-head.collapsed::after { transform: rotate(-90deg); }
 .cat-body { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 8px; }
 @media(min-width: 740px) { .cat-body { grid-template-columns: repeat(3, 1fr); } }
@@ -158,8 +158,9 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
 .le{font-size:12px;color:var(--dim);margin-bottom:5px;line-height:1.75;border-left:2px solid var(--bdr);padding-left:6px;word-break:keep-all}
 .le-ev{color:var(--ora);border-color:var(--ora)} .le-good{color:var(--grn);border-color:var(--grn)} .le-bad{color:var(--red);border-color:var(--red)} .le-heart{color:var(--pink);border-color:var(--pink)}
 
+/* 하단 탭 메뉴 글씨 크기 키움 */
 #game-tabbar{position:fixed;left:0;right:0;bottom:0;z-index:70;background:rgba(8,6,20,.98);border-top:1px solid var(--bdr);display:flex;justify-content:center;gap:8px;padding:8px 10px calc(8px + env(safe-area-inset-bottom, 0px))}
-.tab-btn{flex:1;max-width:180px;padding:10px 8px;background:var(--bg2);border:1px solid var(--bdr);color:var(--dim);font-family:var(--px);font-size:9px;cursor:pointer}
+.tab-btn{flex:1;max-width:180px;padding:14px 8px;background:var(--bg2);border:1px solid var(--bdr);color:var(--dim);font-family:var(--px);font-size:11px;cursor:pointer;transition:all .1s;}
 .tab-btn.active{border-color:var(--gold);color:var(--gold);text-shadow:0 0 6px var(--gold)}
 #bgm-toggle{position:fixed;left:50%;transform:translateX(-50%);z-index:75;font-family:var(--px);font-size:9px;padding:10px 14px;background:linear-gradient(180deg,#241860 0%,#120c38 100%);border:2px solid var(--bdr2);color:var(--gold);cursor:pointer;border-radius:999px;text-shadow:0 0 6px var(--gold);box-shadow:0 4px 16px rgba(0,0,0,.3)}
 #bgm-toggle.off{color:var(--dim);border-color:var(--bdr);text-shadow:none}
@@ -211,7 +212,7 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
 <div id="screen-title" class="screen screen-flex active">
   <div class="ttl-em">🔮</div>
   <div class="ttl-main">마법사 수련생<br>아카데미</div>
-  <div class="ttl-sub">— MAGE ACADEMY v6 —</div>
+  <div class="ttl-sub">— MAGE ACADEMY v7 —</div>
   <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px">
     <button class="btn" id="new-game-btn">✦ 새 게임</button>
     <button class="btn" id="load-btn" style="display:none">▶ 이어하기</button>
@@ -272,7 +273,10 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
         <div class="prog"><div class="progf" id="hd-prog" style="width:0%"></div></div>
         <div class="px9" style="color:var(--dim);margin-top:3px" id="hd-turn">1/60</div>
       </div>
-      <div class="hd-gold">💰 <span id="hd-gold">240</span>G</div>
+      <div style="text-align:right">
+        <div class="hd-gold">💰 <span id="hd-gold">240</span>G</div>
+        <div class="px9" style="margin-top:6px;color:var(--dim)">피로도 <span id="hd-fatigue-txt" style="color:var(--grn)">0</span></div>
+      </div>
     </div>
   </div>
 
@@ -289,7 +293,11 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
         <div class="preview-sub" id="preview-sub"></div>
       </div>
       <div style="font-size:13px;color:var(--dim);margin-bottom:8px;line-height:1.9;word-break:keep-all">활동 선택 (오전 → 오후 순). 데이트는 오후 슬롯을 사용해요.</div>
+      
       <div id="act-grid"></div>
+      
+      <button class="btn btn-pink" id="date-btn-main" style="display:none;width:100%;margin-bottom:8px">💕 데이트 신청 (오후)</button>
+      
       <button class="btn" style="width:100%" id="confirm-btn">다음 달 →</button>
     </div>
   </div>
@@ -305,7 +313,7 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0}
         </div>
       </div>
       <div id="npc-list"></div>
-      <button class="btn btn-sm btn-pink" id="date-btn" style="display:none;width:100%;margin-top:6px">💕 데이트 신청</button>
+      <button class="btn btn-sm btn-pink" id="date-btn" style="display:none;width:100%;margin-top:6px">💕 데이트 신청 (오후)</button>
     </div>
   </div>
 
@@ -579,7 +587,7 @@ function initGame(name,stats){G={name,turn:1,totalTurns:60,gold:240,fatigue:0,st
 function normalizeGameState(src){const counts=Object.assign(baseCounts(),src.counts||{});counts.byAct=counts.byAct||{};return{name:src.name||'아리아',turn:Math.max(1,src.turn||1),totalTurns:60,gold:Math.max(0,src.gold??240),fatigue:clamp(src.fatigue??0),stats:{mana:Math.max(0,src.stats?.mana??5),know:Math.max(0,src.stats?.know??5),body:Math.max(0,src.stats?.body??5),social:Math.max(0,src.stats?.social??5)},npc:{leon:clamp(src.npc?.leon??0),cassian:clamp(src.npc?.cassian??0),saren:clamp(src.npc?.saren??0),vain:clamp(src.npc?.vain??0),elias:clamp(src.npc?.elias??0),jaiden:clamp(src.npc?.jaiden??0),oliver:clamp(src.npc?.oliver??0)},counts,selAM:src.selAM??null,selPM:src.selPM??null,forcedRest:!!src.forcedRest,triggered:src.triggered||{},log:Array.isArray(src.log)?src.log:[],activeTab:src.activeTab||'train',collapsed:src.collapsed||{job:false,class:false,social:false,free:false}};}
 function migrateLegacySave(old){return normalizeGameState({name:old.name,turn:old.turn,totalTurns:60,gold:old.gold,fatigue:old.fatigue,stats:old.stats,npc:old.npc,forcedRest:old.forcedRest,triggered:old.triggered,log:(old.log||[]).map(item=>typeof item==='string'?{mark:'기록',txt:item,cls:''}:{mark:item.mark||'기록',txt:item.txt||'',cls:item.cls||''})});}
 function saveGame(){if(Object.keys(G).length)localStorage.setItem(SAVE_KEY,JSON.stringify(G));}
-function clearSave(){[SAVE_KEY,'mageAcad_v5','mageAcad_v4','mageAcad_v3','mageAcad_v2'].forEach(k=>localStorage.removeItem(k));}
+function clearSave(){[SAVE_KEY,'mageAcad_v6','mageAcad_v5','mageAcad_v4','mageAcad_v3','mageAcad_v2'].forEach(k=>localStorage.removeItem(k));}
 
 function getBgm(){return document.getElementById('bgm')}
 function updateBgmButton(isPlaying){const btn=document.getElementById('bgm-toggle');if(bgmEnabled&&isPlaying){btn.textContent='🔊 BGM ON';btn.classList.remove('off');}else{btn.textContent='🔇 BGM OFF';btn.classList.add('off');}}
@@ -599,7 +607,23 @@ function confirmCreate(){const name=document.getElementById('char-name').value.t
 function startGame(){showScreen('screen-game');if(!G.activeTab)G.activeTab='train';renderAll();}
 function setTab(tab){G.activeTab=tab;document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.getElementById(`tab-${tab}`).classList.add('active');document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));saveGame();}
 function renderAll(){renderHUD();renderTrain();renderRelations();renderShop();renderStatus();renderLog();setTab(G.activeTab||'train');saveGame();}
-function renderHUD(){document.getElementById('hd-name').textContent=G.name;document.getElementById('hd-gold').textContent=G.gold;document.getElementById('hd-prog').style.width=(Math.min(G.turn,G.totalTurns)/G.totalTurns*100)+'%';document.getElementById('hd-turn').textContent=Math.min(G.turn,G.totalTurns)+'/'+G.totalTurns;const[sn,sc]=getSeason();document.getElementById('hd-date').textContent=`${getYear()}년차 ${getMonth()}월`;document.getElementById('hd-season').innerHTML=`<span class="stag ${sc}">${sn}</span>`;}
+
+function renderHUD(){
+  document.getElementById('hd-name').textContent=G.name;
+  document.getElementById('hd-gold').textContent=G.gold;
+  document.getElementById('hd-prog').style.width=(Math.min(G.turn,G.totalTurns)/G.totalTurns*100)+'%';
+  document.getElementById('hd-turn').textContent=Math.min(G.turn,G.totalTurns)+'/'+G.totalTurns;
+  const[sn,sc]=getSeason();
+  document.getElementById('hd-date').textContent=`${getYear()}년차 ${getMonth()}월`;
+  document.getElementById('hd-season').innerHTML=`<span class="stag ${sc}">${sn}</span>`;
+  
+  // 피로도 HUD 실시간 업데이트
+  const fat = G.fatigue;
+  const fatEl = document.getElementById('hd-fatigue-txt');
+  fatEl.textContent = fat;
+  fatEl.style.color = fat >= 80 ? 'var(--red)' : fat >= 50 ? 'var(--ora)' : 'var(--grn)';
+}
+
 function slotText(v){if(!v)return{txt:'선택 안 함',empty:true};if(isDateSlot(v)){const npc=NPCS.find(n=>n.id===v.split(':')[1]);return{txt:npc?`💕 ${npc.name} 데이트`:'💕 데이트',empty:false};}const a=getActById(v);return a?{txt:`${a.icon} ${a.name}`,empty:false}:{txt:'선택 안 함',empty:true};}
 function getComboPreview(am,pm){const out={mana:0,know:0,body:0,social:0,gold:0,heart:0,notes:[]};if(!am||!pm||isDateSlot(am)||isDateSlot(pm))return out;const pair=[am,pm].sort().join('|');if(pair==['alchemy_assist','alchemy_practicum'].sort().join('|')){out.mana+=1;out.know+=1;out.gold+=5;out.notes.push('연금 시너지');}else if(pair==['wall_guard','martial_basics'].sort().join('|')){out.body+=1;out.notes.push('전투 시너지');}else if(pair==['banquet_service','royal_tea'].sort().join('|')){out.social+=2;out.notes.push('궁정 인맥 시너지');}else if(pair==['market_delivery','night_market'].sort().join('|')){out.social+=1;out.gold+=8;out.notes.push('시장 인맥 시너지');}else if(pair==['library_sorting','ancient_texts'].sort().join('|')){out.know+=1;out.notes.push('연구 시너지');}else if(pair==['forbidden_decoding','secret_archive'].sort().join('|')){out.mana+=2;out.know+=1;out.notes.push('금지 지식 공명');}return out;}
 function getDatePreview(npcId){const evList=DATE_EVS[npcId]||[];return evList.filter(e=>G.npc[npcId]>=e.req).pop()||{fat:8,h:5};}
@@ -669,12 +693,35 @@ function renderTrain(){
     h += `</div></div>`;
   }
   document.getElementById('act-grid').innerHTML=h;
+  
+  // 메인 탭에 데이트 버튼 표시 확인 로직
+  let anyDate = false;
+  for (const npc of NPCS) { if (G.npc[npc.id] >= 25 && npc.meet(G.turn)) anyDate = true; }
+  const dbt = document.getElementById('date-btn-main');
+  if (dbt) {
+    dbt.style.display = (anyDate && !G.forcedRest) ? 'block' : 'none';
+    dbt.textContent = isDateSlot(G.selPM) ? '💕 데이트 변경 (오후)' : '💕 데이트 신청 (오후)';
+  }
+
   renderPreview();
 }
 
 function selAct(id){if(G.forcedRest)return;const a=getActById(id);if(!a)return;if(a.gold<0&&G.gold<Math.abs(a.gold)){addLog(`💸 ${a.name} 비용이 부족합니다.`,'bad');return;}if(G.selAM===id){G.selAM=null;renderTrain();saveGame();return;}if(G.selPM===id){G.selPM=null;renderTrain();saveGame();return;}const pmIsDate=isDateSlot(G.selPM);if(!G.selAM)G.selAM=id;else if(!G.selPM)G.selPM=id;else if(pmIsDate)G.selAM=id;else{G.selAM=G.selPM;G.selPM=id;}renderTrain();saveGame();}
 
-function renderRelations(){let h='',anyDate=false;for(const npc of NPCS){const met=npc.meet(G.turn),heart=G.npc[npc.id];if(heart>=25&&met)anyDate=true;h+=`<div class="nc${met?'':' locked'}" ${met?`onclick="openNpcModal('${npc.id}')"`:''}><img src="${IMG[npc.id]}" class="npc-img" alt="${npc.name}"><div style="flex:1;min-width:0"><span class="nn">${npc.name}${met?'':' 🔒'}</span><div class="nh"><div class="nhf" style="width:${heart}%"></div></div></div><span class="hnum">${met?heart:'?'}</span></div>`;}document.getElementById('npc-list').innerHTML=h;const db=document.getElementById('date-btn');db.style.display=(anyDate&&!G.forcedRest)?'block':'none';db.textContent=isDateSlot(G.selPM)?'💕 데이트 변경':'💕 데이트 신청';}
+function renderRelations(){
+  let h='',anyDate=false;
+  for(const npc of NPCS){
+    const met=npc.meet(G.turn),heart=G.npc[npc.id];
+    if(heart>=25&&met)anyDate=true;
+    h+=`<div class="nc${met?'':' locked'}" ${met?`onclick="openNpcModal('${npc.id}')"`:''}><img src="${IMG[npc.id]}" class="npc-img" alt="${npc.name}"><div style="flex:1;min-width:0"><span class="nn">${npc.name}${met?'':' 🔒'}</span><div class="nh"><div class="nhf" style="width:${heart}%"></div></div></div><span class="hnum">${met?heart:'?'}</span></div>`;
+  }
+  document.getElementById('npc-list').innerHTML=h;
+  
+  const db=document.getElementById('date-btn');
+  db.style.display=(anyDate&&!G.forcedRest)?'block':'none';
+  db.textContent=isDateSlot(G.selPM)?'💕 데이트 변경 (오후)':'💕 데이트 신청 (오후)';
+}
+
 function renderShop(){let h='';for(const it of SHOP){h+=`<div class="sh-item"><div><div class="sh-name">${it.name}</div><div class="sh-desc">${it.desc}</div></div><button class="btn btn-xs" onclick="buyItem('${it.id}')" ${G.gold<it.cost?'disabled':''}>${it.cost}G</button></div>`;}document.getElementById('shop-list').innerHTML=h;}
 function renderStatus(){const defs=[['mana','✨ 마력','sd-mana'],['know','📚 지식','sd-know'],['body','💪 체력','sd-body'],['social','💬 사교','sd-soc']];let h='';for(const[k,lbl,cls]of defs){const v=Math.min(G.stats[k],100);h+=`<div class="sdr ${cls}"><span class="sdlbl">${lbl}</span><div class="sdb"><div class="sdf" style="width:${v}%"></div></div><span class="sdn">${G.stats[k]}</span></div>`;}document.getElementById('stat-panel').innerHTML=h;document.getElementById('fat-num').textContent=G.fatigue+'/100';const ff=document.getElementById('fat-fill');ff.style.width=G.fatigue+'%';ff.style.background=G.fatigue>=80?'#ff4040':G.fatigue>=50?'#ff9040':'#40e880';let b='';if(G.fatigue>=80)b+='<span class="badge b-bad">⚠️ 과로</span>';else if(G.fatigue>=50)b+='<span class="badge b-warn">😰 피로</span>';else b+='<span class="badge b-ok">✅ 정상</span>';if(G.forcedRest)b+='<span class="badge b-bad">🛌 강제 휴식</span>';if(G.gold<30)b+='<span class="badge b-warn">💸 자금 부족</span>';if(G.counts.forbidden>=3)b+='<span class="badge b-warn">🌑 금지 지식</span>';document.getElementById('badges').innerHTML=b;}
 
@@ -704,49 +751,4 @@ function closeDateModal(){document.getElementById('date-modal').classList.remove
 function startDate(npcId){closeDateModal();G.selPM=`date:${npcId}`;G.activeTab='train';renderAll();}
 
 function getLoveStage(h){if(h>=80)return'💖 연인 직전';if(h>=60)return'💗 감정 자각';if(h>=40)return'🩷 신경 쓰임';if(h>=20)return'🤝 친해짐';return'👤 지인';}
-function openNpcModal(id){const npc=NPCS.find(n=>n.id===id);if(!npc)return;const h=G.npc[id];document.getElementById('nm-img').src=IMG[id];document.getElementById('nm-name').textContent=npc.name;document.getElementById('nm-title').textContent=npc.title;document.getElementById('nm-desc').textContent=npc.desc;document.getElementById('nm-hf').style.width=h+'%';document.getElementById('nm-hn').textContent=h+'/100';document.getElementById('nm-stage').textContent=getLoveStage(h);const nxt=npc.events.find(e=>!G.triggered[npc.id+'_'+e.t]&&e.t>=G.turn);document.getElementById('nm-next').textContent=nxt?`다음 주요 이벤트까지 약 ${nxt.t-G.turn+1}개월`:'주요 이벤트 완료 ✨';document.getElementById('npc-modal').classList.add('open');}
-function closeNpcModal(){document.getElementById('npc-modal').classList.remove('open');}
-
-function getTopNpc(){let best=null;for(const npc of NPCS){const v=G.npc[npc.id];if(!best||v>best.v)best={id:npc.id,name:npc.name,v};}return best;}
-function getBuildType(){const arr=[['마력',G.stats.mana],['지식',G.stats.know],['체력',G.stats.body],['사교',G.stats.social]].sort((a,b)=>b[1]-a[1]);return `${arr[0][0]} 중심 성장형`}
-function openMeModal(fromCreate=false){const name=Object.keys(G).length?G.name:(document.getElementById('char-name').value.trim()||'수련생');const stats=Object.keys(G).length?G.stats:alloc;const fatigue=Object.keys(G).length?G.fatigue:0;const gold=Object.keys(G).length?G.gold:240;const top=Object.keys(G).length?getTopNpc():null;const lines=[`이름: ${name}`,`성장 성향: ${Object.keys(G).length?getBuildType():'초기 배분 확인 중'}`,`마력 ${stats.mana} / 지식 ${stats.know} / 체력 ${stats.body} / 사교 ${stats.social}`,`피로도 ${fatigue}/100`,`골드 ${gold}G`];if(top&&top.v>0)lines.push(`가장 가까운 인물: ${top.name} (${top.v})`);if(Object.keys(G).length&&G.counts.forbidden>0)lines.push(`금지 지식 노출: ${G.counts.forbidden}회`);document.getElementById('me-meta-list').innerHTML=lines.map(t=>`<div>${t}</div>`).join('');let desc='지금은 아직 수련의 초입이다. 어떤 마법사가 될지는 당신의 선택에 달려 있다.';if(Object.keys(G).length){if(fatigue>=80)desc='최근 너무 무리하고 있다. 조금 쉬지 않으면 다음 달에 쓰러질 수도 있다.';else if(fatigue>=50)desc='꾸준히 성장 중이지만 피로가 꽤 쌓였다. 이번 달 선택은 회복도 고려하는 편이 좋다.';else desc='지금 흐름은 안정적이다. 전략적으로 고르면 원하는 엔딩 쪽으로 더 빠르게 기울 수 있다.';}document.getElementById('me-desc').textContent=desc;document.getElementById('me-modal').classList.add('open');if(!fromCreate&&Object.keys(G).length)G.activeTab='relations';}
-function closeMeModal(){document.getElementById('me-modal').classList.remove('open');}
-
-function buyItem(id){const it=SHOP.find(x=>x.id===id);if(!it||G.gold<it.cost)return;G.gold-=it.cost;applyEff(it.eff);addLog(`🛍️ ${it.name} 구매 (${it.desc})`,'good');renderAll();}
-
-function getEndingSnapshot(){return{mana:G.stats.mana,know:G.stats.know,body:G.stats.body,social:G.stats.social,gold:G.gold,fatigue:G.fatigue,npc:G.npc,scholarship:G.counts.scholarship,forbidden:G.counts.forbidden,burnout:G.counts.burnout,debt:G.counts.debt,dates:G.counts.dates,jobCount:G.counts.job,classCount:G.counts.class,socialCount:G.counts.social,freeCount:G.counts.free,alchemyCount:(G.counts.byAct.alchemy_assist||0)+(G.counts.byAct.alchemy_practicum||0)};}
-function checkEnding(){if(G.turn<=G.totalTurns)return;const s=getEndingSnapshot();const main=MAIN_ENDINGS.find(e=>e.cond(s))||MAIN_ENDINGS[MAIN_ENDINGS.length-1];const romanceCandidates=ROMANCE_ENDINGS.filter(r=>r.cond(s));let romance=null;if(romanceCandidates.length)romance=romanceCandidates.sort((a,b)=>(G.npc[b.id]||0)-(G.npc[a.id]||0))[0];showEnding(main,romance);}
-function showEnding(main,romance){document.getElementById('en-ico').textContent=main.ico;document.getElementById('en-main-ttl').textContent=main.ttl;document.getElementById('en-main-txt').textContent=main.txt;const sideWrap=document.getElementById('en-side-wrap'),sideLabel=document.getElementById('en-side-label'),sideTtl=document.getElementById('en-side-ttl'),sideTxt=document.getElementById('en-side-txt');sideWrap.style.display='block';if(romance){sideLabel.textContent='💕 로맨스 에필로그';sideLabel.style.color='var(--pink)';sideTtl.style.color='var(--pink)';sideTtl.textContent=romance.ttl;sideTxt.textContent=romance.txt;}else{sideLabel.textContent='🌙 솔로 에필로그';sideLabel.style.color='var(--silver)';sideTtl.style.color='var(--silver)';sideTtl.textContent=SOLO_ENDING.ttl;sideTxt.textContent=SOLO_ENDING.txt;}document.getElementById('en-meta').innerHTML=`총 아르바이트 <span style="color:var(--gold)">${G.counts.job}</span>회 / 수업 <span style="color:var(--know)">${G.counts.class}</span>회 / 사교 <span style="color:var(--pink)">${G.counts.social}</span>회 / 무료 행동 <span style="color:var(--grn)">${G.counts.free}</span>회<br>데이트 <span style="color:var(--pink)">${G.counts.dates}</span>회 / 장학금 <span style="color:var(--gold)">${G.counts.scholarship}</span>회 / 금지 지식 <span style="color:#b18cff">${G.counts.forbidden}</span>회`;const cols={mana:'#9050ff',know:'#40b0ff',body:'#40e880',social:'#ffaa40'};document.getElementById('en-stats').innerHTML=[['✨ 마력',G.stats.mana,'mana'],['📚 지식',G.stats.know,'know'],['💪 체력',G.stats.body,'body'],['💬 사교',G.stats.social,'social'],['💰 골드',G.gold,'gold']].map(([l,v,k])=>`<div class="en-st" style="border-color:${cols[k]||'#e8b830'};color:${cols[k]||'#e8b830'}">${l}<br>${v}</div>`).join('');clearSave();showScreen('screen-ending');}
-
-function loadGame(){const v6=localStorage.getItem(SAVE_KEY);const v5=localStorage.getItem('mageAcad_v5');const v4=localStorage.getItem('mageAcad_v4');const v3=localStorage.getItem('mageAcad_v3');const v2=localStorage.getItem('mageAcad_v2');if(v6)G=normalizeGameState(JSON.parse(v6));else if(v5){G=normalizeGameState(JSON.parse(v5));saveGame();}else if(v4){G=normalizeGameState(JSON.parse(v4));saveGame();}else if(v3){G=normalizeGameState(JSON.parse(v3));saveGame();}else if(v2){G=migrateLegacySave(JSON.parse(v2));saveGame();}else return;startGame();}
-function restartGame(){showScreen('screen-title');}
-
-window.adj=adj;window.openNpcModal=openNpcModal;window.selAct=selAct;window.startDate=startDate;window.pickNpcChoice=pickNpcChoice;window.openMeModal=openMeModal;window.buyItem=buyItem;window.toggleCat=toggleCat;
-
-document.addEventListener('DOMContentLoaded',()=>{
- for(let i=0;i<70;i++){const s=document.createElement('div');s.className='star';s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()*2+1}px;height:${Math.random()*2+1}px;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*3}s`;document.body.appendChild(s);}
- if([SAVE_KEY,'mageAcad_v5','mageAcad_v4','mageAcad_v3','mageAcad_v2'].some(k=>localStorage.getItem(k)))document.getElementById('load-btn').style.display='inline-block';
- document.getElementById('new-game-btn').addEventListener('click',()=>{tryStartBgm();startCreate();});
- document.getElementById('load-btn').addEventListener('click',()=>{tryStartBgm();loadGame();});
- document.getElementById('back-btn').addEventListener('click',()=>{tryStartBgm();showScreen('screen-title');});
- document.getElementById('start-btn').addEventListener('click',()=>{tryStartBgm();confirmCreate();});
- document.getElementById('confirm-btn').addEventListener('click',()=>{tryStartBgm();attemptConfirmMonth();});
- document.getElementById('random-stat-btn').addEventListener('click',randomizeAlloc);
- document.getElementById('date-btn').addEventListener('click',()=>{tryStartBgm();openDateMenu();});
- document.getElementById('restart-btn').addEventListener('click',()=>{tryStartBgm();restartGame();});
- document.getElementById('ev-close-btn').addEventListener('click',()=>{tryStartBgm();closeEvModal();});
- document.getElementById('date-cancel-btn').addEventListener('click',closeDateModal);
- document.getElementById('npc-close-btn').addEventListener('click',closeNpcModal);
- document.getElementById('me-close-btn').addEventListener('click',closeMeModal);
- document.getElementById('warn-cancel-btn').addEventListener('click',()=>closeWarnModal(false));
- document.getElementById('warn-ok-btn').addEventListener('click',()=>closeWarnModal(true));
- document.getElementById('bgm-toggle').addEventListener('click',toggleBgm);
- document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>setTab(btn.dataset.tab)));
- ['ev-modal','npc-modal','date-modal','me-modal','warn-modal'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{if(e.target===e.currentTarget)document.getElementById(id).classList.remove('open');});});
- document.getElementById('lv-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeLvModal();});
- tryStartBgm();window.addEventListener('load',()=>{tryStartBgm();setTimeout(()=>tryStartBgm(),250);});document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&bgmEnabled&&!bgmUserPaused)tryStartBgm();});
- syncFloatingUi();
-});
-</script>
-</body>
-</html>
+function openNpcModal(id){const npc=NPCS.find(n=>n.id===id);if(!npc)return;const h=G.
