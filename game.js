@@ -428,10 +428,28 @@ function fmtChange(k, v) {
   return `<span class="${cls}">${lbl} ${sign}${v}</span>`;
 }
 
-function renderPreview(){const p=getPreviewResult();const chosen=!!(G.selAM||G.selPM);const main=document.getElementById('preview-main');const sub=document.getElementById('preview-sub');if(!chosen){main.classList.add('is-empty');main.innerHTML='<span class="c-neu">활동을 고르면 예상 변화가 표시돼요.</span>';sub.innerHTML='';sub.className='preview-sub';return;}
-  const parts=[fmtChange('mana',p.mana),fmtChange('know',p.know),fmtChange('body',p.body),fmtChange('social',p.social),fmtChange('gold',p.gold),fmtChange('fat',p.fat)].filter(Boolean);
-  if(parts.length){main.classList.remove('is-empty');main.innerHTML=parts.join('');}else{main.classList.add('is-empty');main.innerHTML='<span class="c-neu">큰 변화 없음</span>';};
-  const noteLines=[];noteLines.push(`월말 예상 골드 ${p.endGold}G`);noteLines.push(`예상 피로 ${p.endFat}/100`);if(p.heart)noteLines.push(`데이트 포함 호감도 +${p.heart}`);if(p.notes.length)noteLines.push(...p.notes);if(p.forced)noteLines.push('⚠️ 이 상태면 다음 달 강제 휴식 가능');sub.className='preview-sub';sub.innerHTML=noteLines.map(line=>`<div class="preview-note-line${line.startsWith('⚠️')?' preview-note-warn':''}">${line}</div>`).join('');
+function fmtPreviewStat(k, v) {
+  if (!v) return '';
+  const labels = { mana:'마력', know:'지식', body:'체력', social:'사교', gold:'골드', fat:'피로' };
+  const lbl = labels[k] || k;
+  const sign = v > 0 ? '+' : '';
+  const isGood = k === 'fat' ? v < 0 : v > 0;
+  const cls = isGood ? 'c-pos' : 'c-neg';
+  return `<div class="preview-stat ${cls}">${lbl} ${sign}${v}</div>`;
+}
+
+function renderPreview(){const p=getPreviewResult();const chosen=!!(G.selAM||G.selPM);const main=document.getElementById('preview-main');const sub=document.getElementById('preview-sub');if(!chosen){main.innerHTML='<div class="preview-empty">활동을 고르면 예상 변화가 표시돼요.</div>';sub.innerHTML='';sub.className='preview-sub';return;}
+  const parts=[fmtPreviewStat('mana',p.mana),fmtPreviewStat('know',p.know),fmtPreviewStat('body',p.body),fmtPreviewStat('social',p.social),fmtPreviewStat('gold',p.gold),fmtPreviewStat('fat',p.fat)].filter(Boolean);
+  main.innerHTML=parts.join('') || '<div class="preview-empty c-neu">큰 변화 없음</div>';
+  const lines=[
+    {txt:`월말 예상 골드 ${p.endGold}G`},
+    {txt:`예상 피로 ${p.endFat}/100`}
+  ];
+  if(p.heart) lines.push({txt:`데이트 포함 호감도 +${p.heart}`,wide:true});
+  if(p.notes.length) lines.push({txt:p.notes.join(', '),wide:true});
+  if(p.forced) lines.push({txt:'⚠️ 이 상태면 다음 달 강제 휴식 가능',wide:true,warn:true});
+  sub.innerHTML=lines.map(line=>`<div class="${line.wide?'span-all ':''}${line.warn?'preview-warn-line':''}">${line.txt}</div>`).join('');
+  sub.className='preview-sub';
 }
 
 function toggleCat(key) {
