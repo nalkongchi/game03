@@ -89,30 +89,24 @@
   <div id="tab-train" class="tab-panel active">
     <div class="box tabbox">
       <div class="mi" id="m-info">1년차 1월 — 이달의 활동을 선택하세요</div>
-      
       <div class="slots">
         <div class="slot"><div class="slot-lbl">🌅 오전</div><div class="slot-val empty" id="slot-am">선택 안 함</div></div>
         <div class="slot"><div class="slot-lbl">🌆 오후</div><div class="slot-val empty" id="slot-pm">선택 안 함</div></div>
       </div>
-      
-      <div class="action-row">
-        <div class="preview-box" style="margin-bottom:0; display:flex; flex-direction:column;">
-          <div class="preview-ttl">✦ 예상 변화</div>
-          <div class="preview-main" id="preview-main" style="flex:1;">
-            <span style="color:var(--dim);font-size:13px;">활동을 고르면<br>예상 변화가 표시돼요.</span>
-          </div>
+      <div class="preview-row">
+        <div class="preview-box">
+          <div class="preview-ttl">✦ 이번 달 예상 변화</div>
+          <div class="preview-main" id="preview-main">활동을 고르면 예상 변화가 표시돼요.</div>
           <div class="preview-sub" id="preview-sub"></div>
         </div>
-        
-        <div style="display:flex; flex-direction:column; gap:10px;">
-          <button class="btn btn-pink" id="date-btn-main" style="display:none; width:100%; font-size:12px; padding:12px;" data-action="start-date" data-npc-id="">💕 데이트 신청</button>
-          <button class="btn" style="width:100%; font-size:15px; font-weight:bold; flex:1;" id="confirm-btn">다음 달 진행 ➔</button>
-        </div>
+        <button class="btn next-month-btn" id="confirm-btn" type="button"><span class="next-label">다음 달 진행</span><span class="next-arrow">→</span></button>
       </div>
-
-      <div style="font-size:13px;color:var(--dim);margin-bottom:12px;line-height:1.8;word-break:keep-all">활동 선택 (오전 → 오후 순). 데이트는 오후 슬롯을 사용해요.</div>
+      <div style="font-size:14px;color:var(--dim);margin-bottom:12px;line-height:1.9;word-break:keep-all">활동 선택 (오전 → 오후 순). 데이트는 오후 슬롯을 사용해요.</div>
       
       <div id="act-grid"></div>
+      
+      <button class="btn btn-pink" id="date-btn-main" style="display:none;width:100%;margin-bottom:12px;font-size:14px;padding:16px;">💕 데이트 신청 (오후 활동)</button>
+      
     </div>
   </div>
 
@@ -160,6 +154,8 @@
     <button class="tab-btn" data-tab="status">내 정보</button>
   </div>
 </div>
+
+<button id="scroll-top-btn" class="scroll-top-btn" type="button" aria-label="맨 위로 이동" aria-hidden="true">↑<span>위로</span></button>
 
 <div id="screen-ending" class="screen screen-flex">
   <div class="en-ico" id="en-ico">✨</div>

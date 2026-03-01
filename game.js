@@ -428,10 +428,10 @@ function fmtChange(k, v) {
   return `<span class="${cls}">${lbl} ${sign}${v}</span>`;
 }
 
-function renderPreview(){const p=getPreviewResult();const chosen=!!(G.selAM||G.selPM);if(!chosen){document.getElementById('preview-main').textContent='활동을 고르면 예상 변화가 표시돼요.';document.getElementById('preview-sub').textContent='';return;}
+function renderPreview(){const p=getPreviewResult();const chosen=!!(G.selAM||G.selPM);const main=document.getElementById('preview-main');const sub=document.getElementById('preview-sub');if(!chosen){main.classList.add('is-empty');main.innerHTML='<span class="c-neu">활동을 고르면 예상 변화가 표시돼요.</span>';sub.innerHTML='';sub.className='preview-sub';return;}
   const parts=[fmtChange('mana',p.mana),fmtChange('know',p.know),fmtChange('body',p.body),fmtChange('social',p.social),fmtChange('gold',p.gold),fmtChange('fat',p.fat)].filter(Boolean);
-  document.getElementById('preview-main').innerHTML=parts.join(' ') || '<span class="c-neu">큰 변화 없음</span>';
-  const notes=[];notes.push(`월말 예상 골드 ${p.endGold}G`);notes.push(`예상 피로 ${p.endFat}/100`);if(p.heart)notes.push(`데이트 포함 호감도 +${p.heart}`);if(p.notes.length)notes.push(p.notes.join(', '));if(p.forced)notes.push('⚠️ 이 상태면 다음 달 강제 휴식 가능');const sub=document.getElementById('preview-sub');sub.textContent=notes.join(' · ');sub.className='preview-sub'+(p.forced?' preview-warn':'');
+  if(parts.length){main.classList.remove('is-empty');main.innerHTML=parts.join('');}else{main.classList.add('is-empty');main.innerHTML='<span class="c-neu">큰 변화 없음</span>';};
+  const noteLines=[];noteLines.push(`월말 예상 골드 ${p.endGold}G`);noteLines.push(`예상 피로 ${p.endFat}/100`);if(p.heart)noteLines.push(`데이트 포함 호감도 +${p.heart}`);if(p.notes.length)noteLines.push(...p.notes);if(p.forced)noteLines.push('⚠️ 이 상태면 다음 달 강제 휴식 가능');sub.className='preview-sub';sub.innerHTML=noteLines.map(line=>`<div class="preview-note-line${line.startsWith('⚠️')?' preview-note-warn':''}">${line}</div>`).join('');
 }
 
 function toggleCat(key) {

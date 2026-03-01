@@ -88,18 +88,18 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:14px 0}
 .tab-panel.active{display:block}
 .tabbox{padding:14px}
 .mi{font-family:var(--px);font-size:11px;color:var(--gold);text-align:center;margin-bottom:12px;text-shadow:0 0 7px var(--gold);line-height:1.9}
-.slots{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.slots{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .slot{padding:12px;border:1px solid var(--bdr);background:var(--bg2)}
 .slot-lbl{font-family:var(--px);font-size:9px;color:var(--dim);margin-bottom:6px}
 .slot-val{font-size:14px;color:var(--silver);line-height:1.7;min-height:44px}
 .slot-val.empty{color:var(--dim)}
-.preview-row{display:grid;grid-template-columns:minmax(0,1fr) 128px;gap:10px;margin-bottom:12px;align-items:stretch}
-.preview-box{padding:12px;border:1px solid var(--bdr);background:rgba(16,14,34,.9);margin-bottom:0;min-width:0}
+.preview-row{display:grid;grid-template-columns:minmax(0,1fr) 144px;gap:12px;margin-bottom:12px;align-items:stretch}
+.preview-box{padding:12px;border:1px solid var(--bdr);background:rgba(16,14,34,.9);margin-bottom:0;min-width:0;display:flex;flex-direction:column;justify-content:center}
 .preview-ttl{font-family:var(--px);font-size:10px;color:var(--know);margin-bottom:10px}
-.preview-main{font-size:14px;line-height:1.8;color:var(--silver)}
-.preview-sub{font-size:13px;line-height:1.8;color:var(--dim);margin-top:8px}
+.preview-main{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 10px;font-size:14px;line-height:1.55;color:var(--silver);align-items:start}
+.preview-sub{font-size:12px;line-height:1.6;color:var(--dim);margin-top:10px;display:flex;flex-direction:column;gap:4px}
 .preview-warn{color:var(--ora)}
-.next-month-btn{width:100%;min-height:100%;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;padding:14px 10px;line-height:1.7;word-break:keep-all}
+.next-month-btn{width:100%;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:13px;padding:14px 12px;line-height:1.55;word-break:keep-all;gap:6px}
 .scroll-top-btn{position:fixed;right:16px;bottom:calc(var(--tabbar-offset) + 18px);z-index:75;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:56px;height:56px;border:1px solid var(--gold);background:rgba(16,14,34,.96);color:var(--gold);font-family:var(--px);font-size:12px;cursor:pointer;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .18s ease, transform .18s ease, box-shadow .18s ease;box-shadow:0 0 0 rgba(0,0,0,0)}
 .scroll-top-btn span{font-size:8px;line-height:1.2}
 .scroll-top-btn.show{opacity:1;pointer-events:auto;transform:translateY(0);box-shadow:0 6px 18px rgba(0,0,0,.35)}
@@ -129,7 +129,13 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:14px 0}
 .c-pos { color: var(--grn); font-weight: 700; }
 .c-neg { color: var(--red); font-weight: 700; }
 .c-neu { color: var(--dim); }
-.ac span, .preview-main span { display: inline-block; margin-right: 6px; }
+.ac span { display: inline-block; margin-right: 6px; }
+.preview-main span { display:block; margin-right:0; word-break:keep-all; }
+.preview-main.is-empty{display:block;line-height:1.7;}
+.preview-note-line{display:block;word-break:keep-all;}
+.preview-note-warn{color:var(--ora);font-weight:700;}
+.next-label{display:block;}
+.next-arrow{display:block;font-size:18px;line-height:1;}
 
 .np{padding:14px}
 .me-card{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg2);border:1px solid var(--bdr);cursor:pointer;margin-bottom:12px}
@@ -208,8 +214,8 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:14px 0}
   .hd-name{max-width:88px;font-size:11px}
   .hd-gold{font-size:11px}
   .m-txt,.modal-desc{font-size:15px}
-  .preview-row{grid-template-columns:minmax(0,1fr) 112px}
-  .next-month-btn{font-size:12px;padding:12px 8px}
+  .preview-row{grid-template-columns:minmax(0,1fr) 132px}
+  .next-month-btn{font-size:12px;padding:12px 10px;gap:5px}
   .scroll-top-btn{right:12px;width:52px;height:52px}
   .cat-body{grid-template-columns:1fr 1fr}
 }
