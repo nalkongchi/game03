@@ -123,7 +123,7 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:14px 0}
 /* 활동 버튼 UI - 크기 키움 */
 .ab{padding:14px 10px;background:var(--bg2);border:1px solid var(--bdr);color:var(--text);cursor:pointer;font-family:var(--sr);text-align:center;transition:all .12s;line-height:1.4}
 .ab:hover{background:#19133a;border-color:var(--bdr2)}
-.ab.sel{border-color:var(--mana);background:#1c1050}
+.ab.sel{border-color:var(--mana);background:#1c1050;box-shadow:0 0 12px var(--mana);}
 .ab.dis{opacity:.45;cursor:not-allowed}
 .ai{font-size:22px;display:block;margin-bottom:6px}
 .an{font-size:15px;display:block;line-height:1.45; font-weight:600;}
