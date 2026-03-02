@@ -814,6 +814,15 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('warn-ok-btn').addEventListener('click',()=>closeWarnModal(true));
   document.getElementById('bgm-toggle').addEventListener('click',toggleBgm);
   document.getElementById('scroll-top-btn').addEventListener('click',scrollToTopNow);
+
+  document.getElementById('home-btn').addEventListener('click', () => {
+    if (confirm('메인 화면으로 돌아가시겠습니까?\n(현재 진행 상황은 자동으로 저장됩니다)')) {
+      tryStartBgm();
+      showScreen('screen-title');
+      refreshLoadButton();
+    }
+  });
+  
   document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>setTab(btn.dataset.tab)));
 
   window.addEventListener('scroll',toggleScrollTopButton,{passive:true});
