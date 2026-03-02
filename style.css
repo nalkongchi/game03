@@ -49,6 +49,13 @@ hr.dv{border:none;border-top:1px solid var(--bdr);margin:14px 0}
 }
 #bgm-toggle.off{color:var(--dim);border-color:var(--bdr);}
 
+#home-btn {
+  position: absolute; top: 14px; left: 14px; z-index: 100;
+  font-family: var(--px); font-size: 8px; padding: 8px 12px;
+  background: rgba(16,14,34,.8); border: 1px solid var(--bdr2);
+  color: var(--gold); cursor: pointer; border-radius: 6px;
+}
+
 #screen-title{flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:20px;text-align:center}
 .ttl-em{font-size:72px;animation:flt 4s ease-in-out infinite;filter:drop-shadow(0 0 18px #9050ff)}
 @keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
